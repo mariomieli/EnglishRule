@@ -120,6 +120,29 @@ export function Review() {
   );
 }
 
+function SettingRow({ ico, title, desc, danger, children }: { ico: string; title: string; desc: string; danger?: boolean; children: React.ReactNode }) {
+  return (
+    <div className={`setting ${danger ? 'danger' : ''}`}>
+      <span className="set-ico" aria-hidden>
+        {ico}
+      </span>
+      <div className="txt">
+        <div className="t">{title}</div>
+        <div className="d">{desc}</div>
+      </div>
+      <div className="ctl">{children}</div>
+    </div>
+  );
+}
+
+function Switch({ on, onClick, label, disabled }: { on: boolean; onClick: () => void; label: string; disabled?: boolean }) {
+  return (
+    <button className={`switch ${on ? 'on' : ''}`} onClick={onClick} disabled={disabled} role="switch" aria-checked={on} aria-label={label}>
+      <motion.span layout className="knob" transition={{ type: 'spring', stiffness: 600, damping: 32 }} />
+    </button>
+  );
+}
+
 export function Profile() {
   const { state, setTheme, toggleSound, setDailyGoal, setAutoCheck, setAdvanceMs, reset, user, cloud, sync } = useStore();
   const [stats, setStats] = useState(() => analyticsEnabled());
@@ -240,41 +263,26 @@ export function Profile() {
               </div>
             </motion.div>
 
-            <motion.div className="card" style={{ padding: '10px 24px' }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
-              <div className="setting">
-                <div>
-                  <div style={{ fontWeight: 700 }}>Tema</div>
-                  <div className="faint" style={{ fontSize: '.85rem' }}>Auto segue l'impostazione del dispositivo</div>
-                </div>
+            <motion.div className="card settings-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+              <h3>Impostazioni</h3>
+
+              <div className="set-group">Aspetto e suoni</div>
+              <SettingRow ico="🎨" title="Tema" desc="Auto segue il dispositivo">
                 <div className="seg">
-                  <button className={state.themePref === 'system' ? 'on' : ''} onClick={() => setTheme('system')}>📱 Auto</button>
-                  <button className={state.themePref === 'light' ? 'on' : ''} onClick={() => setTheme('light')}>☀️ Chiaro</button>
-                  <button className={state.themePref === 'dark' ? 'on' : ''} onClick={() => setTheme('dark')}>🌙 Scuro</button>
+                  <button className={state.themePref === 'system' ? 'on' : ''} onClick={() => setTheme('system')}>Auto</button>
+                  <button className={state.themePref === 'light' ? 'on' : ''} onClick={() => setTheme('light')}>Chiaro</button>
+                  <button className={state.themePref === 'dark' ? 'on' : ''} onClick={() => setTheme('dark')}>Scuro</button>
                 </div>
-              </div>
-              <div className="setting">
-                <div>
-                  <div style={{ fontWeight: 700 }}>Effetti sonori</div>
-                  <div className="faint" style={{ fontSize: '.85rem' }}>Suoni per risposte giuste e sbagliate</div>
-                </div>
-                <button className={`switch ${state.sound ? 'on' : ''}`} onClick={toggleSound} role="switch" aria-checked={state.sound} aria-label="Effetti sonori">
-                  <motion.span layout className="knob" transition={{ type: 'spring', stiffness: 600, damping: 32 }} />
-                </button>
-              </div>
-              <div className="setting">
-                <div>
-                  <div style={{ fontWeight: 700 }}>Verifica automatica</div>
-                  <div className="faint" style={{ fontSize: '.85rem' }}>Scelta multipla, giusta/sbagliata e abbinamenti si verificano appena rispondi</div>
-                </div>
-                <button className={`switch ${state.autoCheck ? 'on' : ''}`} onClick={() => setAutoCheck(!state.autoCheck)} role="switch" aria-checked={state.autoCheck} aria-label="Verifica automatica">
-                  <motion.span layout className="knob" transition={{ type: 'spring', stiffness: 600, damping: 32 }} />
-                </button>
-              </div>
-              <div className="setting">
-                <div>
-                  <div style={{ fontWeight: 700 }}>Dopo una risposta giusta</div>
-                  <div className="faint" style={{ fontSize: '.85rem' }}>Pausa prima di passare all'esercizio successivo; tocca la spiegazione per fermarti</div>
-                </div>
+              </SettingRow>
+              <SettingRow ico="🔊" title="Effetti sonori" desc="Suoni per risposte giuste e sbagliate">
+                <Switch on={state.sound} onClick={toggleSound} label="Effetti sonori" />
+              </SettingRow>
+
+              <div className="set-group">Esercizi</div>
+              <SettingRow ico="⚡" title="Verifica automatica" desc="Si verifica appena rispondi (scelta multipla, giusto/sbagliato, abbinamenti)">
+                <Switch on={state.autoCheck} onClick={() => setAutoCheck(!state.autoCheck)} label="Verifica automatica" />
+              </SettingRow>
+              <SettingRow ico="⏱️" title="Dopo una risposta giusta" desc="Pausa prima dell'esercizio successivo. Tocca la spiegazione per fermarti">
                 <div className="seg">
                   {[
                     { ms: 0, label: 'Manuale' },
@@ -286,12 +294,8 @@ export function Profile() {
                     </button>
                   ))}
                 </div>
-              </div>
-              <div className="setting">
-                <div>
-                  <div style={{ fontWeight: 700 }}>Obiettivo giornaliero</div>
-                  <div className="faint" style={{ fontSize: '.85rem' }}>XP da guadagnare ogni giorno</div>
-                </div>
+              </SettingRow>
+              <SettingRow ico="🎯" title="Obiettivo giornaliero" desc="XP da guadagnare ogni giorno">
                 <div className="seg">
                   {[30, 50, 100, 150].map((n) => (
                     <button key={n} className={state.dailyGoal === n ? 'on' : ''} onClick={() => setDailyGoal(n)}>
@@ -299,39 +303,27 @@ export function Profile() {
                     </button>
                   ))}
                 </div>
-              </div>
+              </SettingRow>
+
+              <div className="set-group">Privacy e dati</div>
               {cloud && (
-                <div className="setting">
-                  <div>
-                    <div style={{ fontWeight: 700 }}>Statistiche anonime</div>
-                    <div className="faint" style={{ fontSize: '.85rem' }}>
-                      {browserSaysNo() ? 'Disattivate: il tuo browser chiede di non essere tracciato' : 'Aiutano a migliorare le lezioni. Nessun cookie, nessun dato personale.'}
-                    </div>
-                  </div>
-                  <button
-                    className={`switch ${stats ? 'on' : ''}`}
+                <SettingRow ico="📊" title="Statistiche anonime" desc={browserSaysNo() ? 'Disattivate: il tuo browser chiede di non essere tracciato' : 'Aiutano a migliorare le lezioni. Nessun cookie, nessun dato personale'}>
+                  <Switch
+                    on={stats}
                     disabled={browserSaysNo()}
                     onClick={() => {
                       setAnalytics(!stats);
                       setStats(!stats);
                     }}
-                    role="switch"
-                    aria-checked={stats}
-                    aria-label="Statistiche anonime"
-                  >
-                    <motion.span layout className="knob" transition={{ type: 'spring', stiffness: 600, damping: 32 }} />
-                  </button>
-                </div>
+                    label="Statistiche anonime"
+                  />
+                </SettingRow>
               )}
-              <div className="setting">
-                <div>
-                  <div style={{ fontWeight: 700 }}>Azzera i progressi</div>
-                  <div className="faint" style={{ fontSize: '.85rem' }}>Cancella XP, lezioni ed errori salvati{user ? ' su tutti i tuoi dispositivi' : ''}</div>
-                </div>
-                <button className="btn btn-ghost btn-sm" style={{ color: 'var(--bad-text)' }} onClick={() => confirm(user ? 'Vuoi davvero cancellare tutti i progressi del tuo account, su tutti i dispositivi? Non si può annullare.' : 'Vuoi davvero cancellare tutti i progressi? Non si può annullare.') && reset()}>
+              <SettingRow ico="🗑️" title="Azzera i progressi" desc={`Cancella XP, lezioni ed errori${user ? ' su tutti i tuoi dispositivi' : ''}`} danger>
+                <button className="btn btn-ghost btn-sm danger-btn" onClick={() => confirm(user ? 'Vuoi davvero cancellare tutti i progressi del tuo account, su tutti i dispositivi? Non si può annullare.' : 'Vuoi davvero cancellare tutti i progressi? Non si può annullare.') && reset()}>
                   Azzera
                 </button>
-              </div>
+              </SettingRow>
             </motion.div>
           </div>
         </div>
