@@ -220,6 +220,13 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
     if (score >= 70) celebrate(score === 100);
   }, [pos, queue.length, firstTry, total, mode, lessonId, addXp, finishLesson, state.sound, state.xpByDay, state.dailyGoal]);
 
+  // risposta giusta: si va avanti da soli dopo un attimo (Invio o "Continua" per anticipare)
+  useEffect(() => {
+    if (!checked || !correct || done) return;
+    const t = setTimeout(next, 1100);
+    return () => clearTimeout(t);
+  }, [checked, correct, done, next]);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.repeat) return;

@@ -63,6 +63,7 @@ Ultimo aggiornamento: 29/09/2026 (punti 1-6, 10, 13-19).
 
 ## Verifica automatica delle risposte
 - Scelta multipla, giusta/sbagliata e abbinamenti si verificano da soli 350 ms dopo la risposta: non si può più cambiare idea dopo aver toccato un'opzione (prima si poteva finché non si premeva Verifica). Completamento, riordino e le voci scritte restano manuali. Nessuna opzione per tornare al vecchio comportamento.
+- Con la risposta giusta si passa all'esercizio dopo circa 1 secondo (Invio o "Continua" per anticipare): la spiegazione di un esercizio corretto resta visibile poco, e non c'è modo di fermare l'avanzamento per rileggerla. Con la risposta sbagliata si resta finché non si preme Continua.
 
 ## 13-14. Test e CI
 - Gli smoke test Playwright coprono 4 percorsi, tastiera, CSP, axe (10 pagine x 2 temi) e statistiche; non coprono: accesso e sincronizzazione con Supabase reale (nessuna credenziale di prova, la CI costruisce senza cloud), cambio di dispositivo, speaking con microfono, dettato con audio, installazione come PWA, uso offline.

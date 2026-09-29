@@ -52,3 +52,18 @@ test('ripasso: vuoto all\'inizio e navigazione di base', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /profilo/ })).toBeVisible();
   await expect(page.getByText(/Traguardi/)).toBeVisible();
 });
+
+test('risposta giusta: si passa da soli all\'esercizio successivo', async ({ page }) => {
+  const { a1 } = await import('../src/data/lessons/a1');
+  const first = a1.find((l) => l.id === 'a1-to-be')!.exercises[0];
+  test.skip(first.type !== 'mcq', 'il primo esercizio non è a scelta multipla');
+  if (first.type !== 'mcq') return;
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Salta' }).click();
+  await page.goto('/lesson/a1-to-be/practice');
+  await page.locator('.option', { hasText: first.options[first.answer].replace(/\*/g, '') }).first().click();
+  await expect(page.locator('.feedback.good')).toBeVisible();
+  // senza toccare nulla la sessione va avanti
+  await expect(page.locator('.feedback')).toHaveCount(0, { timeout: 4000 });
+  await expect(page.locator('.ex-prompt, .fill-sentence, .order-answer').first()).toBeVisible();
+});
