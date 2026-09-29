@@ -1,5 +1,5 @@
 import type { Exercise } from '../data/types';
-import { normalize } from './utils';
+import { looseKey, normalize } from './utils';
 
 export type Answer = number | string | string[] | boolean | { mistakes: number } | null;
 
@@ -10,6 +10,11 @@ export function isComplete(ex: Exercise, a: Answer): boolean {
       return typeof a === 'string' && a.trim().length > 0;
     case 'order':
       return Array.isArray(a) && a.length === ex.words.length;
+    case 'listen':
+    case 'translate':
+      return typeof a === 'string' && a.trim().length > 0;
+    case 'correct':
+      return typeof a === 'string' && a.trim().length > 0 && looseKey(a) !== looseKey(ex.sentence);
     default:
       return true;
   }
@@ -30,6 +35,12 @@ export function evaluate(ex: Exercise, a: Answer): boolean {
       return a === ex.isCorrect;
     case 'match':
       return typeof a === 'object' && a !== null && !Array.isArray(a) && a.mistakes === 0;
+    case 'listen':
+      return typeof a === 'string' && looseKey(a) === looseKey(ex.text);
+    case 'translate':
+      return typeof a === 'string' && ex.answers.some((x) => looseKey(x) === looseKey(a));
+    case 'correct':
+      return typeof a === 'string' && ex.answers.some((x) => looseKey(x) === looseKey(a));
   }
 }
 
@@ -46,6 +57,11 @@ export function solution(ex: Exercise): string | null {
       return ex.isCorrect ? 'La frase è corretta.' : ex.correction ?? null;
     case 'match':
       return null;
+    case 'listen':
+      return ex.text;
+    case 'translate':
+    case 'correct':
+      return ex.answers[0];
   }
 }
 
@@ -55,6 +71,9 @@ export const typeLabel: Record<Exercise['type'], { label: string; icon: string }
   order: { label: 'Riordina le parole', icon: '🧩' },
   judge: { label: 'Giusta o sbagliata?', icon: '⚖️' },
   match: { label: 'Abbina le coppie', icon: '🔗' },
+  listen: { label: 'Ascolta e scrivi', icon: '🎧' },
+  translate: { label: 'Traduci in inglese', icon: '🌍' },
+  correct: { label: "Correggi l'errore", icon: '🩹' },
 };
 
 /** Risposta dell'utente in forma di testo, per confrontarla con la soluzione nel feedback. */
@@ -70,5 +89,9 @@ export function given(ex: Exercise, a: Answer): string | null {
       return typeof a === 'boolean' ? (a ? 'Hai detto: corretta' : 'Hai detto: sbagliata') : null;
     case 'match':
       return null;
+    case 'listen':
+    case 'translate':
+    case 'correct':
+      return typeof a === 'string' && a.trim() ? a.trim() : null;
   }
 }

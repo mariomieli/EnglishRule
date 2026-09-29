@@ -33,6 +33,25 @@ export const normalize = (s: string) =>
     .replace(/[.!?]+\s*$/, '')
     .trim();
 
+/**
+ * Chiave di confronto per risposte scritte liberamente: ignora maiuscole, punteggiatura e la differenza
+ * tra forma contratta e forma piena (I'm = I am, don't = do not, can't = cannot).
+ */
+export const looseKey = (s: string) =>
+  normalize(s)
+    .replace(/\bcan't\b/g, 'cannot')
+    .replace(/\bwon't\b/g, 'will not')
+    .replace(/\bshan't\b/g, 'shall not')
+    .replace(/\blet's\b/g, 'let us')
+    .replace(/n't\b/g, ' not')
+    .replace(/'m\b/g, ' am')
+    .replace(/'re\b/g, ' are')
+    .replace(/'ve\b/g, ' have')
+    .replace(/'ll\b/g, ' will')
+    .replace(/[^a-z0-9' ]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
 /** Rimuove il markup inline (**, *, ==) per confronti e sintesi vocale. */
 export const plain = (s: string) => s.replace(/\*\*|==|\*/g, '');
 

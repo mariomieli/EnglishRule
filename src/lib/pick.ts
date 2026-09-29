@@ -9,9 +9,10 @@ const MAX_PER_TYPE = 4;
  * Primo tentativo: i primi 10 (sequenza curata a difficoltà crescente).
  * Tentativi successivi: prima gli esercizi visti meno volte, almeno uno per tipo,
  * al massimo 4 dello stesso tipo, in ordine mescolato.
+ * `usable` esclude gli esercizi non eseguibili sul dispositivo (es. dettato senza sintesi vocale).
  */
-export function pickExercises(exercises: Exercise[], seen: Record<number, number> = {}, firstTime: boolean): number[] {
-  const all = exercises.map((_, i) => i);
+export function pickExercises(exercises: Exercise[], seen: Record<number, number> = {}, firstTime: boolean, usable: (e: Exercise) => boolean = () => true): number[] {
+  const all = exercises.map((_, i) => i).filter((i) => usable(exercises[i]));
   if (all.length <= SESSION_SIZE) return firstTime ? all : shuffle(all);
   if (firstTime) return all.slice(0, SESSION_SIZE);
 

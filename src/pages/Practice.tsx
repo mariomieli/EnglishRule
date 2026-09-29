@@ -11,7 +11,7 @@ import { Counter, Stars } from '../components/ui';
 import { lessonById, nextLesson } from '../data';
 import { levelById } from '../data/levels';
 import type { Exercise } from '../data/types';
-import { sfx } from '../lib/audio';
+import { canSpeak, sfx } from '../lib/audio';
 import { reviewQueue, starsFor, today, useStore } from '../lib/store';
 import { pickExercises } from '../lib/pick';
 import { pct } from '../lib/utils';
@@ -27,6 +27,8 @@ const PRAISE = ['Ottimo!', 'Perfetto!', 'Esatto!', 'Bravissimo!', 'Grande!', 'Im
 const OOPS = ['Non proprio.', 'Quasi!', 'Ops, non è così.', 'Riproviamo più tardi.'];
 const pick = (a: string[]) => a[Math.floor(Math.random() * a.length)];
 
+const usable = (e: Exercise) => e.type !== 'listen' || canSpeak;
+
 export function LessonPractice() {
   const { id = '' } = useParams();
   const lesson = lessonById(id);
@@ -36,7 +38,7 @@ export function LessonPractice() {
   // 10 esercizi su 25: al primo tentativo la sequenza curata, poi i meno visti
   const items = useMemo<Item[]>(() => {
     if (!lesson) return [];
-    return pickExercises(lesson.exercises, state.seen[lesson.id], firstTime).map((index) => ({ lessonId: lesson.id, index, ex: lesson.exercises[index] }));
+    return pickExercises(lesson.exercises, state.seen[lesson.id], firstTime, usable).map((index) => ({ lessonId: lesson.id, index, ex: lesson.exercises[index] }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lesson, loc.key]);
   const marked = useRef<Item[] | null>(null);
@@ -59,7 +61,7 @@ export function ReviewPractice() {
       .flatMap((m) => {
         const l = lessonById(m.lessonId);
         const ex = l?.exercises[m.index];
-        return ex ? [{ lessonId: m.lessonId, index: m.index, ex }] : [];
+        return ex && usable(ex) ? [{ lessonId: m.lessonId, index: m.index, ex }] : [];
       }),
   );
   if (!items.length)

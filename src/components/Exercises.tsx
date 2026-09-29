@@ -1,7 +1,7 @@
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Exercise } from '../data/types';
-import { sfx } from '../lib/audio';
+import { canSpeak, sfx, speak } from '../lib/audio';
 import { evaluate, type Answer } from '../lib/grading';
 import { shuffle, shuffleDifferent } from '../lib/utils';
 import { Rich } from './Rich';
@@ -27,6 +27,12 @@ export function ExerciseView(p: Props<Exercise>) {
       return <Judge {...p} ex={ex} />;
     case 'match':
       return <Match {...p} ex={ex} />;
+    case 'listen':
+      return <Listen {...p} ex={ex} />;
+    case 'translate':
+      return <Translate {...p} ex={ex} />;
+    case 'correct':
+      return <Correct {...p} ex={ex} />;
   }
 }
 
@@ -307,6 +313,97 @@ function Match({ ex, setAnswer, checked }: Props<Extract<Exercise, { type: 'matc
           </motion.p>
         )}
       </AnimatePresence>
+    </>
+  );
+}
+
+/* ---------------- Dettato, traduzione, correzione ---------------- */
+
+function TypeBox({ value, onChange, checked, ok, placeholder, autoFocus }: { value: string; onChange: (v: string) => void; checked: boolean; ok: boolean; placeholder?: string; autoFocus?: boolean }) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    // su mobile evitiamo di aprire la tastiera in automatico
+    if (autoFocus && window.matchMedia('(pointer: fine)').matches) ref.current?.focus({ preventScroll: true });
+  }, [autoFocus]);
+  return (
+    <motion.textarea
+      ref={ref}
+      className={`type-box ${checked ? (ok ? 'correct' : 'wrong') : ''}`}
+      value={value}
+      rows={2}
+      placeholder={placeholder}
+      onChange={(e) => onChange(e.target.value.replace(/\n/g, ' '))}
+      onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
+      disabled={checked}
+      aria-label="Risposta"
+      autoComplete="off"
+      autoCorrect="off"
+      autoCapitalize="off"
+      spellCheck={false}
+      animate={checked && !ok ? shake : checked ? pop : undefined}
+    />
+  );
+}
+
+function Listen({ ex, answer, setAnswer, checked }: Props<Extract<Exercise, { type: 'listen' }>>) {
+  const val = typeof answer === 'string' ? answer : '';
+  const ok = checked && evaluate(ex, val);
+  useEffect(() => {
+    const t = setTimeout(() => speak(ex.text), 350);
+    return () => {
+      clearTimeout(t);
+      if (canSpeak) speechSynthesis.cancel();
+    };
+  }, [ex]);
+  return (
+    <>
+      <h2 className="ex-prompt">Ascolta la frase e scrivila</h2>
+      <div className="listen-row">
+        <button className="listen-btn" onClick={() => speak(ex.text)} aria-label="Riascolta">
+          🔊
+        </button>
+        <button className="btn btn-ghost btn-sm" onClick={() => speak(ex.text, { rate: 0.6 })}>
+          🐢 Più lento
+        </button>
+      </div>
+      <TypeBox value={val} onChange={setAnswer} checked={checked} ok={ok} placeholder="Scrivi quello che senti" autoFocus />
+    </>
+  );
+}
+
+function Translate({ ex, answer, setAnswer, checked }: Props<Extract<Exercise, { type: 'translate' }>>) {
+  const val = typeof answer === 'string' ? answer : '';
+  const ok = checked && evaluate(ex, val);
+  return (
+    <>
+      <h2 className="ex-prompt">Traduci in inglese</h2>
+      <p className="ex-source">“{ex.it}”</p>
+      <TypeBox value={val} onChange={setAnswer} checked={checked} ok={ok} placeholder="Scrivi la frase in inglese" autoFocus />
+      <div className="hint" style={{ marginTop: 10 }}>
+        💡 Maiuscole e punteggiatura non contano; puoi usare le forme contratte (I'm) o piene (I am).
+      </div>
+    </>
+  );
+}
+
+function Correct({ ex, answer, setAnswer, checked }: Props<Extract<Exercise, { type: 'correct' }>>) {
+  // si parte dalla frase sbagliata: basta modificarla
+  const started = useRef(false);
+  useEffect(() => {
+    if (!started.current) {
+      started.current = true;
+      setAnswer(ex.sentence);
+    }
+  }, [ex, setAnswer]);
+  const val = typeof answer === 'string' ? answer : ex.sentence;
+  const ok = checked && evaluate(ex, val);
+  return (
+    <>
+      <h2 className="ex-prompt">C'è un errore: correggi la frase</h2>
+      <TypeBox value={val} onChange={setAnswer} checked={checked} ok={ok} autoFocus />
+      <div className="hint" style={{ marginTop: 10 }}>
+        💡 Modifica il testo qui sopra e riscrivi la frase giusta.
+      </div>
     </>
   );
 }

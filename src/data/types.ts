@@ -29,7 +29,14 @@ export type Exercise =
   // la frase è corretta? se isCorrect=false, correction = versione giusta
   | { type: 'judge'; sentence: string; isCorrect: boolean; correction?: string; explain: string }
   // abbina coppie (3-5 coppie): left[i] va con right[i] (verranno mescolate)
-  | { type: 'match'; prompt: string; pairs: [string, string][]; explain: string };
+  | { type: 'match'; prompt: string; pairs: [string, string][]; explain: string }
+  // Tipi generati automaticamente dagli esercizi esistenti (vedi derive.ts), mai scritti a mano nelle lezioni:
+  // dettato: si ascolta la frase e la si scrive
+  | { type: 'listen'; text: string; translation?: string; explain: string }
+  // traduzione italiano -> inglese: answers = tutte le traduzioni accettate
+  | { type: 'translate'; it: string; answers: string[]; explain: string }
+  // correzione: la frase contiene un errore, va riscritta corretta
+  | { type: 'correct'; sentence: string; answers: string[]; explain: string };
 
 export interface Lesson {
   id: string; // slug univoco, es. "a1-to-be"

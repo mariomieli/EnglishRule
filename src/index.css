@@ -2946,3 +2946,58 @@ tbody tr:hover {
   gap: 12px;
   margin-bottom: 10px;
 }
+
+.type-box {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--border-strong);
+  border-radius: 16px;
+  background: var(--info-bg);
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: clamp(1.15rem, 2.8vw, 1.5rem);
+  font-weight: 600;
+  color: var(--text);
+  outline: none;
+  resize: none;
+  line-height: 1.5;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.type-box:focus {
+  border-color: var(--accent);
+}
+
+.type-box.correct {
+  border-color: var(--good);
+  background: var(--good-bg);
+}
+
+.type-box.wrong {
+  border-color: var(--bad);
+  background: var(--bad-bg);
+}
+
+.ex-source {
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  font-weight: 600;
+  margin: 0 0 16px;
+  color: var(--text-2);
+}
+
+.listen-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.listen-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 0;
+  font-size: 2rem;
+  cursor: pointer;
+  background: var(--accent);
+  color: white;
+}
