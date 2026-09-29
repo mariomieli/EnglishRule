@@ -13,7 +13,9 @@
     "validate:speaking": "tsx scripts/validate-speaking.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "gen:meta": "tsx scripts/gen-meta.ts",
+    "prebuild": "tsx scripts/gen-meta.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",

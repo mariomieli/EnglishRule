@@ -42,3 +42,25 @@ describe('esercizi derivati (dettato, traduzione, correzione)', () => {
     expect(new Set(pickExercises(all, {}, false).map((i) => all[i].type)).size).toBeGreaterThanOrEqual(6);
   });
 });
+
+describe('elenco leggero delle lezioni (meta.gen.ts)', () => {
+  it('è aggiornato rispetto ai contenuti: se fallisce, eseguire npm run gen:meta', async () => {
+    const { LESSON_META } = await import('../data/meta.gen');
+    expect(LESSON_META.map((m) => m.id)).toEqual(RAW.map((l) => l.id));
+    for (const l of RAW) {
+      const m = LESSON_META.find((x) => x.id === l.id)!;
+      expect(m).toMatchObject({ level: l.level, title: l.title, subtitle: l.subtitle, icon: l.icon, minutes: l.minutes, tags: l.tags });
+      expect(m.exerciseCount).toBe(l.exercises.length + deriveExercises(l.exercises).length);
+    }
+  });
+
+  it('loadLesson restituisce teoria ed esercizi (con i derivati) di ogni lezione', async () => {
+    const { loadLesson, LESSONS } = await import('../data');
+    for (const meta of LESSONS.slice(0, 12)) {
+      const l = await loadLesson(meta.id);
+      expect(l?.theory.length).toBeGreaterThan(0);
+      expect(l?.exercises.length).toBe(meta.exerciseCount);
+    }
+    expect(await loadLesson('non-esiste')).toBeUndefined();
+  });
+});

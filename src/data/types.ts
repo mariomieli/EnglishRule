@@ -50,6 +50,9 @@ export interface Lesson {
   exercises: Exercise[]; // 8-10 esercizi, tipi misti
 }
 
+/** Lezione senza teoria ed esercizi: si carica subito (elenchi, ricerca, progressi). */
+export type LessonMeta = Omit<Lesson, 'theory' | 'exercises'> & { exerciseCount: number };
+
 export interface PlacementQuestion {
   level: LevelId;
   prompt: string; // con "___" per il buco

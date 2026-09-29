@@ -1,17 +1,33 @@
 import { AnimatePresence, MotionConfig } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { CommandPalette, TabBar, TopBar } from './components/Nav';
 import { AnimatedBackground } from './components/ui';
+import { prefetchAllLessons } from './data';
 import { StoreProvider, useStore } from './lib/store';
-import { Onboarding } from './pages/Onboarding';
 import { Home } from './pages/Home';
-import { LessonPage, LevelPage, Levels } from './pages/Level';
-import { Account } from './pages/Account';
-import { Placement } from './pages/Placement';
-import { LessonPractice, ReviewPractice } from './pages/Practice';
-import { Profile, Review } from './pages/Profile';
-import { SpeakingHub, SpeakingSession } from './pages/Speaking';
+
+// le altre pagine si scaricano quando servono
+const Levels = lazy(() => import('./pages/Level').then((m) => ({ default: m.Levels })));
+const LevelPage = lazy(() => import('./pages/Level').then((m) => ({ default: m.LevelPage })));
+const LessonPage = lazy(() => import('./pages/Level').then((m) => ({ default: m.LessonPage })));
+const Account = lazy(() => import('./pages/Account').then((m) => ({ default: m.Account })));
+const Placement = lazy(() => import('./pages/Placement').then((m) => ({ default: m.Placement })));
+const LessonPractice = lazy(() => import('./pages/Practice').then((m) => ({ default: m.LessonPractice })));
+const ReviewPractice = lazy(() => import('./pages/Practice').then((m) => ({ default: m.ReviewPractice })));
+const Profile = lazy(() => import('./pages/Profile').then((m) => ({ default: m.Profile })));
+const Review = lazy(() => import('./pages/Profile').then((m) => ({ default: m.Review })));
+const SpeakingHub = lazy(() => import('./pages/Speaking').then((m) => ({ default: m.SpeakingHub })));
+const SpeakingSession = lazy(() => import('./pages/Speaking').then((m) => ({ default: m.SpeakingSession })));
+const Onboarding = lazy(() => import('./pages/Onboarding').then((m) => ({ default: m.Onboarding })));
+
+function PageLoading() {
+  return (
+    <main className="container narrow" aria-busy="true" aria-live="polite">
+      <p className="muted" style={{ textAlign: 'center', padding: '80px 0' }}>Carico…</p>
+    </main>
+  );
+}
 
 function Shell() {
   const location = useLocation();
@@ -38,6 +54,22 @@ function Shell() {
     return () => window.removeEventListener('keydown', onKey);
   }, [focus]);
 
+  // a caricamento finito, in un momento di calma: scarica il resto (livelli e pagine) per l'uso offline
+  useEffect(() => {
+    const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    const run = () => {
+      if (conn?.saveData) return;
+      void prefetchAllLessons();
+      for (const load of [() => import('./pages/Level'), () => import('./pages/Practice'), () => import('./pages/Profile'), () => import('./pages/Speaking'), () => import('./pages/Placement'), () => import('./pages/Account')]) void load().catch(() => undefined);
+    };
+    if ('requestIdleCallback' in window) {
+      const id = requestIdleCallback(run, { timeout: 10000 });
+      return () => cancelIdleCallback(id);
+    }
+    const t = setTimeout(run, 5000);
+    return () => clearTimeout(t);
+  }, []);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, [location.pathname]);
@@ -46,7 +78,9 @@ function Shell() {
     return (
       <div className="app">
         <AnimatedBackground />
-        <Onboarding />
+        <Suspense fallback={<PageLoading />}>
+          <Onboarding />
+        </Suspense>
       </div>
     );
 
@@ -54,6 +88,7 @@ function Shell() {
     <div className="app">
       <AnimatedBackground />
       {!focus && <TopBar onSearch={() => setSearch(true)} />}
+      <Suspense fallback={<PageLoading />}>
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
@@ -71,6 +106,7 @@ function Shell() {
           <Route path="*" element={<Home />} />
         </Routes>
       </AnimatePresence>
+      </Suspense>
       {!focus && <TabBar />}
       <CommandPalette open={search} onClose={() => setSearch(false)} />
     </div>

@@ -9,8 +9,9 @@ import { Rich } from '../components/Rich';
 import { Theory } from '../components/Theory';
 import { Counter, Stars } from '../components/ui';
 import { lessonById, nextLesson } from '../data';
+import { useLesson, useLessons } from '../data/useLesson';
 import { levelById } from '../data/levels';
-import type { Exercise } from '../data/types';
+import type { Exercise, Lesson } from '../data/types';
 import { canSpeak, sfx } from '../lib/audio';
 import { reviewQueue, starsFor, today, useStore } from '../lib/store';
 import { badgesOf, unlockedIds } from '../lib/badges';
@@ -30,41 +31,67 @@ const pick = (a: string[]) => a[Math.floor(Math.random() * a.length)];
 
 const usable = (e: Exercise) => e.type !== 'listen' || canSpeak;
 
+function Loading({ failed }: { failed?: boolean }) {
+  return (
+    <main className="container narrow">
+      <div className="card empty-state">
+        <div className="e">{failed ? '📡' : '⏳'}</div>
+        <h2>{failed ? 'Impossibile caricare la lezione' : 'Carico la lezione…'}</h2>
+        {failed && (
+          <>
+            <p className="muted">Controlla la connessione e riprova.</p>
+            <button className="btn btn-primary" style={{ marginTop: 12 }} onClick={() => location.reload()}>
+              Riprova
+            </button>
+          </>
+        )}
+      </div>
+    </main>
+  );
+}
+
 export function LessonPractice() {
   const { id = '' } = useParams();
-  const lesson = lessonById(id);
+  const meta = lessonById(id);
+  const { lesson, loading, failed } = useLesson(meta ? id : undefined);
+  if (!meta) return <NotFound />;
+  if (!lesson) return <Loading failed={!loading && failed} />;
+  return <LessonSession lesson={lesson} />;
+}
+
+function LessonSession({ lesson }: { lesson: Lesson }) {
   const loc = useLocation();
   const { state, markSeen } = useStore();
-  const firstTime = !!lesson && !state.completed[lesson.id];
+  const firstTime = !state.completed[lesson.id];
   // 10 esercizi su 25: al primo tentativo la sequenza curata, poi i meno visti
   const items = useMemo<Item[]>(() => {
-    if (!lesson) return [];
     return pickExercises(lesson.exercises, state.seen[lesson.id], firstTime, usable).map((index) => ({ lessonId: lesson.id, index, ex: lesson.exercises[index] }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lesson, loc.key]);
   const marked = useRef<Item[] | null>(null);
   useEffect(() => {
-    if (!lesson || !items.length || marked.current === items) return;
+    if (!items.length || marked.current === items) return;
     marked.current = items;
     markSeen(lesson.id, items.map((i) => i.index));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
-  if (!lesson) return <NotFound />;
   return <Session key={loc.key} items={items} mode="lesson" lessonId={lesson.id} title={lesson.title} />;
 }
 
 export function ReviewPractice() {
   const { state } = useStore();
   // congeliamo la lista all'avvio della sessione
-  const [items] = useState<Item[]>(() =>
-    reviewQueue(state)
-      .slice(0, 12)
-      .flatMap((m) => {
-        const l = lessonById(m.lessonId);
-        const ex = l?.exercises[m.index];
+  const [queue] = useState(() => reviewQueue(state).slice(0, 12));
+  const { lessons, loading, failed } = useLessons(queue.map((m) => m.lessonId));
+  const items = useMemo<Item[]>(
+    () =>
+      queue.flatMap((m) => {
+        const ex = lessons[m.lessonId]?.exercises[m.index];
         return ex && usable(ex) ? [{ lessonId: m.lessonId, index: m.index, ex }] : [];
       }),
+    [queue, lessons],
   );
+  if (queue.length && !items.length && (loading || failed)) return <Loading failed={!loading && failed} />;
   if (!items.length)
     return (
       <main className="container narrow">
@@ -118,6 +145,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
   }, []);
 
   const item = queue[pos];
+  const { lesson: ruleBody } = useLesson(item?.lessonId);
   const total = items.length;
   const progress = done ? 100 : pct(pos + (checked && correct ? 1 : 0), queue.length);
 
@@ -200,7 +228,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
   const sol = solution(item.ex);
   const mine = !correct && checked ? given(item.ex, answer) : null;
   const ruleLesson = lessonById(item.lessonId);
-  const ruleBlocks = ruleLesson?.theory.filter((b) => b.type === 'rule' || b.type === 'formula' || b.type === 'warning' || b.type === 'tip' || b.type === 'compare' || b.type === 'table') ?? [];
+  const ruleBlocks = ruleBody?.theory.filter((b) => b.type === 'rule' || b.type === 'formula' || b.type === 'warning' || b.type === 'tip' || b.type === 'compare' || b.type === 'table') ?? [];
 
   return (
     <div className="practice">

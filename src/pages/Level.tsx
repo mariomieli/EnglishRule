@@ -6,6 +6,7 @@ import { Theory } from '../components/Theory';
 import { LevelBadge, Page, ProgressRing, Stars } from '../components/ui';
 import { rise, stagger } from '../lib/motion';
 import { lessonById, lessonsByLevel, nextLesson } from '../data';
+import { useLesson } from '../data/useLesson';
 import { LEVELS, levelById } from '../data/levels';
 import { scenariosByLevel } from '../data/speaking';
 import { ScenarioGrid } from './Speaking';
@@ -128,6 +129,7 @@ export function LevelPage() {
 export function LessonPage() {
   const { id = '' } = useParams();
   const lesson = lessonById(id);
+  const { lesson: body, failed } = useLesson(lesson ? id : undefined);
   const { state, markTheory } = useStore();
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 25 });
@@ -137,17 +139,17 @@ export function LessonPage() {
   }, [id]);
 
   useEffect(() => {
-    if (!lesson) return;
+    if (!lesson || !body) return;
     // la teoria è "letta" quando si arriva in fondo alla pagina
     return scrollYProgress.on('change', (v) => v > 0.92 && markTheory(lesson.id));
-  }, [lesson, scrollYProgress, markTheory]);
+  }, [lesson, body, scrollYProgress, markTheory]);
 
   if (!lesson) return <Page><div className="container narrow"><div className="card empty-state"><div className="e">🔍</div><h2>Lezione non trovata</h2><Link to="/levels" className="btn btn-primary">Tutti i livelli</Link></div></div></Page>;
 
   const lv = levelById(lesson.level)!;
   const prog = state.completed[lesson.id];
   const nxt = nextLesson(lesson.id);
-  const counts = lesson.exercises.length;
+  const counts = lesson.exerciseCount;
 
   return (
     <Page>
@@ -177,7 +179,14 @@ export function LessonPage() {
           </motion.div>
         </motion.div>
 
-        <Theory blocks={lesson.theory} />
+        {body ? (
+          <Theory blocks={body.theory} />
+        ) : (
+          <div className="card empty-state" style={{ margin: '24px 0' }}>
+            <div className="e">{failed ? '📡' : '⏳'}</div>
+            <h3>{failed ? 'Impossibile caricare la lezione: controlla la connessione.' : 'Carico la teoria…'}</h3>
+          </div>
+        )}
 
         <motion.div className="card cta-bar" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div>
