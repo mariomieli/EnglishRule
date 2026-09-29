@@ -56,6 +56,11 @@ Ultimo aggiornamento: 30/09/2026. I punti del piano non ancora fatti (classifica
 - Il prefetch in background scarica tutti i livelli e le pagine (circa 600 kB) dopo l'avvio, salvo "risparmio dati": non c'è una scelta dell'utente.
 - Il logo è PNG (raster). Nessuna misura reale (Lighthouse, Core Web Vitals) su dispositivi veri. Il service worker non ha precache versionato per gli asset con hash.
 
+## Zoom e ridimensionamento della finestra
+- Su mobile lo zoom con le dita è bloccato (meta viewport, `touch-action`, eventi di gesto su iOS): contrasta con WCAG 1.4.4 (chi ha difficoltà visive non può ingrandire la pagina). Scelta di Mario; la regola axe `meta-viewport` è disattivata nei test.
+- Su desktop, sotto 1200 px di larghezza la pagina si rimpicciolisce in proporzione (CSS `zoom` sulla radice, calcolato in `src/lib/fitWindow.ts`) e le regole responsive valgono solo sui dispositivi touch (`(hover: none)`). Con finestre molto strette il testo diventa minuscolo (a 400 px è circa un terzo); nessuna dimensione minima. Non provato dal vivo: possibili scostamenti nelle animazioni di posizione (linguetta del menu, tessere del riordino) e nei pannelli fissi; il `zoom` CSS richiede browser recenti (Chrome, Safari, Firefox 126+).
+- Un dispositivo touch con finestra larga (tablet in orizzontale) si comporta come mobile per le regole responsive; un desktop con schermo touch come desktop.
+
 ## Accessibilità
 - Verifica automatica (axe, WCAG 2 A/AA) su 10 pagine in due temi: passa. Riordino e abbinamento sono provati da tastiera; non provati con VoiceOver/TalkBack. Le frasi inglesi hanno `lang="en"` negli esercizi, negli esempi di teoria e nello speaking, ma non nei testi misti (spiegazioni, abbinamenti).
 - Nessun controllo per ingrandire il testo (solo zoom del browser), nessuna modalità ad alto contrasto oltre ai due temi; coriandoli e suoni solo con "effetti sonori" e `prefers-reduced-motion`.
