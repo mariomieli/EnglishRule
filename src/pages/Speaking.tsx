@@ -315,7 +315,7 @@ function Talk({ s, onDone }: { s: SpeakingScenario; onDone: (r: TurnResult[]) =>
               {b.who === 'partner' && <span className="bubble-avatar">{partnerName(s)[0]}</span>}
               <div className={`bubble ${b.who} ${b.ok === false ? 'weak' : ''}`}>
                 {b.who === 'partner' && <div className="bubble-name">{partnerName(s)}</div>}
-                <div className="bubble-text">
+                <div className="bubble-text" lang="en">
                   <Rich text={b.text} />
                 </div>
                 {b.it && <BubbleTranslation it={b.it} />}
@@ -469,7 +469,7 @@ function RepeatTurn({ turn, sound, onComplete }: { turn: Extract<SpeakingTurn, {
   return (
     <div className="card turn-card">
       <div className="ex-type">🔁 Ascolta e ripeti</div>
-      <div className="repeat-line">
+      <div className="repeat-line" lang="en">
         {res ? (
           detail.map((w, i) => (
             <motion.span

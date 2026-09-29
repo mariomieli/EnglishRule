@@ -258,6 +258,8 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
     const onKey = (e: KeyboardEvent) => {
       if (e.repeat) return;
       if (e.key !== 'Enter' || done) return;
+      // su un pulsante Invio deve fare ciò che fa il pulsante (scegliere una tessera, un'opzione...), non verificare
+      if ((e.target as HTMLElement | null)?.closest('button, a, [role="button"], [role="radio"]')) return;
       e.preventDefault();
       if (checked) next();
       else check();

@@ -85,7 +85,7 @@ function Mcq({ ex, answer, setAnswer, checked }: Props<Extract<Exercise, { type:
               whileTap={checked ? undefined : { scale: 0.98 }}
             >
               <span className="key">{k + 1}</span>
-              <span>
+              <span lang="en">
                 <Rich text={ex.options[oi]} />
               </span>
             </motion.button>
@@ -113,7 +113,7 @@ function Fill({ ex, answer, setAnswer, checked }: Props<Extract<Exercise, { type
 
   return (
     <>
-      <div className="fill-sentence">
+      <div className="fill-sentence" lang="en">
         <Rich text={before} />
         <motion.input
           ref={ref}
@@ -167,15 +167,15 @@ function Order({ ex, setAnswer, checked }: Props<Extract<Exercise, { type: 'orde
           “{ex.translation}”
         </h2>
       )}
-      <motion.div className={`order-answer ${checked ? (ok ? 'correct' : 'wrong') : ''}`} animate={checked && !ok ? shake : undefined}>
+      <motion.div lang="en" role="group" aria-label="La tua frase" className={`order-answer ${checked ? (ok ? 'correct' : 'wrong') : ''}`} animate={checked && !ok ? shake : undefined}>
         {ids.map((id) => (
-          <motion.button layout layoutId={`t${id}`} key={id} className="tile" onClick={() => toggle(id)} disabled={checked} transition={{ type: 'spring', stiffness: 500, damping: 35 }}>
+          <motion.button layout layoutId={`t${id}`} key={id} className="tile" aria-label={`${ex.words[id]}: toglila dalla frase`} onClick={() => toggle(id)} disabled={checked} transition={{ type: 'spring', stiffness: 500, damping: 35 }}>
             {ex.words[id]}
           </motion.button>
         ))}
         {ids.length === 0 && <span className="faint" style={{ padding: '10px 6px', fontWeight: 600 }}>Tocca le parole nell'ordine giusto</span>}
       </motion.div>
-      <div className="order-bank">
+      <div className="order-bank" lang="en" role="group" aria-label="Parole disponibili">
         {tokens.map((t) =>
           ids.includes(t.id) ? (
             <span key={t.id} className="tile-ghost">
@@ -228,7 +228,7 @@ function Judge({ ex, answer, setAnswer, checked }: Props<Extract<Exercise, { typ
 
   return (
     <>
-      <motion.div className="judge-sentence" initial={{ rotateX: -40, opacity: 0 }} animate={{ rotateX: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 200, damping: 18 }}>
+      <motion.div lang="en" className="judge-sentence" initial={{ rotateX: -40, opacity: 0 }} animate={{ rotateX: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 200, damping: 18 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center' }}>
           <SpeakButton text={ex.sentence} />
           <span>
@@ -281,6 +281,8 @@ function Match({ ex, setAnswer, checked }: Props<Extract<Exercise, { type: 'matc
       <motion.button
         key={side + i}
         className={`match-item ${isDone ? 'done' : isWrong ? 'wrong' : sel ? 'selected' : ''}`}
+        aria-pressed={sel}
+        aria-label={isDone ? `${ex.pairs[i][side === 'L' ? 0 : 1].replace(/\*/g, '')}, già abbinata` : undefined}
         disabled={isDone || checked}
         onClick={() => {
           sfx.tap();
@@ -303,12 +305,16 @@ function Match({ ex, setAnswer, checked }: Props<Extract<Exercise, { type: 'matc
         <Rich text={ex.prompt} />
       </h2>
       <div className="match-grid">
-        <div className="match-col">{left.map((i, k) => item('L', i, k))}</div>
-        <div className="match-col">{right.map((i, k) => item('R', i, k))}</div>
+        <div className="match-col" role="group" aria-label="Prima colonna">
+          {left.map((i, k) => item('L', i, k))}
+        </div>
+        <div className="match-col" role="group" aria-label="Seconda colonna">
+          {right.map((i, k) => item('R', i, k))}
+        </div>
       </div>
       <AnimatePresence>
         {done.length === ex.pairs.length && !checked && (
-          <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="muted" style={{ textAlign: 'center', marginTop: 18, fontWeight: 600 }}>
+          <motion.p role="status" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="muted" style={{ textAlign: 'center', marginTop: 18, fontWeight: 600 }}>
             {mistakes.current === 0 ? 'Perfetto! Tutte le coppie al primo colpo.' : `Completato con ${mistakes.current} ${mistakes.current === 1 ? 'errore' : 'errori'}.`}
           </motion.p>
         )}
@@ -328,6 +334,7 @@ function TypeBox({ value, onChange, checked, ok, placeholder, autoFocus }: { val
   return (
     <motion.textarea
       ref={ref}
+      lang="en"
       className={`type-box ${checked ? (ok ? 'correct' : 'wrong') : ''}`}
       value={value}
       rows={2}

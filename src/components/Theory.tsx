@@ -79,7 +79,9 @@ function Block({ b }: { b: TheoryBlock }) {
                 <SpeakButton text={ex.en} />
                 <div className="body">
                   <div className="en">
-                    <Rich text={ex.en} />
+                    <span lang="en">
+                      <Rich text={ex.en} />
+                    </span>
                   </div>
                   {ex.it && <div className="it">{ex.it}</div>}
                 </div>

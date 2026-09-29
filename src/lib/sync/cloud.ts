@@ -25,8 +25,8 @@ interface Row {
   version: number;
 }
 
-async function pull(userId: string): Promise<Row | null> {
-  const { data, error } = await supabase!.from('progress').select('doc, version').eq('user_id', userId).maybeSingle();
+async function pull(db: SupabaseClient, userId: string): Promise<Row | null> {
+  const { data, error } = await db.from('progress').select('doc, version').eq('user_id', userId).maybeSingle();
   if (error) throw error;
   return data as Row | null;
 }
@@ -38,21 +38,21 @@ async function pull(userId: string): Promise<Row | null> {
  * Poiché la fusione non perde mai dati, nessun aggiornamento concorrente viene sovrascritto.
  * Restituisce il documento fuso da applicare in locale.
  */
-export async function syncDoc(userId: string, local: Doc): Promise<Doc> {
+export async function syncDoc(userId: string, local: Doc, db: SupabaseClient = supabase!): Promise<Doc> {
   for (let attempt = 0; attempt < 6; attempt++) {
-    const row = await pull(userId);
+    const row = await pull(db, userId);
     const remote = row ? sanitize(row.doc) : null;
     const merged = remote ? mergeDocs(local, remote) : local;
     if (remote && sameDoc(merged, remote)) return merged; // il cloud contiene già tutto
 
     if (!row) {
-      const { error } = await supabase!.from('progress').insert({ user_id: userId, doc: merged, version: 1 });
+      const { error } = await db.from('progress').insert({ user_id: userId, doc: merged, version: 1 });
       if (!error) return merged;
       if (error.code === '23505') continue; // un altro dispositivo ha creato la riga ora: riprova
       throw error;
     }
 
-    const { data, error } = await supabase!
+    const { data, error } = await db
       .from('progress')
       .update({ doc: merged, version: row.version + 1 })
       .eq('user_id', userId)
