@@ -1,0 +1,11 @@
+{
+  "name": "EnglishRule",
+  "short_name": "EnglishRule",
+  "description": "Grammatica inglese dal livello A1 al C2",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0a1a",
+  "theme_color": "#0b0a1a",
+  "lang": "it",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
