@@ -13,6 +13,7 @@ import { levelById } from '../data/levels';
 import type { Exercise } from '../data/types';
 import { canSpeak, sfx } from '../lib/audio';
 import { reviewQueue, starsFor, today, useStore } from '../lib/store';
+import { badgesOf, unlockedIds } from '../lib/badges';
 import { pickExercises } from '../lib/pick';
 import { pct } from '../lib/utils';
 
@@ -111,6 +112,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
   const [floats, setFloats] = useState<{ id: number; x: number; y: number; n: number }[]>([]);
   const btnRef = useRef<HTMLButtonElement>(null);
   const startedAt = useRef(0);
+  const [badgesBefore] = useState(() => unlockedIds(state));
   useEffect(() => {
     startedAt.current = Date.now();
   }, []);
@@ -191,7 +193,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
     navigate(lessonId ? `/lesson/${lessonId}` : '/review');
   };
 
-  if (done) return <Result {...done} total={total} firstTry={firstTry} bestCombo={bestCombo} mode={mode} lessonId={lessonId} />;
+  if (done) return <Result {...done} badgesBefore={badgesBefore} total={total} firstTry={firstTry} bestCombo={bestCombo} mode={mode} lessonId={lessonId} />;
   if (!item) return null;
 
   const tl = typeLabel[item.ex.type];
@@ -329,7 +331,9 @@ function celebrate(big: boolean) {
   }
 }
 
-function Result({ score, xp, stars, improved, goal, total, firstTry, bestCombo, mode, lessonId, seconds }: { score: number; xp: number; stars: number; improved: boolean; goal: boolean; total: number; firstTry: number; bestCombo: number; mode: 'lesson' | 'review'; lessonId?: string; seconds: number }) {
+function Result({ score, xp, stars, improved, goal, total, firstTry, bestCombo, mode, lessonId, seconds, badgesBefore }: { badgesBefore: Set<string>; score: number; xp: number; stars: number; improved: boolean; goal: boolean; total: number; firstTry: number; bestCombo: number; mode: 'lesson' | 'review'; lessonId?: string; seconds: number }) {
+  const { state } = useStore();
+  const newBadges = useMemo(() => badgesOf(state).filter((b) => b.ok && !badgesBefore.has(b.id)), [state, badgesBefore]);
   const lesson = lessonId ? lessonById(lessonId) : undefined;
   const nxt = lessonId ? nextLesson(lessonId) : undefined;
   const lv = lesson ? levelById(lesson.level) : undefined;
@@ -369,6 +373,11 @@ function Result({ score, xp, stars, improved, goal, total, firstTry, bestCombo, 
           🎯 Obiettivo giornaliero raggiunto!
         </motion.div>
       )}
+      {newBadges.map((b, i) => (
+        <motion.div key={b.id} className="chip" style={{ margin: '12px auto 0', width: 'fit-content', borderColor: 'var(--accent-2)' }} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1.2 + i * 0.2, type: 'spring' }}>
+          {b.e} Nuovo traguardo: {b.t}
+        </motion.div>
+      ))}
       <motion.div className="score-grid" initial="hidden" animate="show" variants={{ show: { transition: { staggerChildren: 0.1, delayChildren: 0.5 } } }}>
         {[
           { v: <><Counter to={score} />%</>, l: `${firstTry}/${total} al primo colpo` },

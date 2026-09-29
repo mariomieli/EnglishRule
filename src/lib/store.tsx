@@ -41,7 +41,7 @@ export interface State {
   mistakes: Record<string, Mistake>;
   srs: Record<string, SrsCard>;
   seen: Record<string, Record<number, number>>;
-  streak: { count: number; last: string | null; best: number };
+  streak: { count: number; last: string | null; best: number; freezes: number };
   xpByDay: Record<string, number>;
   dailyGoal: number;
   theme: Theme; // tema effettivamente mostrato
@@ -116,10 +116,11 @@ function loadSaved(dev: string): Saved {
   return { owner: null, doc: emptyDoc() };
 }
 
-/** Serie valida solo se l'ultimo giorno di studio è oggi o ieri. */
+/** Serie valida se l'ultimo giorno di studio è oggi o ieri; se ieri è saltato, regge solo con un congelamento. */
 export function currentStreak(s: State) {
   if (!s.streak.last) return 0;
-  return dayDiff(s.streak.last, today()) <= 1 ? s.streak.count : 0;
+  const gap = dayDiff(s.streak.last, today());
+  return gap <= 1 || (gap === 2 && s.streak.freezes > 0) ? s.streak.count : 0;
 }
 
 /** Esercizi da ripassare ora: prima gli errori aperti, poi le schede scadute (le più in ritardo per prime). */

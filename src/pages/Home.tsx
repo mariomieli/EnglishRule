@@ -90,7 +90,7 @@ export function Home() {
 
         <motion.div className="stats-row" variants={stagger} initial="hidden" animate="show">
           {[
-            { ico: '🔥', val: streak, lbl: streak === 1 ? 'giorno di fila' : 'giorni di fila' },
+            { ico: '🔥', val: streak, lbl: `${streak === 1 ? 'giorno di fila' : 'giorni di fila'}${state.streak.freezes ? ` · ❄️ ${state.streak.freezes} ${state.streak.freezes === 1 ? 'congelamento' : 'congelamenti'}` : ''}` },
             { ico: '⚡', val: state.xp, lbl: 'XP totali' },
             { ico: '📚', val: done, lbl: `lezioni su ${LESSONS.length}` },
             { ico: '🎯', val: Math.min(100, pct(todayXp, state.dailyGoal)), lbl: `obiettivo di oggi (${todayXp}/${state.dailyGoal} XP)`, suffix: '%' },

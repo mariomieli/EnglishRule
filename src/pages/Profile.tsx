@@ -6,7 +6,8 @@ import { Counter, LevelBadge, Page } from '../components/ui';
 import { rise, stagger } from '../lib/motion';
 import { LESSONS, lessonById, lessonsByLevel } from '../data';
 import { LEVELS } from '../data/levels';
-import { currentStreak, reviewQueue, today, useStore, type State } from '../lib/store';
+import { currentStreak, reviewQueue, today, useStore } from '../lib/store';
+import { badgesOf } from '../lib/badges';
 import { pct } from '../lib/utils';
 
 export function Review() {
@@ -94,26 +95,6 @@ export function Review() {
   );
 }
 
-function badges(s: State) {
-  const done = Object.keys(s.completed).length;
-  const perfect = Object.values(s.completed).filter((c) => c.best === 100).length;
-  const levelDone = (lv: string) => {
-    const ls = lessonsByLevel(lv as never);
-    return ls.length > 0 && ls.every((l) => s.completed[l.id]);
-  };
-  return [
-    { e: '🌟', t: 'Prima lezione', ok: done >= 1 },
-    { e: '📚', t: '10 lezioni', ok: done >= 10 },
-    { e: '🏛️', t: '30 lezioni', ok: done >= 30 },
-    { e: '💯', t: 'Punteggio perfetto', ok: perfect >= 1 },
-    { e: '🎯', t: 'Test di livello', ok: !!s.placement },
-    { e: '🔥', t: 'Serie di 3 giorni', ok: s.streak.best >= 3 },
-    { e: '⚡', t: 'Serie di 7 giorni', ok: s.streak.best >= 7 },
-    { e: '💎', t: '1.000 XP', ok: s.xp >= 1000 },
-    ...LEVELS.map((l) => ({ e: l.emoji, t: `Livello ${l.id} completo`, ok: levelDone(l.id) })),
-  ];
-}
-
 export function Profile() {
   const { state, setTheme, toggleSound, setDailyGoal, reset, user, cloud, sync } = useStore();
   const done = Object.keys(state.completed).length;
@@ -125,7 +106,7 @@ export function Profile() {
     return { key, label: d.toLocaleDateString('it-IT', { weekday: 'short' }).slice(0, 3), xp: state.xpByDay[key] ?? 0 };
   });
   const max = Math.max(state.dailyGoal, ...days.map((d) => d.xp));
-  const bs = badges(state);
+  const bs = badgesOf(state);
   const avg = done ? Math.round(Object.values(state.completed).reduce((a, c) => a + c.best, 0) / done) : 0;
 
   return (
@@ -143,7 +124,7 @@ export function Profile() {
         <motion.div className="stats-row" style={{ marginTop: 0 }} variants={stagger} initial="hidden" animate="show">
           {[
             { ico: '⚡', val: state.xp, lbl: 'XP totali' },
-            { ico: '🔥', val: streak, lbl: `serie attuale · record ${state.streak.best}` },
+            { ico: '🔥', val: streak, lbl: `serie attuale · record ${state.streak.best}${state.streak.freezes ? ` · ❄️ ${state.streak.freezes}` : ''}` },
             { ico: '📚', val: done, lbl: `lezioni su ${LESSONS.length}` },
             { ico: '🎯', val: avg, lbl: 'punteggio medio %' },
           ].map((s) => (
@@ -223,9 +204,10 @@ export function Profile() {
               </h3>
               <div className="badges">
                 {bs.map((b, k) => (
-                  <motion.div key={b.t} className={`badge-item ${b.ok ? '' : 'locked'}`} initial={{ opacity: 0, scale: 0.6 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 + k * 0.04, type: 'spring' }} whileHover={b.ok ? { rotate: [0, -6, 6, 0], scale: 1.06 } : undefined}>
+                  <motion.div key={b.id} title={b.desc} className={`badge-item ${b.ok ? '' : 'locked'}`} initial={{ opacity: 0, scale: 0.6 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 + k * 0.04, type: 'spring' }} whileHover={b.ok ? { rotate: [0, -6, 6, 0], scale: 1.06 } : undefined}>
                     <div className="e">{b.e}</div>
                     <div className="t">{b.t}</div>
+                    {!b.ok && b.cur > 0 && <div className="faint" style={{ fontSize: '.7rem', marginTop: 2 }}>{b.cur.toLocaleString('it-IT')}/{b.goal.toLocaleString('it-IT')}</div>}
                   </motion.div>
                 ))}
               </div>

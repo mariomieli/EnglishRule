@@ -1,7 +1,7 @@
 # Limiti aperti (da colmare)
 
 Elenco vivo dei limiti rimasti dopo ogni miglioramento. Quando uno viene chiuso, cancellarlo o spostarlo in "Chiusi".
-Ultimo aggiornamento: 29/09/2026 (punti 1-5).
+Ultimo aggiornamento: 29/09/2026 (punti 1-6).
 
 ## Nessuna verifica nel browser (vale per tutti i punti sotto)
 - Nulla di quanto sotto è stato provato dal vivo (schermate, tastiera mobile, animazioni): sono stati eseguiti solo tsc, lint, validate e i test da riga di comando. Fare un giro completo su telefono e desktop.
@@ -42,6 +42,16 @@ Ultimo aggiornamento: 29/09/2026 (punti 1-5).
 - Il livello di confidenza del riconoscimento (`confidence`) non è usato: non affidabile su tutti i browser (Safari lo restituisce spesso a 0).
 - Firefox non ha il riconoscimento vocale: si scrive la risposta e il feedback di pronuncia perde senso.
 
+## 6. Obiettivo, serie con congelamento, traguardi
+- **Classifica settimanale: NON fatta.** Richiede una tabella pubblica su Supabase (nome visibile, XP della settimana, RLS che espone solo chi aderisce), un consenso esplicito e la scelta del nome: sono dati di altre persone visibili e una modifica al database remoto, da decidere insieme.
+- Il congelamento è derivato dai giorni con XP (1 ogni 7 giorni di studio nella serie, max 2, copre un solo giorno saltato): è coerente tra dispositivi ma non è una scelta dell'utente (non si può comprare, disattivare o usare "a mano") e non c'è un avviso "stai per perdere la serie".
+- Per gli utenti già attivi la serie mostrata può salire rispetto a prima, perché i giorni saltati ora vengono coperti retroattivamente.
+- L'obiettivo giornaliero ha solo 4 valori fissi (30, 50, 100, 150 XP): niente valore personalizzato, niente obiettivo in minuti o in lezioni, niente giorni di riposo.
+- Il traguardo "obiettivo per 7/30 giorni" conta i giorni che superano l'obiettivo *attuale*: cambiando obiettivo il conteggio cambia.
+- La notifica "Nuovo traguardo" compare solo a fine sessione di esercizi: i traguardi sbloccati con lo speaking si vedono solo nel profilo.
+- Nessun test automatico per i traguardi (`badges.ts` dipende dai dati caricati da Vite, non eseguibili con tsx); la serie con congelamento è invece coperta in `test:sync`.
+- Nessun badge grafico dedicato: sono emoji.
+
 ## Tecnico generale (dal piano iniziale)
 - Bundle oltre 600 kB (dati delle lezioni tutti caricati): serve code splitting per livello.
 - Lint: 11 warning preesistenti (refs in render, setState in effect, ecc.) in src/lib/store.tsx e src/pages/Profile.tsx.
@@ -49,4 +59,4 @@ Ultimo aggiornamento: 29/09/2026 (punti 1-5).
 - `useStore()` troppo centrale (28 archi, `store.tsx` con coesione bassa): da spezzare in parti.
 
 ## Prossimi punti del piano
-6 obiettivo giornaliero, badge, classifica · 7 promemoria push · 8 riepilogo settimanale · 9 offline vero · 10 onboarding · 11 login Apple/email e cancellazione account · 12 voci TTS migliori · 13 Vitest · 14 CI · 15 performance · 16 accessibilità · 17 sicurezza Supabase (RLS) · 18 store a fette · 19 analytics rispettosi della privacy · 20 SEO e condivisione.
+6 (classifica) · 7 promemoria push · 8 riepilogo settimanale · 9 offline vero · 10 onboarding · 11 login Apple/email e cancellazione account · 12 voci TTS migliori · 13 Vitest · 14 CI · 15 performance · 16 accessibilità · 17 sicurezza Supabase (RLS) · 18 store a fette · 19 analytics rispettosi della privacy · 20 SEO e condivisione.

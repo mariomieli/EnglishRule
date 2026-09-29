@@ -196,19 +196,38 @@ export function xpByDay(d: Doc): Record<string, number> {
 
 const dayNum = (day: string) => Math.round(new Date(day + 'T12:00:00Z').getTime() / 86400000);
 
-/** Serie di giorni consecutivi calcolata dai giorni con XP: sempre coerente tra dispositivi. */
-export function streakOf(byDay: Record<string, number>): { count: number; last: string | null; best: number } {
+export const FREEZE_EVERY = 7; // un "congelamento" guadagnato ogni 7 giorni di studio nella stessa serie
+export const FREEZE_MAX = 2;
+
+/**
+ * Serie di giorni consecutivi calcolata dai giorni con XP: sempre coerente tra dispositivi.
+ * Congelamento: ogni 7 giorni di studio se ne guadagna uno (max 2); un solo giorno saltato
+ * viene coperto in automatico da un congelamento e la serie non si spezza (il giorno saltato non conta).
+ * Tutto deriva dai giorni con XP, quindi non c'è nulla in più da sincronizzare.
+ */
+export function streakOf(byDay: Record<string, number>): { count: number; last: string | null; best: number; freezes: number } {
   const days = Object.keys(byDay)
     .filter((k) => byDay[k] > 0 && k !== '1970-01-01')
     .sort();
-  if (!days.length) return { count: 0, last: null, best: 0 };
-  let best = 1;
-  let run = 1;
-  for (let i = 1; i < days.length; i++) {
-    run = dayNum(days[i]) - dayNum(days[i - 1]) === 1 ? run + 1 : 1;
+  if (!days.length) return { count: 0, last: null, best: 0, freezes: 0 };
+  let best = 0;
+  let run = 0;
+  let studied = 0;
+  let freezes = 0;
+  days.forEach((d, i) => {
+    const gap = i ? dayNum(d) - dayNum(days[i - 1]) : 0;
+    if (!i || gap > 2 || (gap === 2 && freezes === 0)) {
+      run = 1;
+      studied = 1;
+    } else {
+      if (gap === 2) freezes--;
+      run++;
+      studied++;
+    }
+    if (studied % FREEZE_EVERY === 0) freezes = Math.min(FREEZE_MAX, freezes + 1);
     best = Math.max(best, run);
-  }
-  return { count: run, last: days[days.length - 1], best };
+  });
+  return { count: run, last: days[days.length - 1], best, freezes };
 }
 
 /* ---------------- Migrazione dal vecchio formato locale ---------------- */

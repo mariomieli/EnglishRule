@@ -80,6 +80,13 @@ ok(xpByDay(mergeDocs(after, oldPhone))['2026-09-30'] === 10, 'progressi dopo l\'
 // serie di giorni
 ok(streakOf({ '2026-09-27': 10, '2026-09-28': 5, '2026-09-29': 20 }).count === 3, 'serie 3 giorni');
 ok(streakOf({ '2026-09-25': 10, '2026-09-28': 5, '2026-09-29': 20 }).best === 2, 'serie interrotta');
+const k = (...d: number[]) => Object.fromEntries(d.map((x) => [`2026-10-${String(x).padStart(2, '0')}`, 10]));
+ok(streakOf(k(1, 2, 3, 4, 5, 6, 7)).freezes === 1, 'un congelamento dopo 7 giorni');
+ok(streakOf(k(1, 2, 3, 4, 5, 6, 7, 9)).count === 9 - 1 && streakOf(k(1, 2, 3, 4, 5, 6, 7, 9)).freezes === 0, 'giorno saltato coperto e congelamento consumato');
+ok(streakOf(k(1, 2, 3, 4, 5, 6, 7, 10)).count === 1, 'due giorni saltati spezzano la serie');
+ok(streakOf(k(1, 2, 4)).count === 1 && streakOf(k(1, 2, 4)).best === 2, 'senza congelamento un giorno saltato spezza');
+ok(streakOf(k(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)).freezes === 2, 'massimo 2 congelamenti');
+ok(streakOf(k(1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16)).count === 15, 'serie che continua dopo il congelamento');
 ok(streakOf({ '2026-10-31': 10, '2026-11-01': 5 }).count === 2, 'serie a cavallo del cambio ora/mese');
 
 console.log(fails ? `${fails} test falliti` : 'OK: tutte le proprietà di fusione verificate (1.200 casi casuali + scenari)');
