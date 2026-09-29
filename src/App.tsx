@@ -6,6 +6,7 @@ import { AnimatedBackground } from './components/ui';
 import { StoreProvider } from './lib/store';
 import { Home } from './pages/Home';
 import { LessonPage, LevelPage, Levels } from './pages/Level';
+import { Account } from './pages/Account';
 import { Placement } from './pages/Placement';
 import { LessonPractice, ReviewPractice } from './pages/Practice';
 import { Profile, Review } from './pages/Profile';
@@ -50,6 +51,7 @@ function Shell() {
           <Route path="/review/practice" element={<ReviewPractice />} />
           <Route path="/test" element={<Placement />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/account" element={<Account />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </AnimatePresence>

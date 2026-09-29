@@ -10,7 +10,10 @@ createRoot(document.getElementById('root')!).render(
 )
 
 // solo in sviluppo: espone i contenuti per i test end-to-end nel browser
-if (import.meta.env.DEV) import('./data').then((m) => Object.assign(window, { __GQ: m }));
+if (import.meta.env.DEV)
+  import('./data').then((m) =>
+    Object.assign(window, { __GQ: m, __E2E: { email: import.meta.env.VITE_E2E_EMAIL, email2: import.meta.env.VITE_E2E_EMAIL_2, password: import.meta.env.VITE_E2E_PASSWORD } }),
+  );
 
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(() => {}));

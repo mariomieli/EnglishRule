@@ -113,7 +113,7 @@ function badges(s: State) {
 }
 
 export function Profile() {
-  const { state, setTheme, toggleSound, setDailyGoal, reset } = useStore();
+  const { state, setTheme, toggleSound, setDailyGoal, reset, user, cloud, sync } = useStore();
   const done = Object.keys(state.completed).length;
   const streak = currentStreak(state);
   const days = Array.from({ length: 7 }, (_, k) => {
@@ -156,6 +156,23 @@ export function Profile() {
             </motion.div>
           ))}
         </motion.div>
+
+        {cloud && (
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+            <Link to="/account" className="card cta-bar" style={{ marginTop: 18, padding: 18 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
+                <span className="avatar">{user ? (user.email ?? '?')[0].toUpperCase() : '☁️'}</span>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis' }}>{user ? user.email : 'Salva i progressi nel cloud'}</div>
+                  <div className="faint" style={{ fontSize: '.85rem' }}>
+                    {user ? { local: '', syncing: 'Sincronizzazione in corso…', synced: 'Sincronizzato su tutti i tuoi dispositivi', offline: 'Offline: sincronizzo appena torni online', error: 'Errore di sincronizzazione' }[sync.status] : 'Accedi per ritrovarli su telefono, tablet e computer'}
+                  </div>
+                </div>
+              </div>
+              <span className="btn btn-ghost btn-sm">{user ? 'Account' : 'Accedi'}</span>
+            </Link>
+          </motion.div>
+        )}
 
         <div className="profile-grid" style={{ marginTop: 18 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
@@ -248,9 +265,9 @@ export function Profile() {
               <div className="setting">
                 <div>
                   <div style={{ fontWeight: 700 }}>Azzera i progressi</div>
-                  <div className="faint" style={{ fontSize: '.85rem' }}>Cancella XP, lezioni ed errori salvati</div>
+                  <div className="faint" style={{ fontSize: '.85rem' }}>Cancella XP, lezioni ed errori salvati{user ? ' su tutti i tuoi dispositivi' : ''}</div>
                 </div>
-                <button className="btn btn-ghost btn-sm" style={{ color: 'var(--bad)' }} onClick={() => confirm('Vuoi davvero cancellare tutti i progressi? Non si può annullare.') && reset()}>
+                <button className="btn btn-ghost btn-sm" style={{ color: 'var(--bad)' }} onClick={() => confirm(user ? 'Vuoi davvero cancellare tutti i progressi del tuo account, su tutti i dispositivi? Non si può annullare.' : 'Vuoi davvero cancellare tutti i progressi? Non si può annullare.') && reset()}>
                   Azzera
                 </button>
               </div>

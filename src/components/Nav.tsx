@@ -16,7 +16,7 @@ const LINKS = [
 ];
 
 export function TopBar({ onSearch }: { onSearch: () => void }) {
-  const { state, setTheme } = useStore();
+  const { state, setTheme, user, cloud, sync } = useStore();
   const [scrolled, setScrolled] = useState(false);
   const streak = currentStreak(state);
   const mistakes = Object.keys(state.mistakes).length;
@@ -68,6 +68,17 @@ export function TopBar({ onSearch }: { onSearch: () => void }) {
         <button className="icon-btn" onClick={onSearch} aria-label="Cerca" style={{ display: 'none' }} data-mobile-search>
           <ISearch />
         </button>
+        {cloud &&
+          (user ? (
+            <Link to="/account" className="avatar" aria-label="Il tuo account" title={user.email}>
+              {(user.email ?? '?')[0].toUpperCase()}
+              <span className="badge-dot" style={{ background: sync.status === 'synced' ? 'var(--good)' : sync.status === 'error' ? 'var(--bad)' : sync.status === 'offline' ? 'var(--warn)' : 'var(--accent)' }} />
+            </Link>
+          ) : (
+            <Link to="/account" className="btn btn-primary btn-sm hide-mobile">
+              Accedi
+            </Link>
+          ))}
         <button className="icon-btn" onClick={() => setTheme(state.theme === 'dark' ? 'light' : 'dark')} aria-label={state.theme === 'dark' ? 'Tema chiaro' : 'Tema scuro'}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.span key={state.theme} initial={{ rotate: -90, opacity: 0, scale: 0.5 }} animate={{ rotate: 0, opacity: 1, scale: 1 }} exit={{ rotate: 90, opacity: 0, scale: 0.5 }} transition={{ duration: 0.25 }} style={{ display: 'grid' }}>
