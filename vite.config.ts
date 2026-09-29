@@ -1,10 +1,29 @@
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv, type Plugin } from 'vite'
 
-export default defineConfig({
+/** Inserisce nella CSP l'indirizzo esatto di Supabase configurato (più quelli ospitati da Supabase). */
+function cspSupabase(mode: string): Plugin {
+  return {
+    name: 'csp-supabase',
+    transformIndexHtml(html) {
+      const env = loadEnv(mode, process.cwd(), 'VITE_');
+      const sources = new Set(['https://*.supabase.co', 'wss://*.supabase.co']);
+      try {
+        const u = new URL(env.VITE_SUPABASE_URL ?? '');
+        sources.add(u.origin);
+        sources.add(`${u.protocol === 'https:' ? 'wss' : 'ws'}://${u.host}`);
+      } catch {
+        /* cloud non configurato */
+      }
+      return html.replace('__SUPABASE_CONNECT__', [...sources].join(' '));
+    },
+  };
+}
+
+export default defineConfig(({ mode }) => ({
   // GitHub Pages serve il sito sotto /EnglishRule/: il path arriva da BASE_PATH in fase di build
   base: process.env.BASE_PATH ?? '/',
-  plugins: [react()],
+  plugins: [react(), cspSupabase(mode)],
   build: {
     rolldownOptions: {
       output: {
@@ -23,4 +42,4 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 600,
   },
-})
+}))

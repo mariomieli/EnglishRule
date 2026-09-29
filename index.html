@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="%BASE_URL%favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/png" sizes="32x32" href="%BASE_URL%favicon-32.png" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' __SUPABASE_CONNECT__ https://fonts.googleapis.com https://fonts.gstatic.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="EnglishRule: impara la grammatica inglese dal livello A1 al C2 con lezioni chiare, esercizi interattivi e progressi salvati." />
     <meta property="og:title" content="EnglishRule · Grammatica inglese A1-C2" />
@@ -22,9 +23,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <title>EnglishRule · Grammatica inglese A1-C2</title>
-    <script>
-      try { var t = localStorage.getItem('er-theme'); document.documentElement.dataset.theme = t || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'); } catch (e) {}
-    </script>
+    <script src="%BASE_URL%theme-init.js"></script>
   </head>
   <body>
     <div id="root"></div>
