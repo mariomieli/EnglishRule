@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { alignWords, problemWords, tipsFor } from '../lib/pronunciation';
+import { alignWords, nearMisses, problemWords, tipsFor } from '../lib/pronunciation';
 import { alignRepeat, checkReply, checkTargets, normSpeech } from '../lib/speech-eval';
 
 const ok = (c: boolean, m: string) => expect(c, m).toBe(true);
@@ -42,5 +42,14 @@ describe('valutazione del parlato e pronuncia', () => {
     ok(problemWords(alignWords('the the cat', 'a a cat'), 3).length === 1, 'niente doppioni');
     ok(problemWords(alignWords('a b cat', 'x y z'), 3).every((r) => r.word.length > 1), 'niente parole da una lettera');
   }
+  });
+
+  it('parole quasi giuste nelle risposte libere', () => {
+    const refs = ['I think it is a good idea', 'I would like a ticket'];
+    expect(nearMisses('I sink it is a good idea', refs)).toEqual([{ said: 'sink', expected: 'think' }]);
+    expect(nearMisses('I think it is a good idea', refs)).toEqual([]); // niente da segnalare
+    expect(nearMisses('I would like a tickets please', refs).map((m) => m.said)).toContain('tickets');
+    expect(nearMisses('banana', refs)).toEqual([]); // nessuna somiglianza
+    expect(nearMisses('sink tickets liked', ['think ticket like'], 2)).toHaveLength(2); // rispetta il massimo
   });
 });

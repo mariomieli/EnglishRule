@@ -83,3 +83,32 @@ export function problemWords(res: WordResult[], max = 3): WordResult[] {
     .sort((a, b) => Number(b.status === 'miss') - Number(a.status === 'miss'))
     .slice(0, max);
 }
+
+export interface NearMiss {
+  said: string; // parola capita dal riconoscimento
+  expected: string; // parola attesa, simile per suono/scrittura
+}
+
+/**
+ * Nelle risposte libere non c'è una frase da confrontare parola per parola. Qui si cercano le parole "quasi giuste":
+ * una parola capita che non compare nelle frasi di riferimento ma somiglia molto a una parola di riferimento che manca
+ * (es. capito "sink" dove il modello ha "think"). Spesso è un errore di pronuncia, non di grammatica.
+ */
+export function nearMisses(said: string, refs: string[], max = 3): NearMiss[] {
+  const ref = new Set(refs.flatMap((r) => words(r)));
+  const heard = words(said);
+  const heardSet = new Set(heard);
+  const out: NearMiss[] = [];
+  for (const w of new Set(heard)) {
+    if (w.length < 3 || ref.has(w)) continue;
+    let best: { r: string; sim: number } | null = null;
+    for (const r of ref) {
+      if (r.length < 3 || heardSet.has(r)) continue;
+      const sim = wordSim(w, r);
+      if (sim >= 0.6 && (!best || sim > best.sim)) best = { r, sim };
+    }
+    if (best) out.push({ said: w, expected: best.r });
+    if (out.length >= max) break;
+  }
+  return out;
+}

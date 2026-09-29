@@ -11,7 +11,7 @@ import { SCENARIOS, scenarioById, scenariosByLevel } from '../data/speaking';
 import type { SpeakingScenario, SpeakingTurn } from '../data/types';
 import { canSpeak, sfx, speak } from '../lib/audio';
 import { rise, stagger } from '../lib/motion';
-import { alignWords, problemWords, tipsFor, type WordResult } from '../lib/pronunciation';
+import { alignWords, nearMisses, problemWords, tipsFor, type WordResult } from '../lib/pronunciation';
 import { alignRepeat, checkReply, checkTargets, words } from '../lib/speech-eval';
 import { starsFor, useStore } from '../lib/store';
 import { speechSupported, useSpeech } from '../lib/useSpeech';
@@ -562,6 +562,36 @@ function PronunciationTips({ words: list }: { words: WordResult[] }) {
   );
 }
 
+/** "Forse volevi dire…": parole capite male che somigliano a quelle attese, con i consigli per pronunciarle. */
+function NearMissTips({ said, refs }: { said: string; refs: string[] }) {
+  const misses = nearMisses(said, refs);
+  if (!misses.length) return null;
+  return (
+    <div className="tips-box" style={{ marginBottom: 12 }}>
+      {misses.map((m) => (
+        <div key={m.expected} className="tip-row">
+          <div className="tip-head">
+            <span>
+              Forse volevi dire <strong>«{m.expected}»</strong>
+            </span>
+            <span className="faint"> · ho capito «{m.said}»</span>
+            {canSpeak && (
+              <button type="button" className="speak-btn" aria-label={`Ascolta ${m.expected}`} onClick={() => speak(m.expected, { rate: 0.6 })}>
+                <ISpeaker width={15} height={15} />
+              </button>
+            )}
+          </div>
+          {tipsFor(m.expected, 1).map((t) => (
+            <div key={t} className="tip-text">
+              {t}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /* ---------- Rispondi ---------- */
 
 function ReplyTurn({ turn, sound, onComplete }: { turn: Extract<SpeakingTurn, { type: 'reply' }>; sound: boolean; onComplete: Complete }) {
@@ -595,6 +625,7 @@ function ReplyTurn({ turn, sound, onComplete }: { turn: Extract<SpeakingTurn, { 
               {last.ok ? 'Perfetto, risposta efficace!' : tries === 1 ? 'Non ci siamo ancora: rileggi il compito e riprova.' : 'Quasi. Prova a includere:'}
             </div>
             <div style={{ fontWeight: 500, marginTop: 4, color: 'var(--text-2)' }}>Hai detto: “{last.text}”</div>
+            <NearMissTips said={last.text} refs={[...turn.answers, ...turn.keywords.flat()]} />
             {!last.ok && tries >= 2 && (
               <div className="kw-list">
                 {turn.keywords.map((g, i) => (
@@ -687,6 +718,7 @@ function FreeTurn({ turn, sound, onComplete }: { turn: Extract<SpeakingTurn, { t
             </div>
             <div style={{ fontWeight: 500, marginTop: 6 }}>“{said}”</div>
           </div>
+          <NearMissTips said={said} refs={[turn.model, ...turn.targets.flatMap((t) => t.patterns)]} />
           <div className="model-answers">
             <div className="eyebrow" style={{ marginBottom: 6 }}>
               Risposta modello
