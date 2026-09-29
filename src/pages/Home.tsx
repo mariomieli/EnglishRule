@@ -179,7 +179,7 @@ export function Home() {
 
         <footer className="footer">
           <img src={logoMark} alt="" height={28} style={{ display: 'block', margin: '0 auto 8px', height: 28, width: 'auto' }} />
-          EnglishRule · Livelli secondo il Quadro Comune Europeo di Riferimento (QCER) · I tuoi progressi restano sul tuo dispositivo</footer>
+          EnglishRule · Livelli secondo il Quadro Comune Europeo di Riferimento (QCER) · {user ? 'I tuoi progressi sono sincronizzati con il tuo account' : cloud ? 'Senza account i progressi restano su questo dispositivo: accedi per ritrovarli ovunque' : 'I tuoi progressi restano su questo dispositivo'}</footer>
       </div>
     </Page>
   );
