@@ -175,6 +175,7 @@ export function Placement() {
   }
 
   if (!q) return null;
+  const sentence = q.kind === 'sentence';
   const [before, after = ''] = q.prompt.split(/_{2,}/);
   return (
     <div className="practice">
@@ -200,7 +201,7 @@ export function Placement() {
               </div>
               <h2 className="ex-prompt">
                 <Rich text={before} />
-                <span style={{ display: 'inline-block', minWidth: 80, borderBottom: '3px solid var(--accent)', margin: '0 6px' }}>&nbsp;</span>
+                {!sentence && <span style={{ display: 'inline-block', minWidth: 80, borderBottom: '3px solid var(--accent)', margin: '0 6px' }}>&nbsp;</span>}
                 <Rich text={after} />
               </h2>
               <div className="options">

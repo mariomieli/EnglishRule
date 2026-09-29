@@ -78,7 +78,7 @@ for (const l of lessons) {
 const byLevel: Record<string, number> = {};
 placement.forEach((q, i) => {
   byLevel[q.level] = (byLevel[q.level] ?? 0) + 1;
-  if ((q.prompt.match(/_{2,}/g) ?? []).length !== 1) errors.push(`placement ${i + 1}: blank`);
+  if ((q.prompt.match(/_{2,}/g) ?? []).length !== (q.kind === 'sentence' ? 0 : 1)) errors.push(`placement ${i + 1}: blank`);
   if (q.answer < 0 || q.answer >= q.options.length) errors.push(`placement ${i + 1}: answer`);
   if (new Set(q.options).size !== q.options.length) errors.push(`placement ${i + 1}: opzioni duplicate`);
   if (/[–—]/.test(q.prompt + q.options.join())) errors.push(`placement ${i + 1}: trattino lungo`);

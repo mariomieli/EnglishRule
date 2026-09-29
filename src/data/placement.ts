@@ -18,6 +18,12 @@ export const placement: PlacementQuestion[] = [
   { level: "A1", prompt: "This is my sister. ___ name is Laura.", options: ["His", "Her", "She", "Hers"], answer: 1, lesson: "a1-pronouns-possessives" },
   { level: "A1", prompt: "Please ___ the door. It's cold.", options: ["closing", "closes", "to close", "close"], answer: 3, lesson: "a1-imperative-prepositions-place" },
   { level: "A1", prompt: "Are there ___ chairs in the kitchen?", options: ["some", "any", "a", "an"], answer: 1, lesson: "a1-there-is-are" },
+  { level: "A1", kind: "sentence", prompt: "Which sentence is correct?", options: ["She have two brothers.", "She has two brothers.", "She haves two brothers.", "She is have two brothers."], answer: 1, lesson: "a1-present-simple" },
+  { level: "A1", kind: "sentence", prompt: "Which sentence is correct?", options: ["I am from Italy.", "I from Italy.", "I is from Italy.", "I be from Italy."], answer: 0, lesson: "a1-to-be" },
+  { level: "A1", kind: "sentence", prompt: "Which sentence is correct?", options: ["There is three books on the desk.", "There are three books on the desk.", "There be three books on the desk.", "Is three books on the desk."], answer: 1, lesson: "a1-there-is-are" },
+  { level: "A1", kind: "sentence", prompt: "Which sentence is correct?", options: ["Can she to swim?", "Does she can swim?", "Can she swim?", "Can swims she?"], answer: 2, lesson: "a1-can" },
+  { level: "A1", kind: "sentence", prompt: "Which sentence is correct?", options: ["Look! He plays football.", "Look! He is playing football.", "Look! He play football.", "Look! He playing football."], answer: 1, lesson: "a1-present-continuous" },
+  { level: "A1", kind: "sentence", prompt: "Which sentence is correct?", options: ["What time does the film start?", "What time the film starts?", "What time do the film start?", "What time starts the film?"], answer: 0, lesson: "a1-question-words" },
 
   // A2
   { level: "A2", prompt: "I ___ a shower when the phone rang, so I didn't answer it.", options: ["had", "have", "was having", "am having"], answer: 2, lesson: "a2-past-continuous" },
@@ -36,6 +42,12 @@ export const placement: PlacementQuestion[] = [
   { level: "A2", prompt: "You look tired. You ___ go to bed early tonight.", options: ["should", "would", "must to", "can to"], answer: 0, lesson: "a2-must-have-to-should" },
   { level: "A2", prompt: "Look at those black clouds! It ___ rain.", options: ["will", "is going to", "is raining", "rains"], answer: 1, lesson: "a2-future-forms" },
   { level: "A2", prompt: "While I ___ dinner, the lights went out.", options: ["cooked", "was cooking", "cook", "am cooking"], answer: 1, lesson: "a2-past-continuous" },
+  { level: "A2", kind: "sentence", prompt: "Which sentence is correct?", options: ["I have seen him yesterday.", "I saw him yesterday.", "I have saw him yesterday.", "I did saw him yesterday."], answer: 1, lesson: "a2-past-simple" },
+  { level: "A2", kind: "sentence", prompt: "Which sentence is correct?", options: ["She is taller than her sister.", "She is more tall than her sister.", "She is tallest than her sister.", "She is taller that her sister."], answer: 0, lesson: "a2-comparatives-superlatives" },
+  { level: "A2", kind: "sentence", prompt: "Which sentence is correct?", options: ["We were watching TV when the phone rang.", "We watching TV when the phone rang.", "We was watching TV when the phone rang.", "We were watch TV when the phone rang."], answer: 0, lesson: "a2-past-continuous" },
+  { level: "A2", kind: "sentence", prompt: "Which sentence is correct?", options: ["I don't have some money.", "I don't have any money.", "I haven't got a money.", "I don't have much moneys."], answer: 1, lesson: "a2-countable-uncountable" },
+  { level: "A2", kind: "sentence", prompt: "Which sentence is correct?", options: ["You should to see a doctor.", "You should seeing a doctor.", "You should see a doctor.", "You should sees a doctor."], answer: 2, lesson: "a2-must-have-to-should" },
+  { level: "A2", kind: "sentence", prompt: "Which sentence is correct?", options: ["She always goes not to work by car.", "She never goes to work by car.", "She goes never to work by car.", "She never go to work by car."], answer: 1, lesson: "a2-adverbs-frequency-manner" },
 
   // B1
   { level: "B1", prompt: "I ___ in this town since 2018.", options: ["live", "am living", "have lived", "lived"], answer: 2, lesson: "b1-present-perfect-vs-past" },
@@ -54,6 +66,12 @@ export const placement: PlacementQuestion[] = [
   { level: "B1", prompt: "I ___ him last week at the supermarket.", options: ["have seen", "saw", "have saw", "was seeing"], answer: 1, lesson: "b1-present-perfect-vs-past" },
   { level: "B1", prompt: "If you heat ice, it ___ .", options: ["will melt", "melts", "would melt", "melted"], answer: 1, lesson: "b1-zero-first-conditional" },
   { level: "B1", prompt: "I ___ never seen snow before I moved to Canada.", options: ["have", "did", "had", "was"], answer: 2, lesson: "b1-past-perfect" },
+  { level: "B1", kind: "sentence", prompt: "Which sentence is correct?", options: ["If I will see him, I will tell him.", "If I see him, I will tell him.", "If I saw him, I will tell him.", "If I would see him, I tell him."], answer: 1, lesson: "b1-zero-first-conditional" },
+  { level: "B1", kind: "sentence", prompt: "Which sentence is correct?", options: ["I've lived here since ten years.", "I've lived here for ten years.", "I live here for ten years.", "I lived here for ten years now."], answer: 1, lesson: "b1-present-perfect-vs-past" },
+  { level: "B1", kind: "sentence", prompt: "Which sentence is correct?", options: ["The report was wrote by Anna.", "The report was written by Anna.", "The report is wrote by Anna.", "The report written by Anna was."], answer: 1, lesson: "b1-passive-present-past" },
+  { level: "B1", kind: "sentence", prompt: "Which sentence is correct?", options: ["He said me that he was tired.", "He told that he was tired.", "He said that he was tired.", "He told to me he was tired."], answer: 2, lesson: "b1-reported-speech" },
+  { level: "B1", kind: "sentence", prompt: "Which sentence is correct?", options: ["She is the woman which lives next door.", "She is the woman who lives next door.", "She is the woman whose lives next door.", "She is the woman whom lives next door."], answer: 1, lesson: "b1-defining-relative-clauses" },
+  { level: "B1", kind: "sentence", prompt: "Which sentence is correct?", options: ["I'm looking forward to see you.", "I'm looking forward to seeing you.", "I'm looking forward seeing you.", "I look forward to see you."], answer: 1, lesson: "b1-gerund-infinitive" },
 
   // B2
   { level: "B2", prompt: "If I had known about the meeting, I ___ .", options: ["would come", "would have come", "had come", "will come"], answer: 1, lesson: "b2-third-mixed-conditionals" },
@@ -72,6 +90,12 @@ export const placement: PlacementQuestion[] = [
   { level: "B2", prompt: "Nobody answered the door. They ___ out.", options: ["must be", "can be", "must to be", "are must"], answer: 0, lesson: "b2-modals-deduction" },
   { level: "B2", prompt: "___ it was raining, we went for a walk.", options: ["Despite", "Although", "However", "In spite"], answer: 1, lesson: "b2-contrast-linkers" },
   { level: "B2", prompt: "There is ___ traffic today, so we'll be on time.", options: ["a few", "few", "little", "many"], answer: 2, lesson: "b2-advanced-quantifiers" },
+  { level: "B2", kind: "sentence", prompt: "Which sentence is correct?", options: ["If I would have known, I would have helped.", "If I had known, I would have helped.", "If I knew, I would have helped.", "If I have known, I would helped."], answer: 1, lesson: "b2-third-mixed-conditionals" },
+  { level: "B2", kind: "sentence", prompt: "Which sentence is correct?", options: ["I wish I would have more free time now.", "I wish I have more free time now.", "I wish I had more free time now.", "I wish I will have more free time now."], answer: 2, lesson: "b2-wish-if-only" },
+  { level: "B2", kind: "sentence", prompt: "Which sentence is correct?", options: ["He suggested to go to the cinema.", "He suggested going to the cinema.", "He suggested us going to the cinema.", "He suggested that to go to the cinema."], answer: 1, lesson: "b2-reporting-verbs" },
+  { level: "B2", kind: "sentence", prompt: "Which sentence is correct?", options: ["I'll have finished by the time you'll arrive.", "I'll have finished by the time you arrive.", "I'll finished by the time you arrive.", "I finish by the time you will arrive."], answer: 1, lesson: "b2-future-continuous-perfect" },
+  { level: "B2", kind: "sentence", prompt: "Which sentence is correct?", options: ["She must have forgotten her keys.", "She must forgot her keys.", "She must has forgotten her keys.", "She must have forget her keys."], answer: 0, lesson: "b2-modals-deduction" },
+  { level: "B2", kind: "sentence", prompt: "Which sentence is correct?", options: ["I had my car repair yesterday.", "I had my car repaired yesterday.", "I had repaired my car by a mechanic yesterday.", "I made my car repaired yesterday."], answer: 1, lesson: "b2-causative" },
 
   // C1
   { level: "C1", prompt: "She's the person ___ I owe my success.", options: ["to who", "to whom", "whom", "which"], answer: 1, lesson: "c1-advanced-relatives" },
@@ -90,6 +114,12 @@ export const placement: PlacementQuestion[] = [
   { level: "C1", prompt: "He plays ___ guitar beautifully.", options: ["a", "an", "the", "some"], answer: 2, lesson: "c1-articles-nominalisation" },
   { level: "C1", prompt: "He was about ___ leave when the phone rang.", options: ["to", "for", "that", "leaving"], answer: 0, lesson: "c1-advanced-future" },
   { level: "C1", prompt: "The book, the cover of ___ was torn, was on the floor.", options: ["which", "whom", "that", "whose"], answer: 0, lesson: "c1-advanced-relatives" },
+  { level: "C1", kind: "sentence", prompt: "Which sentence is correct?", options: ["Never I have seen such a mess.", "Never have I seen such a mess.", "Never I saw such a mess have.", "Never did I saw such a mess."], answer: 1, lesson: "c1-inversion" },
+  { level: "C1", kind: "sentence", prompt: "Which sentence is correct?", options: ["It was John who broke the window.", "It was John that broke it the window.", "It was John which he broke the window.", "It John was who broke the window."], answer: 0, lesson: "c1-cleft-sentences" },
+  { level: "C1", kind: "sentence", prompt: "Which sentence is correct?", options: ["Having finished the exam, the students left.", "Finished the exam, having the students left.", "Having the exam finished, the students to leave.", "The exam finishing, left the students."], answer: 0, lesson: "c1-participle-clauses" },
+  { level: "C1", kind: "sentence", prompt: "Which sentence is correct?", options: ["She can't have been at home; the lights were off.", "She can't be at home yesterday; the lights were off.", "She mustn't have been at home; the lights were off.", "She couldn't been at home; the lights were off."], answer: 0, lesson: "c1-past-modals" },
+  { level: "C1", kind: "sentence", prompt: "Which sentence is correct?", options: ["I'd rather you not telling anyone.", "I'd rather you didn't tell anyone.", "I'd rather you don't told anyone.", "I'd rather you not to tell anyone."], answer: 1, lesson: "c1-unreal-past" },
+  { level: "C1", kind: "sentence", prompt: "Which sentence is correct?", options: ["The unemployed need support.", "The unemployeds need support.", "An unemployed need support.", "Unemployed the need support."], answer: 0, lesson: "c1-articles-nominalisation" },
 
   // C2
   { level: "C2", prompt: "Little ___ that he was being watched.", options: ["he knew", "did he know", "he did know", "knew he"], answer: 1, lesson: "c1-inversion" },
@@ -108,4 +138,10 @@ export const placement: PlacementQuestion[] = [
   { level: "C2", prompt: "Try ___ she might, she couldn't open the door.", options: ["as", "how", "what", "that"], answer: 0, lesson: "c2-idiomatic-grammar" },
   { level: "C2", prompt: "I ___ this book for ages, and I'm nearly at the end.", options: ["read", "have read", "have been reading", "had read"], answer: 2, lesson: "c2-aspect-nuances" },
   { level: "C2", prompt: "The company is believed ___ its profits last year.", options: ["to have doubled", "to double", "doubling", "that doubled"], answer: 0, lesson: "c2-advanced-passive" },
+  { level: "C2", kind: "sentence", prompt: "Which sentence is correct?", options: ["Had I known, I would have acted differently.", "If had I known, I would have acted differently.", "Had I knew, I would have acted differently.", "Would I have known, I would have acted differently."], answer: 0, lesson: "c2-conditional-inversion" },
+  { level: "C2", kind: "sentence", prompt: "Which sentence is correct?", options: ["It is essential that he to attend the meeting.", "It is essential that he attend the meeting.", "It is essential that he will attend the meeting.", "It is essential that he attending the meeting."], answer: 1, lesson: "c2-mandative-subjunctive" },
+  { level: "C2", kind: "sentence", prompt: "Which sentence is correct?", options: ["The figures are thought to have been exaggerated.", "The figures are thought having been exaggerated.", "It is thought the figures to be exaggerated.", "The figures think to have been exaggerated."], answer: 0, lesson: "c2-advanced-passive" },
+  { level: "C2", kind: "sentence", prompt: "Which sentence is correct?", options: ["Were it not for your help, I would be in trouble.", "Was it not for your help, I would be in trouble.", "If it wouldn't be for your help, I would be in trouble.", "Had it not for your help, I would be in trouble."], answer: 0, lesson: "c2-if-alternatives" },
+  { level: "C2", kind: "sentence", prompt: "Which sentence is correct?", options: ["Not until he left did I realise the truth.", "Not until he left I realised the truth.", "Not until he did leave I realise the truth.", "Not until had he left did I realise the truth."], answer: 0, lesson: "c1-inversion" },
+  { level: "C2", kind: "sentence", prompt: "Which sentence is correct?", options: ["She'd rather have stayed at home.", "She'd rather stayed at home.", "She'd rather to have stayed at home.", "She'd rather has stayed at home."], answer: 0, lesson: "c1-past-modals" },
 ];

@@ -59,6 +59,7 @@ export interface PlacementQuestion {
   options: string[];
   answer: number;
   lesson?: string; // lezione da consigliare se l'utente sbaglia
+  kind?: 'sentence'; // "Quale frase è corretta?": nessun buco nel testo, le opzioni sono frasi intere
 }
 
 /* ---------------- Speaking ---------------- */

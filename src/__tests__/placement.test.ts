@@ -52,3 +52,25 @@ describe('test di livello adattivo', () => {
   }
   });
 });
+
+describe('banca di domande del test di livello', () => {
+  it('ogni domanda è ben formata, con una lezione esistente, e ci sono due formati per livello', async () => {
+    const { placement } = await import('../data/placement');
+    const { lessonById } = await import('../data');
+    for (const q of placement) {
+      const blanks = (q.prompt.match(/_{2,}/g) ?? []).length;
+      expect(blanks, q.prompt).toBe(q.kind === 'sentence' ? 0 : 1);
+      expect(q.answer).toBeGreaterThanOrEqual(0);
+      expect(q.answer).toBeLessThan(q.options.length);
+      expect(new Set(q.options).size).toBe(q.options.length);
+      expect(lessonById(q.lesson ?? ''), `lezione di: ${q.prompt}`).toBeDefined();
+    }
+    for (const lv of ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']) {
+      const qs = placement.filter((q) => q.level === lv);
+      expect(qs.length).toBeGreaterThanOrEqual(20);
+      expect(qs.filter((q) => q.kind === 'sentence').length).toBeGreaterThanOrEqual(6);
+      const prompts = qs.filter((q) => q.kind !== 'sentence').map((q) => q.prompt);
+      expect(new Set(prompts).size).toBe(prompts.length);
+    }
+  });
+});
