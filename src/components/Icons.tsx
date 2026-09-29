@@ -34,3 +34,4 @@ export const IKey = (p: P) => (<svg {...base(p)}><path d="M12 2 2 7l10 5 10-5z" 
 export const IRefresh = (p: P) => (<svg {...base(p)}><path d="M3 12a9 9 0 0 1 15.5-6.3L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.3L3 16M3 21v-5h5" /></svg>);
 export const ICheck = (p: P) => (<svg {...base(p)}><path d="M20 6 9 17l-5-5" /></svg>);
 export const IVolume = (p: P) => (<svg {...base(p)}><path d="M11 5 6 9H2v6h4l5 4z" /><path d="M15.5 8.5a5 5 0 0 1 0 7" /></svg>);
+export const IMic = (p: P) => (<svg {...base(p)}><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8" /></svg>);

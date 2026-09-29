@@ -32,6 +32,7 @@ export interface Mistake {
 export interface State {
   xp: number;
   completed: Record<string, LessonProgress>;
+  speaking: Record<string, LessonProgress>;
   theoryRead: Record<string, true>;
   mistakes: Record<string, Mistake>;
   seen: Record<string, Record<number, number>>;
@@ -120,6 +121,7 @@ function view(doc: Doc): State {
   return {
     xp: Object.values(byDay).reduce((a, n) => a + n, 0),
     completed: doc.completed,
+    speaking: doc.speaking ?? {},
     theoryRead,
     mistakes,
     seen: doc.seen as State['seen'],
@@ -132,6 +134,7 @@ function view(doc: Doc): State {
 interface Actions {
   addXp: (n: number) => void;
   finishLesson: (id: string, score: number) => { stars: number; improved: boolean };
+  finishSpeaking: (id: string, score: number) => { stars: number; improved: boolean };
   markTheory: (id: string) => void;
   recordMistake: (lessonId: string, index: number) => void;
   clearMistake: (lessonId: string, index: number) => void;
@@ -335,10 +338,31 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [update],
   );
 
+  const finishSpeaking = useCallback(
+    (id: string, score: number) => {
+      const stars = starsFor(score);
+      const before = docRef.current.speaking?.[id];
+      const improved = !before || score > before.best;
+      update((d) => {
+        const prev = d.speaking?.[id];
+        return {
+          ...d,
+          speaking: {
+            ...(d.speaking ?? {}),
+            [id]: { best: Math.max(prev?.best ?? 0, score), stars: Math.max(prev?.stars ?? 0, stars), attempts: (prev?.attempts ?? 0) + 1, lastAt: now() },
+          },
+        };
+      });
+      return { stars, improved };
+    },
+    [update],
+  );
+
   const actions = useMemo<Omit<Actions, 'syncNow' | 'signOut'>>(
     () => ({
       addXp,
       finishLesson,
+      finishSpeaking,
       markTheory: (id) => update((d) => (d.theoryRead[id] ? d : { ...d, theoryRead: { ...d.theoryRead, [id]: now() } })),
       recordMistake: (lessonId, index) =>
         update((d) => {
@@ -367,7 +391,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       // nuova "epoca": l'azzeramento si propaga a tutti i dispositivi e vince sui dati precedenti
       reset: () => setSaved((s) => ({ ...s, doc: { ...keepTheme(s.doc), epoch: now() } })),
     }),
-    [addXp, finishLesson, update, setSetting],
+    [addXp, finishLesson, finishSpeaking, update, setSetting],
   );
 
   return <StoreCtx.Provider value={{ state, user, cloud: !!supabase, sync, ...actions, syncNow, signOut }}>{children}</StoreCtx.Provider>;

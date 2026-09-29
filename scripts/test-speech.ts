@@ -1,0 +1,23 @@
+// Test della valutazione delle risposte parlate: `npm run test:speech`
+import { alignRepeat, checkReply, checkTargets, normSpeech } from '../src/lib/speech-eval';
+let f = 0;
+const ok = (c: boolean, m: string) => c || (f++, console.log('  FALLITO:', m));
+ok(normSpeech("I'm 25, I can't swim") === ' i am twenty five i can not swim ' || normSpeech("I'm 25, I can't swim").includes('i am'), 'contrazioni');
+ok(normSpeech('I have 3 cats.') === ' i have three cats ', 'numeri');
+const kw = [['how much'], ['ticket', 'tickets']];
+ok(checkReply('How much is a ticket to London?', kw, []).ok, 'risposta valida');
+ok(checkReply('how much are the tickets', kw, []).ok, 'plurale');
+ok(!checkReply('Where is the station?', kw, []).ok, 'risposta non pertinente');
+ok(checkReply("I'd like a coffee please", [['would like', 'want'], ['coffee']], []).ok, "I'd = I would");
+ok(!checkReply('I like coffee', [['would like', 'want'], ['coffee']], []).ok, 'like senza would');
+ok(!checkReply('something', [['cat']], []).ok && !checkReply('category', [['cat']], []).ok, 'confini di parola');
+const r = alignRepeat('Nice to meet you, I am Paolo.', "nice to meet you I'm pablo");
+ok(r.score === 86, `ripeti: punteggio ${r.score}`);
+ok(r.hit.join() === 'true,true,true,true,true,true,false', 'parole evidenziate');
+ok(checkTargets('I used to live in Rome but now I have moved', [{ label: 'used to', patterns: ['used to'] }, { label: 'present perfect', patterns: ['have moved', 'have lived', 'has'] }]).every((x) => x.used), 'target');
+ok(normSpeech("If I'd known, I'd have told you").includes('if i had known i would have told'), "'d = had / would");
+ok(normSpeech("I'd need help").includes('i would need'), "I'd need");
+ok(normSpeech("It's here and she's been there").includes('it is here and she has been there'), "'s = is / has");
+ok(normSpeech("John's car").includes("john's car"), 'genitivo sassone intatto');
+console.log(f ? `${f} test falliti` : 'OK: valutazione del parlato verificata');
+process.exit(f ? 1 : 0);

@@ -7,6 +7,8 @@ import { LevelBadge, Page, ProgressRing, Stars } from '../components/ui';
 import { rise, stagger } from '../lib/motion';
 import { lessonById, lessonsByLevel, nextLesson } from '../data';
 import { LEVELS, levelById } from '../data/levels';
+import { scenariosByLevel } from '../data/speaking';
+import { ScenarioGrid } from './Speaking';
 import { SESSION_SIZE } from '../lib/pick';
 import { useStore } from '../lib/store';
 import { pct } from '../lib/utils';
@@ -101,6 +103,23 @@ export function LevelPage() {
             );
           })}
         </motion.div>
+
+        {scenariosByLevel(lv.id).length > 0 && (
+          <>
+            <div className="section-title">
+              <div>
+                <div className="eyebrow" style={{ color: lv.from }}>
+                  Conversazione
+                </div>
+                <h2>🎙️ Speaking {lv.id}</h2>
+              </div>
+              <Link to="/speaking" className="muted hide-mobile" style={{ fontWeight: 600 }}>
+                Tutti i dialoghi →
+              </Link>
+            </div>
+            <ScenarioGrid list={scenariosByLevel(lv.id)} />
+          </>
+        )}
       </div>
     </Page>
   );

@@ -18,6 +18,7 @@ function randomDoc(dev: string): Doc {
     const l = `l${rnd(5)}`;
     d.completed[l] = { best: rnd(101), stars: rnd(4), attempts: rnd(5), lastAt: rnd(1000) };
     d.theoryRead[l] = rnd(1000);
+    if (rnd(2)) d.speaking = { ...(d.speaking ?? {}), [`sp-${l}`]: { best: rnd(101), stars: rnd(4), attempts: rnd(3), lastAt: rnd(1000) } };
     const k = `${l}#${rnd(25)}`;
     d.mistakes[k] = { lessonId: l, index: 0, count: 1 + rnd(3), at: rnd(1000), ...(rnd(2) ? { cleared: rnd(1000) } : {}) };
     d.seen[l] = { ...(d.seen[l] ?? {}), [rnd(25)]: rnd(4) };

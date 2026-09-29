@@ -10,12 +10,13 @@ import { Account } from './pages/Account';
 import { Placement } from './pages/Placement';
 import { LessonPractice, ReviewPractice } from './pages/Practice';
 import { Profile, Review } from './pages/Profile';
+import { SpeakingHub, SpeakingSession } from './pages/Speaking';
 
 function Shell() {
   const location = useLocation();
   const [search, setSearch] = useState(false);
   // durante esercizi e test nascondiamo la navigazione per concentrarsi
-  const focus = /\/practice$/.test(location.pathname);
+  const focus = /\/practice$/.test(location.pathname) || /^\/speaking\/.+/.test(location.pathname);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -51,6 +52,8 @@ function Shell() {
           <Route path="/review/practice" element={<ReviewPractice />} />
           <Route path="/test" element={<Placement />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/speaking" element={<SpeakingHub />} />
+          <Route path="/speaking/:id" element={<SpeakingSession />} />
           <Route path="/account" element={<Account />} />
           <Route path="*" element={<Home />} />
         </Routes>

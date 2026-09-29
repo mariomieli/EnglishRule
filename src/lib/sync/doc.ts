@@ -44,6 +44,7 @@ export type Stamped<T> = { v: T; at: number };
 export interface Doc {
   epoch?: number; // data dell'ultimo "azzera progressi": i dati di epoche precedenti vengono scartati
   completed: Record<string, LessonProgress>;
+  speaking?: Record<string, LessonProgress>; // scenari di conversazione
   theoryRead: Record<string, number>;
   mistakes: Record<string, MistakeEntry>;
   seen: Record<string, Record<string, number>>;
@@ -82,13 +83,14 @@ export function mergeDocs(a: Doc, b: Doc): Doc {
     const v = lww(a.settings?.[k] as Stamped<unknown> | undefined, b.settings?.[k] as Stamped<unknown> | undefined);
     if (v) (settings as Record<string, Stamped<unknown>>)[k] = v;
   }
+  const progress = (x?: LessonProgress, y?: LessonProgress): LessonProgress => ({
+    best: max(x?.best, y?.best),
+    stars: max(x?.stars, y?.stars),
+    attempts: max(x?.attempts, y?.attempts),
+    lastAt: max(x?.lastAt, y?.lastAt),
+  });
   const out: Doc = {
-    completed: mergeMap(a.completed, b.completed, (x, y) => ({
-      best: max(x?.best, y?.best),
-      stars: max(x?.stars, y?.stars),
-      attempts: max(x?.attempts, y?.attempts),
-      lastAt: max(x?.lastAt, y?.lastAt),
-    })),
+    completed: mergeMap(a.completed, b.completed, progress),
     theoryRead: mergeMap(a.theoryRead, b.theoryRead, (x, y) => max(x, y)),
     mistakes: mergeMap(a.mistakes, b.mistakes, (x, y) => {
       const base = (x ?? y)!;
@@ -101,6 +103,7 @@ export function mergeDocs(a: Doc, b: Doc): Doc {
     xp: mergeMap(a.xp, b.xp, (x, y) => mergeMap(x, y, (p, q) => max(p, q))),
     settings,
   };
+  if (a.speaking || b.speaking) out.speaking = mergeMap(a.speaking, b.speaking, progress);
   if (a.epoch) out.epoch = a.epoch; // epoche uguali: stesso valore da entrambi i lati
   return out;
 }
@@ -135,6 +138,7 @@ export function sanitize(raw: unknown): Doc {
     xp: obj(r.xp) ?? d.xp,
     settings: obj(r.settings) ?? d.settings,
   };
+  if (obj(r.speaking)) out.speaking = r.speaking;
   if (typeof r.epoch === "number" && r.epoch > 0) out.epoch = r.epoch;
   return out;
 }

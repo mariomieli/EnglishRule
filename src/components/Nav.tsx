@@ -4,14 +4,15 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { LESSONS } from '../data';
 import { currentStreak, useStore } from '../lib/store';
 import { normalize } from '../lib/utils';
-import { IBook, IHome, IMoon, IRepeat, ISearch, ISun, ITarget, IUser } from './Icons';
+import { IBook, IHome, IMic, IMoon, IRepeat, ISearch, ISun, ITarget, IUser } from './Icons';
 import { LevelBadge } from './ui';
 
 const LINKS = [
   { to: '/', label: 'Home', icon: IHome, end: true },
   { to: '/levels', label: 'Livelli', icon: IBook },
+  { to: '/speaking', label: 'Speaking', icon: IMic },
   { to: '/review', label: 'Ripasso', icon: IRepeat },
-  { to: '/test', label: 'Test', icon: ITarget },
+  { to: '/test', label: 'Test', icon: ITarget, desktopOnly: true },
   { to: '/profile', label: 'Profilo', icon: IUser },
 ];
 
@@ -96,7 +97,7 @@ export function TabBar() {
   const mistakes = Object.keys(state.mistakes).length;
   return (
     <nav className="tabbar" aria-label="Principale">
-      {LINKS.map((l) => (
+      {LINKS.filter((l) => !l.desktopOnly).map((l) => (
         <NavLink key={l.to} to={l.to} end={l.end} className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}>
           {({ isActive }) => (
             <>

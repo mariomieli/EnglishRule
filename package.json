@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "validate": "tsx scripts/validate.ts",
     "repetition": "tsx scripts/repetition.ts",
-    "test:sync": "tsx scripts/test-sync.ts"
+    "test:sync": "tsx scripts/test-sync.ts",
+    "validate:speaking": "tsx scripts/validate-speaking.ts",
+    "test:speech": "tsx scripts/test-speech.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",

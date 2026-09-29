@@ -49,3 +49,46 @@ export interface PlacementQuestion {
   options: string[];
   answer: number;
 }
+
+/* ---------------- Speaking ---------------- */
+
+export type SpeakingTurn =
+  // shadowing: ascolta e ripeti la frase
+  | { type: 'repeat'; en: string; it: string }
+  // botta e risposta: il partner parla, l'utente risponde seguendo il compito
+  | {
+      type: 'reply';
+      partner: string; // battuta del partner in inglese
+      partnerIt: string; // traduzione della battuta
+      task: string; // cosa deve dire l'utente, in italiano (es. "Chiedi quanto costa il biglietto")
+      answers: string[]; // 2-4 risposte modello complete in inglese
+      // gruppi di parole chiave: la risposta è valida se contiene almeno un'alternativa di OGNI gruppo
+      // (minuscolo, senza punteggiatura; alternative di 1-3 parole). Es: [["how much"], ["ticket", "tickets"]]
+      keywords: string[][];
+      tip?: string; // suggerimento grammaticale in italiano
+    }
+  // parla liberamente su un tema per qualche decina di secondi
+  | {
+      type: 'free';
+      question: string; // domanda del partner in inglese
+      questionIt: string;
+      task: string; // consegna in italiano
+      seconds: number; // 30-90
+      targets: { label: string; patterns: string[] }[]; // strutture da usare: label in italiano, patterns = parole/espressioni che ne indicano l'uso
+      model: string; // risposta modello in inglese
+    };
+
+export interface SpeakingScenario {
+  id: string; // es. "sp-a1-introductions"
+  level: LevelId;
+  title: string; // es. "Presentarsi"
+  subtitle: string;
+  icon: string; // emoji
+  minutes: number;
+  context: string; // situazione, in italiano: dove sei, con chi parli
+  partner: string; // nome e ruolo del partner, es. "Emma, la tua nuova collega"
+  goals: string[]; // 2-4 obiettivi comunicativi in italiano
+  lessons: string[]; // id delle lezioni di grammatica collegate (esistenti)
+  phrases: { en: string; it: string }[]; // 4-6 frasi utili
+  turns: SpeakingTurn[]; // 7-9 turni: 2 repeat, 4-5 reply, 1 free (l'ultimo)
+}

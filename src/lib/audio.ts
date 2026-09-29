@@ -45,12 +45,16 @@ function pickVoice() {
 
 export const canSpeak = typeof window !== 'undefined' && 'speechSynthesis' in window;
 
-export function speak(text: string) {
-  if (!canSpeak) return;
+export function speak(text: string, opts: { rate?: number; onEnd?: () => void } = {}) {
+  if (!canSpeak) return opts.onEnd?.();
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-GB';
-  u.rate = 0.95;
+  u.rate = opts.rate ?? 0.95;
+  if (opts.onEnd) {
+    u.onend = opts.onEnd;
+    u.onerror = opts.onEnd;
+  }
   const v = pickVoice();
   if (v) u.voice = v;
   speechSynthesis.speak(u);

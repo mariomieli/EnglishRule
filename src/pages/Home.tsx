@@ -136,7 +136,7 @@ export function Home() {
           {[
             { i: '🇮🇹', t: 'Spiegato per italiani', d: 'Ogni lezione evidenzia gli errori tipici di chi parla italiano, con confronti diretti tra le due lingue.' },
             { i: '🧠', t: 'Impari dagli errori', d: "Gli esercizi sbagliati tornano alla fine della sessione e finiscono nel Ripasso, finché non li padroneggi." },
-            { i: '🎧', t: 'Ascolta ogni esempio', d: 'Tocca l’altoparlante per sentire la pronuncia britannica di frasi ed esercizi.' },
+            { i: '🎙️', t: 'Parla davvero', d: 'Dialoghi in situazioni reali per ogni livello: rispondi a voce, il microfono riconosce ciò che dici e ti corregge.' },
             { i: '🧩', t: '5 tipi di esercizi', d: 'Scelta multipla, completamento, riordino, giusto/sbagliato e abbinamenti: mai noioso.' },
             { i: '🔥', t: 'Serie e obiettivi', d: 'XP, stelle, combo e serie giornaliera ti aiutano a studiare un po’ ogni giorno.' },
             { i: '📱', t: 'Ovunque tu sia', d: 'Pensata per mobile e desktop, con scorciatoie da tastiera e tema chiaro o scuro.' },
