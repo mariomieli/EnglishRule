@@ -72,7 +72,7 @@ export function LevelPage() {
               {lv.tagline}
             </div>
             <h1>
-              {lv.name} {lv.emoji}
+              {lv.name}
             </h1>
             <p className="desc">{lv.description}</p>
             <div className="hero-stats">

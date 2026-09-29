@@ -117,7 +117,7 @@ export function Placement() {
               <LevelBadge id={lv.id} size={120} />
             </motion.div>
             <h1 style={{ fontSize: 'clamp(2rem,5vw,2.8rem)', fontWeight: 800 }}>
-              {lv.name} {lv.emoji}
+              {lv.name}
             </h1>
             <p className="muted" style={{ maxWidth: 480, margin: '10px auto 8px' }}>
               {lv.description}

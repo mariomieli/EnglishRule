@@ -128,7 +128,7 @@ export function Onboarding() {
                 <LevelBadge id={chosen.id} size={64} />
                 <div>
                   <strong>
-                    {chosen.name} {chosen.emoji}
+                    {chosen.name}
                   </strong>
                   <div className="muted" style={{ fontSize: '.92rem' }}>
                     {chosen.description}

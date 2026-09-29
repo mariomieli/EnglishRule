@@ -269,7 +269,7 @@ export function LevelCard({ lv, recommended }: { lv: LevelMeta; recommended?: bo
                 {lv.tagline}
               </div>
               <h3>
-                {lv.name} {lv.emoji}
+                {lv.name}
               </h3>
             </div>
           </div>
