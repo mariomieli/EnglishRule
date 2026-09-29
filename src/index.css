@@ -152,7 +152,7 @@ main {
 @media (max-width: 760px) {
   main {
     padding-top: 72px;
-    padding-bottom: calc(110px + env(safe-area-inset-bottom));
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
   }
   .container {
     padding: 0 16px;
@@ -387,11 +387,13 @@ kbd {
     display: flex;
     position: fixed;
     z-index: 50;
-    left: 12px;
-    right: 12px;
-    bottom: calc(12px + env(safe-area-inset-bottom));
-    padding: 6px;
-    border-radius: 22px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* ancorata al bordo inferiore; lo spazio della "home bar" di iPhone resta dentro la barra */
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+    border-radius: 22px 22px 0 0;
+    border-bottom: 0;
     background: color-mix(in srgb, var(--bg-2) 80%, transparent);
     backdrop-filter: blur(20px) saturate(1.5);
     -webkit-backdrop-filter: blur(20px) saturate(1.5);
