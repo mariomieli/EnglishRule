@@ -12,6 +12,7 @@ import { lessonById, nextLesson } from '../data';
 import { useLesson, useLessons } from '../data/useLesson';
 import { levelById } from '../data/levels';
 import type { Exercise, Lesson } from '../data/types';
+import { track } from '../lib/analytics';
 import { canSpeak, sfx } from '../lib/audio';
 import { reviewQueue, starsFor, today, useStore } from '../lib/store';
 import { badgesOf, unlockedIds } from '../lib/badges';
@@ -142,6 +143,8 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
   const [badgesBefore] = useState(() => unlockedIds(state));
   useEffect(() => {
     startedAt.current = Date.now();
+    track(mode === 'review' ? 'review_start' : 'lesson_start', { lesson: lessonId ?? 'review', mode });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const item = queue[pos];
@@ -175,6 +178,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
       setCombo(0);
       if (!item.retry) {
         recordMistake(item.lessonId, item.index);
+        track('exercise_wrong', { lesson: item.lessonId, index: item.index, type: item.ex.type });
         // in modalità lezione riproponiamo l'esercizio alla fine
         if (mode === 'lesson') setQueue((q) => [...q, { ...item, retry: true }]);
       }
@@ -196,6 +200,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
     const before = state.xpByDay[today()] ?? 0;
     const goal = before < state.dailyGoal && before + xp >= state.dailyGoal;
     addXp(xp);
+    track(mode === 'review' ? 'review_done' : 'lesson_done', { lesson: lessonId ?? 'review', score });
     let stars = starsFor(score);
     let improved = false;
     if (mode === 'lesson' && lessonId) ({ stars, improved } = finishLesson(lessonId, score));
@@ -218,6 +223,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
 
   const exit = () => {
     if (!done && pos > 0 && !confirm('Vuoi davvero uscire? I progressi di questa sessione andranno persi.')) return;
+    if (!done) track('session_abandon', { lesson: lessonId ?? 'review', pos, total });
     navigate(lessonId ? `/lesson/${lessonId}` : '/review');
   };
 

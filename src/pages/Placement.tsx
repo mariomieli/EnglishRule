@@ -9,6 +9,7 @@ import { lessonById, lessonsByLevel } from '../data';
 import { LEVELS, levelById } from '../data/levels';
 import { placement } from '../data/placement';
 import { MAX_QUESTIONS, buildDeck, nextLevel, placementResult, recommend, type Answered } from '../lib/placement';
+import { track } from '../lib/analytics';
 import { sfx } from '../lib/audio';
 import { useStore } from '../lib/store';
 import { shuffle } from '../lib/utils';
@@ -45,7 +46,9 @@ export function Placement() {
   };
 
   const finish = (ans: Answered[]) => {
-    setPlacement(placementResult(ans));
+    const result = placementResult(ans);
+    track('placement_done', { level: result, questions: ans.length });
+    setPlacement(result);
     addXp(30);
     setPhase('done');
     if (state.sound) sfx.win();

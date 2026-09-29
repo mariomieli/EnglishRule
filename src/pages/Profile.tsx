@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import type { CSSProperties } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { IArrow, IRepeat } from '../components/Icons';
 import { Counter, LevelBadge, Page } from '../components/ui';
@@ -7,6 +7,7 @@ import { rise, stagger } from '../lib/motion';
 import { LESSONS, lessonById, lessonsByLevel } from '../data';
 import { LEVELS } from '../data/levels';
 import { currentStreak, reviewQueue, today, useStore } from '../lib/store';
+import { analyticsEnabled, browserSaysNo, setAnalytics } from '../lib/analytics';
 import { badgesOf } from '../lib/badges';
 import { pct } from '../lib/utils';
 
@@ -97,6 +98,7 @@ export function Review() {
 
 export function Profile() {
   const { state, setTheme, toggleSound, setDailyGoal, reset, user, cloud, sync } = useStore();
+  const [stats, setStats] = useState(() => analyticsEnabled());
   const done = Object.keys(state.completed).length;
   const streak = currentStreak(state);
   const days = Array.from({ length: 7 }, (_, k) => {
@@ -247,6 +249,29 @@ export function Profile() {
                   ))}
                 </div>
               </div>
+              {cloud && (
+                <div className="setting">
+                  <div>
+                    <div style={{ fontWeight: 700 }}>Statistiche anonime</div>
+                    <div className="faint" style={{ fontSize: '.85rem' }}>
+                      {browserSaysNo() ? 'Disattivate: il tuo browser chiede di non essere tracciato' : 'Aiutano a migliorare le lezioni. Nessun cookie, nessun dato personale.'}
+                    </div>
+                  </div>
+                  <button
+                    className={`switch ${stats ? 'on' : ''}`}
+                    disabled={browserSaysNo()}
+                    onClick={() => {
+                      setAnalytics(!stats);
+                      setStats(!stats);
+                    }}
+                    role="switch"
+                    aria-checked={stats}
+                    aria-label="Statistiche anonime"
+                  >
+                    <motion.span layout className="knob" transition={{ type: 'spring', stiffness: 600, damping: 32 }} />
+                  </button>
+                </div>
+              )}
               <div className="setting">
                 <div>
                   <div style={{ fontWeight: 700 }}>Azzera i progressi</div>

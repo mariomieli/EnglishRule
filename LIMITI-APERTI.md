@@ -1,7 +1,7 @@
 # Limiti aperti (da colmare)
 
 Elenco vivo dei limiti rimasti dopo ogni miglioramento. Quando uno viene chiuso, cancellarlo o spostarlo in "Chiusi".
-Ultimo aggiornamento: 29/09/2026 (punti 1-6 e 10).
+Ultimo aggiornamento: 29/09/2026 (punti 1-6, 10, 13-19).
 
 ## Nessuna verifica nel browser (vale per tutti i punti sotto)
 - Nulla di quanto sotto è stato provato dal vivo (schermate, tastiera mobile, animazioni): sono stati eseguiti solo tsc, lint, validate e i test da riga di comando. Fare un giro completo su telefono e desktop.
@@ -61,6 +61,53 @@ Ultimo aggiornamento: 29/09/2026 (punti 1-6 e 10).
 - Nessuna richiesta di permesso per i promemoria (arrivano col punto 7).
 - Il test per l'utente che ha già dati da un vecchio dispositivo senza account: vede l'onboarding una volta (poi `onboarded` si sincronizza con l'account se ne crea uno).
 
+## 13-14. Test e CI
+- Gli smoke test Playwright coprono 4 percorsi, tastiera, CSP, axe (10 pagine x 2 temi) e statistiche; non coprono: accesso e sincronizzazione con Supabase reale (nessuna credenziale di prova, la CI costruisce senza cloud), cambio di dispositivo, speaking con microfono, dettato con audio, installazione come PWA, uso offline.
+- Il test dell'esercizio assume che il primo esercizio di "Il verbo To Be" sia a scelta multipla: se la sequenza curata cambia va aggiornato.
+- Nessuna soglia di copertura del codice; i test di interfaccia sono solo su Chrome (non Firefox né Safari/WebKit).
+- La CI dura circa 3 minuti in più (browser da scaricare a ogni esecuzione: non c'è cache dei browser di Playwright).
+- Il lint passa con 9 warning noti (riferimenti letti durante il render, `setState` in un effetto): non blocca, ma non sono stati eliminati.
+- Gli script `validate` e `validate:speaking` restano script a parte, non test Vitest.
+
+## 15. Performance
+- All'avvio si scaricano circa 210 kB compressi (prima circa 470 kB), ma la libreria Supabase (circa 55 kB compressi) è ancora caricata subito: renderla a richiesta tocca l'accesso e non si può provare senza credenziali reali.
+- Il prefetch in background scarica tutti i livelli e le pagine (circa 600 kB in più) dopo l'avvio anche su reti lente, salvo "risparmio dati": non c'è una scelta dell'utente.
+- Le immagini del logo sono PNG (non SVG/WebP): il logo originale è raster, un vettoriale sarebbe più leggero e nitido a ogni dimensione.
+- Non misurati i tempi reali (Lighthouse, Core Web Vitals) su dispositivi veri.
+- Il service worker non ha versioni di precache per gli asset con hash: si affida alla cache "al primo utilizzo".
+
+## Logo (aggiunto su richiesta)
+- Il file originale ha lo sfondo bianco: ho ricavato la trasparenza in automatico. Ai bordi possono restare piccoli aloni; i "buchi" delle lettere (e, g, R) restano bianchi, per questo il logo completo sta su una targa bianca nel tema scuro. Meglio avere l'originale in SVG o PNG trasparente.
+- Nella barra in alto uso il simbolo più la scritta in testo (per adattarsi al tema), non il file completo: la tipografia è quella del sito, non quella del logo.
+- Icone PWA e favicon derivate dal simbolo: non controllate su un telefono vero (icona adattiva Android, iOS "aggiungi alla home"). L'immagine di condivisione (`og-image.png`) punta all'indirizzo pubblico su GitHub Pages: se cambia il dominio va aggiornata.
+
+## 16. Accessibilità
+- Verifica automatica (axe, WCAG 2 A/AA) su 10 pagine in tema chiaro e scuro: passa. Non copre ciò che uno strumento non vede: ordine di lettura sensato, chiarezza dei testi alternativi, uso reale con VoiceOver e TalkBack (non provati).
+- L'esercizio "Abbina le coppie" e "Riordina" (tessere) non sono stati verificati con la sola tastiera né con lettore di schermo; la scelta multipla, il completamento e le nuove voci scritte sì.
+- Gli esercizi dettato/traduzione/correzione non annunciano automaticamente il risultato in modo specifico oltre al riquadro di feedback (regione `aria-live`).
+- Le animazioni rispettano `prefers-reduced-motion` (framer-motion e regole CSS), ma i coriandoli e i suoni non hanno un'opzione dedicata oltre a "effetti sonori".
+- Il testo non è ridimensionabile con un controllo dell'app (solo lo zoom del browser); nessuna modalità ad alto contrasto oltre ai due temi.
+- Solo italiano nei testi per lettori di schermo (`lang="it"` sul documento, ma le frasi inglesi non sono marcate `lang="en"`, quindi il lettore potrebbe leggerle con la voce italiana).
+
+## 17. Sicurezza
+- RLS verificata dall'esterno con la sola chiave pubblica: non si legge né si scrive nulla. La migrazione di rafforzamento (`20260930000000_hardening.sql`: limite di dimensione, versione crescente, permessi ad anon) è nel repository ma NON APPLICATA: va eseguita nel SQL Editor di Supabase (non ho accesso al database).
+- La CSP è in un tag `<meta>`: GitHub Pages non permette intestazioni HTTP, quindi mancano `frame-ancestors`, `X-Content-Type-Options`, HSTS gestito solo da GitHub. Richiede stile inline (`style-src 'unsafe-inline'`) per come è scritto React/framer-motion.
+- La CSP non è stata provata con un vero login Supabase o Google (redirect OAuth e realtime WebSocket); ammette `*.supabase.co` e l'indirizzo configurato.
+- Non c'è una politica di cancellazione dell'account e dei dati (punto 11 del piano) né un controllo del limite di richieste lato server.
+- Le dipendenze non sono controllate in automatico (nessun `npm audit` o Dependabot in CI).
+
+## 18. Store a moduli
+- `provider.tsx` e `useCloud.ts` hanno ancora warning noti (riferimenti letti durante il render). La sincronizzazione (`useCloud`) non ha test automatici perché richiede Supabase: sono testate le parti pure (calcoli e trasformazioni), non la sincronizzazione.
+- `State` è ancora un unico oggetto grande: ogni cambiamento fa ridisegnare tutti i componenti che usano `useStore()` (non c'è selezione di fette con memoizzazione).
+
+## 19. Statistiche anonime
+- Il codice è pronto ma la tabella `events` NON esiste ancora: va creata eseguendo `supabase/migrations/20260930000001_events.sql` nel SQL Editor. Finché non c'è, le richieste falliscono in silenzio (compare un errore 404 nella console del browser).
+- Chiunque può inserire eventi (necessario per non avere identificativi): un malintenzionato potrebbe riempire la tabella di eventi falsi; ci sono solo limiti di forma e dimensione, non di frequenza. Pianificare la cancellazione degli eventi vecchi (è nel commento della migrazione).
+- Supabase vede l'indirizzo IP nei propri registri di infrastruttura anche se noi non lo salviamo: da dire nell'informativa privacy.
+- Nessuna informativa privacy nel sito e nessun consenso preventivo (le statistiche sono attive di default salvo Do Not Track/Global Privacy Control o interruttore nel profilo): da valutare con il consulente legale per il GDPR.
+- Nessuna dashboard: si consultano le due viste SQL (`events_lesson_funnel`, `events_hard_exercises`) dal pannello di Supabase.
+- Non si misurano tempi, errori dell'app o eventi di speaking e ripasso oltre a avvio/fine.
+
 ## Tecnico generale (dal piano iniziale)
 - Bundle oltre 600 kB (dati delle lezioni tutti caricati): serve code splitting per livello.
 - Lint: 11 warning preesistenti (refs in render, setState in effect, ecc.) in src/lib/store.tsx e src/pages/Profile.tsx.
@@ -68,4 +115,4 @@ Ultimo aggiornamento: 29/09/2026 (punti 1-6 e 10).
 - `useStore()` troppo centrale (28 archi, `store.tsx` con coesione bassa): da spezzare in parti.
 
 ## Prossimi punti del piano
-6 (classifica) · 7 promemoria push · 8 riepilogo settimanale · 9 offline vero · 11 login Apple/email e cancellazione account · 12 voci TTS migliori · 13 Vitest · 14 CI · 15 performance · 16 accessibilità · 17 sicurezza Supabase (RLS) · 18 store a fette · 19 analytics rispettosi della privacy · 20 SEO e condivisione.
+6 (classifica) · 7 promemoria push · 8 riepilogo settimanale · 9 offline vero · 11 login Apple/email e cancellazione account · 12 voci TTS migliori · 20 SEO e condivisione.

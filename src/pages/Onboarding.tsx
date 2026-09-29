@@ -6,6 +6,7 @@ import { LevelBadge, LogoLockup } from '../components/ui';
 import { lessonsByLevel } from '../data';
 import { LEVELS, levelById } from '../data/levels';
 import type { LevelId } from '../data/types';
+import { track } from '../lib/analytics';
 import { useStore } from '../lib/store';
 
 const TIMES = [
@@ -28,6 +29,7 @@ export function Onboarding() {
 
   const finish = (dest: string) => {
     completeOnboarding({ goal, level: level && level !== 'test' ? level : undefined });
+    track('onboarding_done', { goal, level: level ?? 'none', step });
     navigate(dest);
   };
   const next = () => {
