@@ -3676,3 +3676,10 @@ main:focus {
     display: none;
   }
 }
+
+/* su telefono e tablet il visual della home non compare */
+@media (hover: none) {
+  .hero-visual {
+    display: none;
+  }
+}
