@@ -6,12 +6,14 @@ import { Counter, LevelBadge, Page } from '../components/ui';
 import { rise, stagger } from '../lib/motion';
 import { LESSONS, lessonById, lessonsByLevel } from '../data';
 import { LEVELS } from '../data/levels';
-import { currentStreak, today, useStore, type State } from '../lib/store';
+import { currentStreak, reviewQueue, today, useStore, type State } from '../lib/store';
 import { pct } from '../lib/utils';
 
 export function Review() {
   const { state } = useStore();
-  const list = Object.values(state.mistakes).sort((a, b) => b.count - a.count || b.at - a.at);
+  const list = reviewQueue(state);
+  const errors = Object.keys(state.mistakes).length;
+  const scheduled = Object.keys(state.srs).length;
   const byLesson = new Map<string, number>();
   list.forEach((m) => byLesson.set(m.lessonId, (byLesson.get(m.lessonId) ?? 0) + 1));
 
@@ -20,13 +22,13 @@ export function Review() {
       <div className="container narrow">
         <motion.div variants={stagger} initial="hidden" animate="show">
           <motion.div variants={rise} className="eyebrow">
-            Ripetizione mirata
+            Ripetizione dilazionata
           </motion.div>
           <motion.h1 variants={rise} style={{ fontSize: 'clamp(2.2rem,5vw,3.2rem)', fontWeight: 800, margin: '6px 0 10px' }}>
-            <span className="gradient-text">Ripasso</span> degli errori
+            <span className="gradient-text">Ripasso</span> di oggi
           </motion.h1>
           <motion.p variants={rise} className="muted">
-            Ogni esercizio sbagliato finisce qui. Rispondi correttamente per toglierlo dalla lista.
+            Gli esercizi sbagliati tornano subito. Quelli giusti ricompaiono a intervalli crescenti (1, 3, 7, 14, 30 giorni...) proprio quando stai per dimenticarli.
           </motion.p>
         </motion.div>
 
@@ -36,7 +38,7 @@ export function Review() {
               🧘
             </motion.div>
             <h2>Tutto pulito!</h2>
-            <p className="muted">Non hai errori da ripassare. Continua con le lezioni.</p>
+            <p className="muted">Nulla da ripassare ora. {scheduled > 0 ? `${scheduled} esercizi sono in programma per i prossimi giorni.` : 'Continua con le lezioni.'}</p>
             <Link to="/levels" className="btn btn-primary" style={{ marginTop: 10 }}>
               Vai alle lezioni
             </Link>
@@ -49,9 +51,9 @@ export function Review() {
                   <Counter to={list.length} />
                 </div>
                 <div>
-                  <h3>{list.length === 1 ? 'esercizio da ripassare' : 'esercizi da ripassare'}</h3>
+                  <h3>{list.length === 1 ? 'esercizio da ripassare oggi' : 'esercizi da ripassare oggi'}</h3>
                   <div className="muted" style={{ fontSize: '.9rem' }}>
-                    Sessioni da massimo 12, partendo dai più sbagliati
+                    {errors > 0 ? `${errors} errori aperti · ` : ''}{list.length - errors > 0 ? `${list.length - errors} in scadenza · ` : ''}sessioni da massimo 12
                   </div>
                 </div>
               </div>

@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { LESSONS } from '../data';
-import { currentStreak, useStore } from '../lib/store';
+import { currentStreak, reviewQueue, useStore } from '../lib/store';
 import { normalize } from '../lib/utils';
 import { IBook, IHome, IMic, IMoon, IRepeat, ISearch, ISun, ITarget, IUser } from './Icons';
 import { LevelBadge } from './ui';
@@ -20,7 +20,7 @@ export function TopBar({ onSearch }: { onSearch: () => void }) {
   const { state, setTheme, user, cloud, sync } = useStore();
   const [scrolled, setScrolled] = useState(false);
   const streak = currentStreak(state);
-  const mistakes = Object.keys(state.mistakes).length;
+  const mistakes = reviewQueue(state).length;
 
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 8);
@@ -94,7 +94,7 @@ export function TopBar({ onSearch }: { onSearch: () => void }) {
 
 export function TabBar() {
   const { state } = useStore();
-  const mistakes = Object.keys(state.mistakes).length;
+  const mistakes = reviewQueue(state).length;
   return (
     <nav className="tabbar" aria-label="Principale">
       {LINKS.filter((l) => !l.desktopOnly).map((l) => (

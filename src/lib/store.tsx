@@ -7,6 +7,9 @@ import {
   emptyDoc,
   fromLegacy,
   isActiveMistake,
+  isDue,
+  nextSrs,
+  type SrsCard,
   mergeDocs,
   sanitize,
   settingsOf,
@@ -36,6 +39,7 @@ export interface State {
   speaking: Record<string, LessonProgress>;
   theoryRead: Record<string, true>;
   mistakes: Record<string, Mistake>;
+  srs: Record<string, SrsCard>;
   seen: Record<string, Record<number, number>>;
   streak: { count: number; last: string | null; best: number };
   xpByDay: Record<string, number>;
@@ -118,6 +122,16 @@ export function currentStreak(s: State) {
   return dayDiff(s.streak.last, today()) <= 1 ? s.streak.count : 0;
 }
 
+/** Esercizi da ripassare ora: prima gli errori aperti, poi le schede scadute (le più in ritardo per prime). */
+export function reviewQueue(s: State, now = Date.now()): Mistake[] {
+  const errors = Object.values(s.mistakes).sort((a, b) => b.count - a.count || b.at - a.at);
+  const due = Object.entries(s.srs)
+    .filter(([k, c]) => isDue(c, now) && !s.mistakes[k])
+    .sort((a, b) => a[1].due - b[1].due)
+    .map(([, c]) => ({ lessonId: c.lessonId, index: c.index, count: 0, at: c.at }));
+  return [...errors, ...due];
+}
+
 export const starsFor = (score: number) => (score >= 90 ? 3 : score >= 70 ? 2 : score >= 50 ? 1 : 0);
 
 const systemTheme = (): Theme => (typeof matchMedia !== 'undefined' && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
@@ -135,6 +149,7 @@ function view(doc: Doc, sys: Theme): State {
     speaking: doc.speaking ?? {},
     theoryRead,
     mistakes,
+    srs: doc.srs ?? {},
     seen: doc.seen as State['seen'],
     streak: streakOf(byDay),
     xpByDay: byDay,
@@ -149,6 +164,7 @@ interface Actions {
   finishLesson: (id: string, score: number) => { stars: number; improved: boolean };
   finishSpeaking: (id: string, score: number) => { stars: number; improved: boolean };
   markTheory: (id: string) => void;
+  recordAnswer: (lessonId: string, index: number, ok: boolean) => void;
   recordMistake: (lessonId: string, index: number) => void;
   clearMistake: (lessonId: string, index: number) => void;
   markSeen: (lessonId: string, indices: number[]) => void;
@@ -388,6 +404,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       finishLesson,
       finishSpeaking,
       markTheory: (id) => update((d) => (d.theoryRead[id] ? d : { ...d, theoryRead: { ...d.theoryRead, [id]: now() } })),
+      recordAnswer: (lessonId, index, ok) =>
+        update((d) => {
+          const k = `${lessonId}#${index}`;
+          return { ...d, srs: { ...d.srs, [k]: nextSrs(d.srs?.[k], lessonId, index, ok, now()) } };
+        }),
       recordMistake: (lessonId, index) =>
         update((d) => {
           const k = `${lessonId}#${index}`;

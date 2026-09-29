@@ -10,6 +10,7 @@
  * - completed / seen: massimo (miglior punteggio, stelle, volte visto).
  * - mistakes: ogni errore ha data di registrazione e data di "risolto";
  *   vince l'evento più recente (un errore risolto su un dispositivo sparisce anche sugli altri).
+ * - srs: ripetizione dilazionata per esercizio; vince l'ultima risposta (last-writer-wins).
  * - theoryRead: unione.
  * - impostazioni: vince la modifica più recente (last-writer-wins) campo per campo.
  */
@@ -34,6 +35,26 @@ export interface MistakeEntry {
   cleared?: number; // ultima volta risolto
 }
 
+/** Scheda di ripetizione dilazionata (Leitner) di un singolo esercizio. */
+export interface SrsCard {
+  lessonId: string;
+  index: number;
+  step: number; // scatola 0..SRS_DAYS.length-1
+  due: number; // ms: da quando va ripassato
+  at: number; // ultima risposta
+}
+
+/** Giorni di attesa per scatola: sbagliato = 0 (subito), poi 1, 3, 7, 14, 30, 60, 120. */
+export const SRS_DAYS = [0, 1, 3, 7, 14, 30, 60, 120];
+const DAY_MS = 86400000;
+
+export function nextSrs(prev: SrsCard | undefined, lessonId: string, index: number, ok: boolean, now: number): SrsCard {
+  const step = ok ? Math.min((prev?.step ?? 0) + 1, SRS_DAYS.length - 1) : 0;
+  return { lessonId, index, step, due: now + SRS_DAYS[step] * DAY_MS, at: Math.max(now, (prev?.at ?? 0) + 1) };
+}
+
+export const isDue = (c: SrsCard, now: number) => c.due <= now;
+
 export interface Settings {
   theme: ThemePref;
   sound: boolean;
@@ -47,6 +68,7 @@ export interface Doc {
   epoch?: number; // data dell'ultimo "azzera progressi": i dati di epoche precedenti vengono scartati
   completed: Record<string, LessonProgress>;
   speaking?: Record<string, LessonProgress>; // scenari di conversazione
+  srs?: Record<string, SrsCard>; // ripetizione dilazionata, chiave "lezione#indice"
   theoryRead: Record<string, number>;
   mistakes: Record<string, MistakeEntry>;
   seen: Record<string, Record<string, number>>;
@@ -106,6 +128,13 @@ export function mergeDocs(a: Doc, b: Doc): Doc {
     settings,
   };
   if (a.speaking || b.speaking) out.speaking = mergeMap(a.speaking, b.speaking, progress);
+  if (a.srs || b.srs)
+    out.srs = mergeMap(a.srs, b.srs, (x, y) => {
+      if (!x) return y!;
+      if (!y) return x;
+      if (x.at !== y.at) return x.at > y.at ? x : y;
+      return stable(x) >= stable(y) ? x : y;
+    });
   if (a.epoch) out.epoch = a.epoch; // epoche uguali: stesso valore da entrambi i lati
   return out;
 }
@@ -141,6 +170,7 @@ export function sanitize(raw: unknown): Doc {
     settings: obj(r.settings) ?? d.settings,
   };
   if (obj(r.speaking)) out.speaking = r.speaking;
+  if (obj(r.srs)) out.srs = r.srs;
   if (typeof r.epoch === "number" && r.epoch > 0) out.epoch = r.epoch;
   return out;
 }

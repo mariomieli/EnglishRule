@@ -11,7 +11,7 @@ import { lessonById, nextLesson } from '../data';
 import { levelById } from '../data/levels';
 import type { Exercise } from '../data/types';
 import { sfx } from '../lib/audio';
-import { starsFor, today, useStore } from '../lib/store';
+import { reviewQueue, starsFor, today, useStore } from '../lib/store';
 import { pickExercises } from '../lib/pick';
 import { pct } from '../lib/utils';
 
@@ -53,8 +53,7 @@ export function ReviewPractice() {
   const { state } = useStore();
   // congeliamo la lista all'avvio della sessione
   const [items] = useState<Item[]>(() =>
-    Object.values(state.mistakes)
-      .sort((a, b) => b.count - a.count || b.at - a.at)
+    reviewQueue(state)
       .slice(0, 12)
       .flatMap((m) => {
         const l = lessonById(m.lessonId);
@@ -94,7 +93,7 @@ function NotFound() {
 
 function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesson' | 'review'; lessonId?: string; title: string }) {
   const navigate = useNavigate();
-  const { state, addXp, finishLesson, recordMistake, clearMistake } = useStore();
+  const { state, addXp, finishLesson, recordAnswer, recordMistake, clearMistake } = useStore();
   const [queue, setQueue] = useState<Item[]>(items);
   const [pos, setPos] = useState(0);
   const [answer, setAnswer] = useState<Answer>(null);
@@ -119,6 +118,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
   const check = useCallback(() => {
     if (!item || checked || !isComplete(item.ex, answer)) return;
     const ok = evaluate(item.ex, answer);
+    if (!item.retry) recordAnswer(item.lessonId, item.index, ok);
     setChecked(true);
     setCorrect(ok);
     if (ok) {
@@ -145,7 +145,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
         if (mode === 'lesson') setQueue((q) => [...q, { ...item, retry: true }]);
       }
     }
-  }, [item, checked, answer, combo, mode, state.sound, clearMistake, recordMistake]);
+  }, [item, checked, answer, combo, mode, state.sound, clearMistake, recordMistake, recordAnswer]);
 
   const next = useCallback(() => {
     if (pos + 1 < queue.length) {
