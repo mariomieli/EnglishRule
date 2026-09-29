@@ -144,7 +144,7 @@ input {
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left));
 }
 
 .container.narrow {
@@ -152,17 +152,17 @@ input {
 }
 
 main {
-  padding-top: 88px;
+  padding-top: calc(88px + env(safe-area-inset-top));
   padding-bottom: 120px;
 }
 
 @media (max-width: 760px) and (hover: none) {
   main {
-    padding-top: 72px;
+    padding-top: calc(72px + env(safe-area-inset-top));
     padding-bottom: calc(96px + env(safe-area-inset-bottom));
   }
   .container {
-    padding: 0 16px;
+    padding: 0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
   }
 }
 
@@ -247,7 +247,7 @@ main {
   left: 0;
   right: 0;
   z-index: 50;
-  padding: 14px 0;
+  padding: calc(14px + env(safe-area-inset-top)) 0 14px; /* sotto la barra di stato dell'iPhone quando si apre dalla Home */
   transition: background 0.3s, backdrop-filter 0.3s, border-color 0.3s;
   border-bottom: 1px solid transparent;
 }
@@ -1512,7 +1512,7 @@ tbody tr:hover {
   position: sticky;
   top: 0;
   z-index: 30;
-  padding: 16px 0;
+  padding: calc(16px + env(safe-area-inset-top)) 0 16px;
   background: color-mix(in srgb, var(--bg) 70%, transparent);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -3070,7 +3070,7 @@ tbody tr:hover {
 }
 
 .onboarding {
-  padding-top: 40px;
+  padding-top: calc(40px + env(safe-area-inset-top));
   padding-bottom: 40px;
   min-height: calc(100 * var(--vh));
   display: flex;
@@ -3176,7 +3176,7 @@ main:focus {
 
 .skip-link {
   position: fixed;
-  top: 8px;
+  top: calc(8px + env(safe-area-inset-top));
   left: 8px;
   z-index: 100;
   padding: 10px 16px;
