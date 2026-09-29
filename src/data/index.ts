@@ -13,6 +13,12 @@ export const LESSONS: LessonMeta[] = order.flatMap((lv) => LESSON_META.filter((l
 export const lessonById = (id: string) => LESSONS.find((l) => l.id === id);
 export const lessonsByLevel = (lv: LevelId) => LESSONS.filter((l) => l.level === lv);
 
+/** Numero della lezione all'interno del suo livello (1, 2, 3...). */
+export const lessonNumber = (id: string) => {
+  const l = lessonById(id);
+  return l ? lessonsByLevel(l.level).findIndex((x) => x.id === id) + 1 : 0;
+};
+
 export const nextLesson = (id: string) => {
   const i = LESSONS.findIndex((l) => l.id === id);
   return i >= 0 ? LESSONS[i + 1] : undefined;

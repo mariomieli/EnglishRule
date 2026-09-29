@@ -5,12 +5,10 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ExerciseView } from '../components/Exercises';
 import { evaluate, given, isComplete, solution, typeLabel, type Answer } from '../lib/grading';
 import { IClose } from '../components/Icons';
-import { TopicIcon } from '../components/TopicIcon';
-import { topicOf } from '../data/topics';
 import { Rich } from '../components/Rich';
 import { Theory } from '../components/Theory';
 import { Counter, Stars } from '../components/ui';
-import { lessonById, nextLesson } from '../data';
+import { lessonById, lessonNumber, nextLesson } from '../data';
 import { useLesson, useLessons } from '../data/useLesson';
 import { levelById } from '../data/levels';
 import type { Exercise, Lesson } from '../data/types';
@@ -393,10 +391,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
             <motion.div className="rule-sheet" role="dialog" aria-label={`Regola: ${ruleLesson.title}`} initial={{ y: 80 }} animate={{ y: 0 }} exit={{ y: 80 }} onClick={(e) => e.stopPropagation()}>
               <div className="rule-sheet-head">
                 <h3>
-                  <span style={{ color: topicOf(ruleLesson.id).color, display: 'inline-flex', verticalAlign: 'middle', marginRight: 6 }}>
-                    <TopicIcon lessonId={ruleLesson.id} size={22} />
-                  </span>
-                  {ruleLesson.title}
+                  {lessonNumber(ruleLesson.id)}. {ruleLesson.title}
                 </h3>
                 <button className="icon-btn" onClick={() => setRule(false)} aria-label="Chiudi">
                   <IClose />

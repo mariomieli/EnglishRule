@@ -3,11 +3,10 @@ import { useEffect, useState, type CSSProperties } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { IArrow, IBack, IClock } from '../components/Icons';
 import { Theory } from '../components/Theory';
-import { TopicIcon, TopicIconById } from '../components/TopicIcon';
 import { TOPICS, topicOf, type TopicId } from '../data/topics';
 import { LevelBadge, Page, ProgressRing, Stars } from '../components/ui';
 import { rise, stagger } from '../lib/motion';
-import { lessonById, lessonsByLevel, nextLesson } from '../data';
+import { lessonById, lessonNumber, lessonsByLevel, nextLesson } from '../data';
 import { useLesson } from '../data/useLesson';
 import { LEVELS, levelById } from '../data/levels';
 import { scenariosByLevel } from '../data/speaking';
@@ -93,7 +92,7 @@ export function LevelPage() {
           </button>
           {topics.map(({ t, n }) => (
             <button key={t.id} className={`topic-filter ${topic === t.id ? 'on' : ''}`} style={{ '--topic': t.color } as CSSProperties} onClick={() => setTopic(t.id)} aria-pressed={topic === t.id}>
-              <TopicIconById topic={t.id} size={15} /> {t.short} <span>{n}</span>
+              {t.short} <span>{n}</span>
             </button>
           ))}
         </div>
@@ -114,7 +113,7 @@ export function LevelPage() {
                   <span className={`road-dot ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} aria-hidden />
                   <Link to={`/lesson/${l.id}`} className={`road-card ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} data-n={i + 1} style={{ '--topic': t.color } as CSSProperties}>
                     <div className="road-node">
-                      <TopicIconById topic={t.id} size={26} />
+                      <span className="num">{i + 1}</span>
                       {p && <span className="check">✓</span>}
                     </div>
                     <div className="info">
@@ -196,8 +195,8 @@ export function LessonPage() {
           <IBack /> Livello {lv.id} · {lv.name}
         </Link>
         <motion.div className="lesson-header" variants={stagger} initial="hidden" animate="show">
-          <motion.div variants={rise} className="emoji" style={{ color: topicOf(lesson.id).color }} whileHover={{ rotate: [0, -10, 10, 0] }}>
-            <TopicIcon lessonId={lesson.id} size={34} />
+          <motion.div variants={rise} className="emoji" whileHover={{ rotate: [0, -10, 10, 0] }}>
+            {lessonNumber(lesson.id)}
           </motion.div>
           <motion.div variants={rise} style={{ minWidth: 0 }}>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', marginBottom: 8 }}>

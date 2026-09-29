@@ -3588,3 +3588,19 @@ main:focus {
     display: none;
   }
 }
+
+/* numero della lezione al posto delle icone */
+.road-node .num {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.lesson-node,
+.continue-card .emoji,
+.lesson-header .emoji,
+.cmd-item .e {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 800;
+}
