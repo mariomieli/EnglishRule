@@ -5,6 +5,6 @@
 //   useCloud.ts  account e sincronizzazione
 //   provider.tsx composizione: contesto React e azioni
 export { StoreProvider, useStore } from './provider';
-export { currentStreak, reviewQueue, starsFor, today } from './derived';
+export { currentStreak, reviewQueue, starsFor, today, upcomingReviews } from './derived';
 export type { LessonProgress, Mistake, State, Theme, ThemePref } from './derived';
 export type { SyncStatus } from './useCloud';

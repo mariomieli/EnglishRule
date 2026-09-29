@@ -6,7 +6,7 @@ import { Counter, LevelBadge, Page } from '../components/ui';
 import { rise, stagger } from '../lib/motion';
 import { LESSONS, lessonById, lessonsByLevel } from '../data';
 import { LEVELS } from '../data/levels';
-import { currentStreak, reviewQueue, today, useStore } from '../lib/store';
+import { currentStreak, reviewQueue, today, upcomingReviews, useStore } from '../lib/store';
 import { analyticsEnabled, browserSaysNo, setAnalytics } from '../lib/analytics';
 import { badgesOf } from '../lib/badges';
 import { pct } from '../lib/utils';
@@ -16,8 +16,28 @@ export function Review() {
   const list = reviewQueue(state);
   const errors = Object.keys(state.mistakes).length;
   const scheduled = Object.keys(state.srs).length;
+  const [nowMs] = useState(() => Date.now());
+  const upcoming = upcomingReviews(state, nowMs);
   const byLesson = new Map<string, number>();
   list.forEach((m) => byLesson.set(m.lessonId, (byLesson.get(m.lessonId) ?? 0) + 1));
+
+  const upcomingCard = upcoming.tomorrow + upcoming.week + upcoming.later > 0 && (
+  <div className="card" style={{ marginTop: 18, padding: 18 }}>
+    <h3 style={{ marginBottom: 8 }}>In arrivo</h3>
+    <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+      {[
+        { n: upcoming.tomorrow, l: 'entro domani' },
+        { n: upcoming.week, l: 'nei prossimi 7 giorni' },
+        { n: upcoming.later, l: 'più avanti' },
+      ].map((u) => (
+        <div key={u.l}>
+          <div className="display" style={{ fontSize: '1.6rem', fontWeight: 800 }}>{u.n}</div>
+          <div className="faint" style={{ fontSize: '.85rem' }}>{u.l}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
   return (
     <Page>
@@ -35,6 +55,7 @@ export function Review() {
         </motion.div>
 
         {list.length === 0 ? (
+          <>
           <motion.div className="card empty-state" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} style={{ marginTop: 24 }}>
             <motion.div className="e" animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 2.4 }}>
               🧘
@@ -45,6 +66,8 @@ export function Review() {
               Vai alle lezioni
             </Link>
           </motion.div>
+            {upcomingCard}
+          </>
         ) : (
           <>
             <motion.div className="card cta-bar" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ marginTop: 24 }}>
@@ -63,6 +86,7 @@ export function Review() {
                 <IRepeat /> Inizia il ripasso
               </Link>
             </motion.div>
+            {upcomingCard}
             <div className="section-title" style={{ marginTop: 36 }}>
               <h2 style={{ fontSize: '1.3rem' }}>Argomenti da rinforzare</h2>
             </div>

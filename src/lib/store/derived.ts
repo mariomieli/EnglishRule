@@ -81,3 +81,19 @@ export function view(doc: Doc, sys: Theme): State {
   };
 }
 
+
+/** Ripassi in arrivo (schede non ancora scadute): domani, entro 7 giorni, oltre. */
+export function upcomingReviews(s: State, now = Date.now()): { tomorrow: number; week: number; later: number } {
+  const out = { tomorrow: 0, week: 0, later: 0 };
+  const startOfToday = new Date(now);
+  startOfToday.setHours(0, 0, 0, 0);
+  const day = 86400000;
+  for (const c of Object.values(s.srs)) {
+    if (isDue(c, now)) continue;
+    const d = Math.floor((c.due - startOfToday.getTime()) / day); // 0 = oggi, 1 = domani...
+    if (d <= 1) out.tomorrow++;
+    else if (d <= 7) out.week++;
+    else out.later++;
+  }
+  return out;
+}

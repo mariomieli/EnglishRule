@@ -42,15 +42,26 @@ export interface SrsCard {
   step: number; // scatola 0..SRS_DAYS.length-1
   due: number; // ms: da quando va ripassato
   at: number; // ultima risposta
+  lapses?: number; // quante volte è stato sbagliato
+  streak?: number; // risposte giuste di fila
 }
 
 /** Giorni di attesa per scatola: sbagliato = 0 (subito), poi 1, 3, 7, 14, 30, 60, 120. */
 export const SRS_DAYS = [0, 1, 3, 7, 14, 30, 60, 120];
 const DAY_MS = 86400000;
 
+/** Moltiplicatore dell'attesa: gli esercizi che sbagli spesso tornano prima, quelli sempre giusti più tardi. */
+export function srsMultiplier(lapses: number, streak: number): number {
+  if (lapses > 0) return Math.max(0.5, 1 - 0.15 * Math.min(lapses, 3));
+  return streak >= 4 ? 1.3 : 1;
+}
+
 export function nextSrs(prev: SrsCard | undefined, lessonId: string, index: number, ok: boolean, now: number): SrsCard {
   const step = ok ? Math.min((prev?.step ?? 0) + 1, SRS_DAYS.length - 1) : 0;
-  return { lessonId, index, step, due: now + SRS_DAYS[step] * DAY_MS, at: Math.max(now, (prev?.at ?? 0) + 1) };
+  const lapses = (prev?.lapses ?? 0) + (ok ? 0 : 1);
+  const streak = ok ? (prev?.streak ?? 0) + 1 : 0;
+  const wait = ok ? SRS_DAYS[step] * DAY_MS * srsMultiplier(lapses, streak) : 0;
+  return { lessonId, index, step, due: now + Math.round(wait), at: Math.max(now, (prev?.at ?? 0) + 1), lapses, streak };
 }
 
 export const isDue = (c: SrsCard, now: number) => c.due <= now;
