@@ -3478,16 +3478,14 @@ main:focus {
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  color: var(--topic);
-  background: color-mix(in srgb, var(--topic) 13%, var(--surface-solid));
-  border: 2px solid color-mix(in srgb, var(--topic) 40%, transparent);
+  color: var(--text); /* testo scuro/chiaro del tema: il colore del livello da solo non ha contrasto sufficiente */
+  background: color-mix(in srgb, var(--lv-from) 16%, var(--surface-solid));
+  border: 2px solid color-mix(in srgb, var(--lv-from) 45%, transparent);
 }
 
 .road-card.done .road-node {
-  color: #fff;
-  border-color: transparent;
-  background: linear-gradient(135deg, var(--lv-from), var(--lv-to));
-  box-shadow: 0 8px 22px -8px var(--lv-from);
+  border-color: var(--lv-from);
+  box-shadow: 0 8px 22px -10px var(--lv-from);
 }
 
 .road-node .check {
@@ -3528,8 +3526,8 @@ main:focus {
   border-radius: 99px;
   font-size: 0.66rem;
   letter-spacing: 0.06em;
-  color: #fff;
-  background: linear-gradient(135deg, var(--lv-from), var(--lv-to));
+  color: var(--text);
+  background: color-mix(in srgb, var(--lv-from) 24%, transparent);
 }
 
 .road-card h3 {
