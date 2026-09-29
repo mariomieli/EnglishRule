@@ -11,13 +11,6 @@ import logoMark from '../assets/logo-mark.png';
 import { currentStreak, today, useStore } from '../lib/store';
 import { pct } from '../lib/utils';
 
-const WORDS = [
-  { t: 'have been', x: '2%', y: '12%', d: 0 },
-  { t: 'would have', x: '62%', y: '4%', d: 0.6 },
-  { t: 'Had I known', x: '70%', y: '70%', d: 1.2 },
-  { t: 'is/are', x: '-4%', y: '66%', d: 1.8 },
-  { t: 'used to', x: '38%', y: '88%', d: 2.4 },
-];
 
 export function Home() {
   const { state } = useStore();
@@ -185,44 +178,36 @@ export function Home() {
   );
 }
 
+const SENTENCES = [
+  { lv: 'A1', before: 'She ', hl: 'is', after: ' a teacher.' },
+  { lv: 'B1', before: 'She ', hl: 'has been teaching', after: ' for ten years.' },
+  { lv: 'C1', before: '', hl: 'Had she known', after: ', she would have left.' },
+];
+
+/** Stessa lingua a livelli diversi: tre frasi sempre più precise. */
 function HeroVisual() {
   return (
-    <>
-      <motion.div className="orbit" animate={{ rotate: 360 }} transition={{ duration: 60, repeat: Infinity, ease: 'linear' }} />
-      <motion.div className="orbit o2" animate={{ rotate: -360 }} transition={{ duration: 45, repeat: Infinity, ease: 'linear' }} />
-      <div className="orbit o3" />
-      {LEVELS.map((lv, i) => {
-        const a = (i / LEVELS.length) * Math.PI * 2 - Math.PI / 2;
-        return (
-          <motion.div
-            key={lv.id}
-            style={{ position: 'absolute', left: `${50 + Math.cos(a) * 42}%`, top: `${50 + Math.sin(a) * 42}%`, x: '-50%', y: '-50%' }}
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1, y: ['-50%', '-62%', '-50%'] }}
-            transition={{ scale: { delay: 0.4 + i * 0.1, type: 'spring' }, opacity: { delay: 0.4 + i * 0.1 }, y: { duration: 3 + i * 0.3, repeat: Infinity, ease: 'easeInOut' } }}
-          >
-            <LevelBadge id={lv.id} size={52} />
-          </motion.div>
-        );
-      })}
-      <motion.div className="hero-core" initial={{ scale: 0, rotate: -30 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 160, damping: 12, delay: 0.2 }}>
-        <motion.span animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 2.6, repeat: Infinity }}>
-          Aa
-        </motion.span>
-      </motion.div>
-      {WORDS.map((w) => (
+    <div className="hero-sentences">
+      {SENTENCES.map((s, i) => (
         <motion.div
-          key={w.t}
-          className="floating-word"
-          style={{ left: w.x, top: w.y }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: [0, -12, 0] }}
-          transition={{ opacity: { delay: 0.8 + w.d / 3 }, y: { duration: 4, delay: w.d, repeat: Infinity, ease: 'easeInOut' } }}
+          key={s.lv}
+          className={`hero-sentence s${i}`}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: [0, -6, 0] }}
+          transition={{ opacity: { delay: 0.3 + i * 0.25 }, y: { delay: 0.8 + i * 0.4, duration: 5, repeat: Infinity, ease: 'easeInOut' } }}
         >
-          {w.t}
+          <LevelBadge id={s.lv} size={40} />
+          <span>
+            {s.before}
+            <mark>{s.hl}</mark>
+            {s.after}
+          </span>
         </motion.div>
       ))}
-    </>
+      <motion.p className="hero-caption" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
+        La stessa lingua, sempre più precisa
+      </motion.p>
+    </div>
   );
 }
 
