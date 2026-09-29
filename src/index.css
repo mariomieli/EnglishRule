@@ -3414,7 +3414,7 @@ main:focus {
 
 .path-head {
   position: relative;
-  overflow: hidden;
+  isolation: isolate; /* l'alone resta dietro al contenuto ma sopra lo sfondo della pagina */
   display: flex;
   align-items: center;
   gap: 22px;
@@ -3440,16 +3440,14 @@ main:focus {
 
 .path-glow {
   position: absolute;
-  width: 420px;
-  height: 420px;
-  border-radius: 50%;
-  left: -120px;
-  top: -160px;
-  background: var(--lv-from);
-  opacity: var(--blob-opacity);
-  filter: blur(100px);
-  pointer-events: none;
   z-index: -1;
+  left: -180px;
+  top: -150px;
+  width: 640px;
+  height: 400px;
+  pointer-events: none;
+  /* alone morbido che sfuma fino a zero: nessun bordo, nessun ritaglio */
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--lv-from) calc(var(--blob-opacity) * 80%), transparent) 0%, color-mix(in srgb, var(--lv-from) calc(var(--blob-opacity) * 34%), transparent) 45%, transparent 100%);
 }
 
 .level-path {
