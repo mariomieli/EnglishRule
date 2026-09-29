@@ -38,6 +38,9 @@ Ultimo aggiornamento: 30/09/2026. I punti del piano non ancora fatti (classifica
 - L'obiettivo giornaliero ha 4 valori fissi; i traguardi "obiettivo 7/30 giorni" contano i giorni rispetto all'obiettivo attuale. "Nuovo traguardo" compare solo dopo gli esercizi (non dopo lo speaking); i traguardi non hanno grafiche dedicate (emoji).
 - Onboarding: compare solo dalla home (non da un link diretto), non chiede il motivo di studio, traduce i minuti in XP con una tabella fissa; scegliere il livello a mano vale come il test ("Livello stabilito").
 
+## Tastiera negli esercizi
+- Durante gli esercizi Invio è riservato a "Verifica" e "Continua" (anche se il focus è su una tessera, un'opzione o una coppia): per scegliere tessere e coppie da tastiera si usa **Spazio** (o i numeri per la scelta multipla). Chi si aspetta che Invio attivi il pulsante a fuoco resta spiazzato; una versione che distingue i due casi ha fatto fallire un test nel browser e non è stata indagata.
+
 ## Esercizi: verifica e avanzamento automatici
 - Sono regolabili dal profilo (verifica automatica sì/no; avanzamento manuale, 1 s o 3 s; toccando la spiegazione si ferma). Non c'è una regolazione più fine per tipo di esercizio.
 - Con "Manuale" o dopo aver fermato l'avanzamento si resta finché non si preme Continua; con gli altri tempi la spiegazione di un esercizio giusto resta visibile poco.

@@ -45,17 +45,17 @@ test('riordino usando solo la tastiera', async ({ page }) => {
   const n = await bank.count();
   for (let i = 0; i < n; i++) {
     await bank.first().focus();
-    await page.keyboard.press('Enter');
+    await page.keyboard.press('Space'); // Spazio attiva il pulsante; Invio è riservato a "Verifica"/"Continua"
   }
   await expect(page.getByRole('group', { name: 'La tua frase' }).locator('button')).toHaveCount(n);
   // una tessera messa nella frase si può togliere da tastiera, e ha un nome comprensibile
   const first = page.getByRole('group', { name: 'La tua frase' }).locator('button').first();
   await expect(first).toHaveAttribute('aria-label', /toglila dalla frase/);
   await first.focus();
-  await page.keyboard.press('Enter');
+  await page.keyboard.press('Space');
   await expect(page.getByRole('group', { name: 'La tua frase' }).locator('button')).toHaveCount(n - 1);
   await bank.first().focus();
-  await page.keyboard.press('Enter');
+  await page.keyboard.press('Space');
   await page.getByRole('button', { name: 'Verifica' }).focus();
   await page.keyboard.press('Enter');
   await expect(page.locator('.feedback')).toBeVisible();
@@ -71,10 +71,10 @@ test('abbinamento usando solo la tastiera', async ({ page }) => {
   const right = cols.nth(1).locator('button');
   // ogni voce è un pulsante raggiungibile e attivabile: selezionandola cambia lo stato (aria-pressed)
   await left.first().focus();
-  await page.keyboard.press('Enter');
+  await page.keyboard.press('Space');
   await expect(left.first()).toHaveAttribute('aria-pressed', 'true');
   await right.first().focus();
-  await page.keyboard.press('Enter');
+  await page.keyboard.press('Space');
   // dopo il tentativo la selezione si azzera (giusto o sbagliato)
   await expect(left.first()).toHaveAttribute('aria-pressed', 'false');
 });
