@@ -12,7 +12,8 @@
     "repetition": "tsx scripts/repetition.ts",
     "test:sync": "tsx scripts/test-sync.ts",
     "validate:speaking": "tsx scripts/validate-speaking.ts",
-    "test:speech": "tsx scripts/test-speech.ts"
+    "test:speech": "tsx scripts/test-speech.ts",
+    "test:placement": "tsx scripts/test-placement.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",

@@ -8,55 +8,44 @@ import { LevelBadge, Page } from '../components/ui';
 import { lessonsByLevel } from '../data';
 import { LEVELS, levelById } from '../data/levels';
 import { placement } from '../data/placement';
-import type { LevelId } from '../data/types';
+import { MAX_QUESTIONS, buildDeck, nextLevel, placementResult, type Answered } from '../lib/placement';
 import { sfx } from '../lib/audio';
 import { useStore } from '../lib/store';
 import { shuffle } from '../lib/utils';
-
-/**
- * Livello = il più alto in cui si risponde bene ad almeno 4 domande su 6,
- * a patto che anche i livelli inferiori siano superati (max 1 livello "bucato" tollerato).
- */
-function computeLevel(correctByLevel: Record<LevelId, number>): LevelId {
-  let result: LevelId = 'A1';
-  let misses = 0;
-  for (const lv of LEVELS) {
-    if (correctByLevel[lv.id] >= 4) result = lv.id;
-    else if (++misses > 1) break;
-  }
-  return result;
-}
+import type { PlacementQuestion } from '../data/types';
 
 export function Placement() {
   const { state, setPlacement, addXp } = useStore();
   const [phase, setPhase] = useState<'intro' | 'quiz' | 'done'>('intro');
-  const [i, setI] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
-  const [answers, setAnswers] = useState<boolean[]>([]);
+  const [answers, setAnswers] = useState<Answered[]>([]);
 
-  // opzioni mescolate per ogni domanda
-  const questions = useMemo(() => placement.map((q) => ({ ...q, order: shuffle(q.options.map((_, k) => k)) })), []);
-  const q = questions[i];
+  // domande mescolate per livello, opzioni mescolate per domanda; la prossima dipende dalle risposte
+  const deck = useMemo(() => {
+    const d = buildDeck(placement);
+    return Object.fromEntries(Object.entries(d).map(([l, qs]) => [l, qs.map((q) => ({ ...q, order: shuffle(q.options.map((_, k) => k)) }))])) as Record<string, (PlacementQuestion & { order: number[] })[]>;
+  }, []);
+  const q = useMemo(() => {
+    const lv = nextLevel(answers);
+    if (!lv) return null;
+    return deck[lv][answers.filter((a) => a.level === lv).length] ?? null;
+  }, [answers, deck]);
+  const i = answers.length;
 
   const choose = (k: number) => {
-    if (picked !== null) return;
+    if (picked !== null || !q) return;
     setPicked(k);
     if (state.sound) sfx.tap();
     setTimeout(() => {
-      const ok = k === q.answer;
-      const nextAnswers = [...answers, ok];
-      setAnswers(nextAnswers);
+      const nextAnswers = [...answers, { level: q.level, ok: k === q.answer }];
       setPicked(null);
-      if (i + 1 < questions.length) setI(i + 1);
-      else finish(nextAnswers);
+      setAnswers(nextAnswers);
+      if (!nextLevel(nextAnswers)) finish(nextAnswers);
     }, 380);
   };
 
-  const finish = (ans: boolean[]) => {
-    const by = Object.fromEntries(LEVELS.map((l) => [l.id, 0])) as Record<LevelId, number>;
-    ans.forEach((ok, k) => ok && by[questions[k].level]++);
-    const lv = computeLevel(by);
-    setPlacement(lv);
+  const finish = (ans: Answered[]) => {
+    setPlacement(placementResult(ans));
     addXp(30);
     setPhase('done');
     if (state.sound) sfx.win();
@@ -68,7 +57,7 @@ export function Placement() {
     const onKey = (e: KeyboardEvent) => {
       if (e.repeat) return;
       const n = Number(e.key);
-      if (n >= 1 && n <= q.order.length) choose(q.order[n - 1]);
+      if (q && n >= 1 && n <= q.order.length) choose(q.order[n - 1]);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -86,7 +75,7 @@ export function Placement() {
               Test di <span className="gradient-text">livello</span>
             </h1>
             <p className="muted" style={{ maxWidth: 480, margin: '0 auto 24px' }}>
-              {questions.length} domande a difficoltà crescente, dal livello A1 al C2. Rispondi d'istinto: se non conosci la risposta, scegli quella che ti sembra più naturale.
+              Il test si adatta alle tue risposte: poche domande (di solito 6-10), che salgono o scendono di difficoltà tra A1 e C2. Rispondi d'istinto: se non conosci la risposta, scegli quella che ti sembra più naturale.
             </p>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 26, flexWrap: 'wrap' }}>
               {LEVELS.map((l, k) => (
@@ -111,7 +100,7 @@ export function Placement() {
   if (phase === 'done') {
     const lv = levelById(state.placement ?? 'A1')!;
     const first = lessonsByLevel(lv.id)[0];
-    const score = answers.filter(Boolean).length;
+    const score = answers.filter((a) => a.ok).length;
     return (
       <Page>
         <div className="container narrow">
@@ -127,17 +116,18 @@ export function Placement() {
               {lv.description}
             </p>
             <p className="faint" style={{ marginBottom: 24 }}>
-              {score} risposte corrette su {questions.length} · +30 XP
+              {score} risposte corrette su {answers.length} · +30 XP
             </p>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 26 }}>
               {LEVELS.map((l) => {
-                const idx = questions.map((qq, k) => (qq.level === l.id ? k : -1)).filter((k) => k >= 0);
-                const ok = idx.filter((k) => answers[k]).length;
+                const mine = answers.filter((a) => a.level === l.id);
+                if (!mine.length) return null;
+                const ok = mine.filter((a) => a.ok).length;
                 return (
                   <div key={l.id} style={{ textAlign: 'center' }}>
                     <LevelBadge id={l.id} size={36} />
                     <div className="faint" style={{ fontSize: '.78rem', fontWeight: 700, marginTop: 4 }}>
-                      {ok}/{idx.length}
+                      {ok}/{mine.length}
                     </div>
                   </div>
                 );
@@ -159,6 +149,7 @@ export function Placement() {
     );
   }
 
+  if (!q) return null;
   const [before, after = ''] = q.prompt.split(/_{2,}/);
   return (
     <div className="practice">
@@ -168,10 +159,10 @@ export function Placement() {
             <IClose />
           </Link>
           <div className="progress" style={{ height: 14 }}>
-            <motion.div animate={{ width: `${((i + 1) / questions.length) * 100}%` }} transition={{ type: 'spring', stiffness: 120, damping: 20 }} />
+            <motion.div animate={{ width: `${Math.min(95, ((i + 1) / MAX_QUESTIONS) * 100)}%` }} transition={{ type: 'spring', stiffness: 120, damping: 20 }} />
           </div>
           <span className="faint" style={{ fontWeight: 700, fontSize: '.9rem', minWidth: 52, textAlign: 'right' }}>
-            {i + 1}/{questions.length}
+            {i + 1}
           </span>
         </div>
       </div>

@@ -6,7 +6,6 @@ import { Counter, LevelBadge, Page } from '../components/ui';
 import { rise, stagger } from '../lib/motion';
 import { LESSONS, lessonsByLevel } from '../data';
 import { LEVELS, type LevelMeta } from '../data/levels';
-import { placement } from '../data/placement';
 import { currentStreak, today, useStore } from '../lib/store';
 import { pct } from '../lib/utils';
 
@@ -168,7 +167,7 @@ export function Home() {
           <motion.div className="card test-banner" initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
             <div>
               <h2>Non sai da dove partire?</h2>
-              <p>Fai il test di livello: {placement.length} domande, circa {Math.round(placement.length / 6)} minuti. Ti diciamo dove sei nel quadro europeo.</p>
+              <p>Fai il test di livello: si adatta alle tue risposte, circa 8 domande e 2 minuti. Ti diciamo dove sei nel quadro europeo.</p>
             </div>
             <Link to="/test" className="btn btn-primary">
               Inizia il test <IArrow />
