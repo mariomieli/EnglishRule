@@ -8,6 +8,7 @@ const NEED = 2; // risposte giuste (o sbagliate) che chiudono un livello: 2 su m
 export interface Answered {
   level: LevelId;
   ok: boolean;
+  lesson?: string;
 }
 
 type Verdict = 'pass' | 'fail' | 'open';
@@ -57,3 +58,27 @@ export function placementResult(answers: Answered[]): LevelId {
 
 /** Quante domande al massimo mancano, per la barra di avanzamento (stima prudente). */
 export const MAX_QUESTIONS = 14;
+
+export interface Recommendation {
+  lesson: string;
+  misses: number;
+}
+
+/**
+ * Lezioni da rivedere in base agli errori: solo domande fino al livello stimato + 1
+ * (oltre è normale non sapere). Prima gli argomenti sbagliati più volte, poi i livelli più bassi.
+ */
+export function recommend(answers: Answered[], result: LevelId, max = 4): Recommendation[] {
+  const limit = PLACEMENT_LEVELS.indexOf(result) + 1;
+  const counts = new Map<string, { misses: number; lv: number; first: number }>();
+  answers.forEach((a, n) => {
+    if (a.ok || !a.lesson || PLACEMENT_LEVELS.indexOf(a.level) > limit) return;
+    const cur = counts.get(a.lesson) ?? { misses: 0, lv: PLACEMENT_LEVELS.indexOf(a.level), first: n };
+    cur.misses++;
+    counts.set(a.lesson, cur);
+  });
+  return [...counts.entries()]
+    .sort((x, y) => y[1].misses - x[1].misses || x[1].lv - y[1].lv || x[1].first - y[1].first)
+    .slice(0, max)
+    .map(([lesson, v]) => ({ lesson, misses: v.misses }));
+}

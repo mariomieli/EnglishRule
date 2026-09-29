@@ -48,6 +48,7 @@ export interface PlacementQuestion {
   prompt: string; // con "___" per il buco
   options: string[];
   answer: number;
+  lesson?: string; // lezione da consigliare se l'utente sbaglia
 }
 
 /* ---------------- Speaking ---------------- */

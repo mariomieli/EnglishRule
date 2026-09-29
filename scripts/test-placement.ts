@@ -1,6 +1,6 @@
 // Test del test di livello adattivo: `npm run test:placement`
 import { placement } from '../src/data/placement';
-import { PLACEMENT_LEVELS, buildDeck, nextLevel, placementResult, type Answered } from '../src/lib/placement';
+import { PLACEMENT_LEVELS, buildDeck, nextLevel, placementResult, recommend, type Answered } from '../src/lib/placement';
 
 let fails = 0;
 const ok = (c: boolean, m: string) => { if (!c) { fails++; console.log('  FALLITO:', m); } };
@@ -39,5 +39,14 @@ for (let i = 0; i < 600; i++) {
 }
 ok(within1 / n > 0.9, `precisione con rumore troppo bassa: ${(within1 / n).toFixed(2)}`);
 console.log(`Domande medie ${(total / n).toFixed(1)} (max ${maxQ}) · entro 1 livello ${(100 * within1 / n).toFixed(0)}%`);
+{
+  const a: Answered[] = [
+    { level: 'A2', ok: false, lesson: 'x' }, { level: 'A2', ok: false, lesson: 'y' }, { level: 'A2', ok: true, lesson: 'z' },
+    { level: 'B1', ok: false, lesson: 'y' }, { level: 'C2', ok: false, lesson: 'far' }, { level: 'A1', ok: false },
+  ];
+  const r = recommend(a, 'B1');
+  ok(r.length === 2 && r[0].lesson === 'y' && r[0].misses === 2 && r[1].lesson === 'x', 'raccomandazioni: ordine per errori, poi livello');
+  ok(!r.some((x) => x.lesson === 'far' || x.lesson === 'z'), 'raccomandazioni: niente lezioni oltre il livello +1 o risposte giuste');
+}
 if (fails) { console.log(`${fails} test falliti`); process.exit(1); }
 console.log('OK: test di livello adattivo');

@@ -82,6 +82,7 @@ placement.forEach((q, i) => {
   if (q.answer < 0 || q.answer >= q.options.length) errors.push(`placement ${i + 1}: answer`);
   if (new Set(q.options).size !== q.options.length) errors.push(`placement ${i + 1}: opzioni duplicate`);
   if (/[–—]/.test(q.prompt + q.options.join())) errors.push(`placement ${i + 1}: trattino lungo`);
+  if (!q.lesson || !lessons.some((l) => l.id === q.lesson)) errors.push(`placement ${i + 1}: lezione mancante o inesistente (${q.lesson})`);
 });
 
 const perLevel = lessons.reduce<Record<string, number>>((a, l) => ((a[l.level] = (a[l.level] ?? 0) + 1), a), {});
