@@ -27,4 +27,6 @@ Markup inline: `**grassetto**`, `*corsivo*`, `==evidenziato==`.
 
 ## Deploy
 
-Sito statico (cartella `dist/`). Inclusi `vercel.json` e `public/_redirects` (Netlify) per il routing SPA.
+Pubblicato su GitHub Pages: https://mariomieli.github.io/EnglishRule/ (deploy automatico a ogni push su `main`, vedi `.github/workflows/deploy.yml`).
+
+Per altri hosting statici: `npm run build` e pubblica `dist/`. Inclusi `vercel.json` e `public/_redirects` (Netlify) per il routing SPA.

@@ -63,7 +63,7 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <StoreProvider>
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
           <Shell />
         </BrowserRouter>
       </StoreProvider>
