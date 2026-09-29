@@ -2873,3 +2873,42 @@ tbody tr:hover {
     display: none;
   }
 }
+
+/* barra superiore sempre su una riga */
+.search-trigger,
+.nav-link,
+.chip {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1280px) {
+  .topbar .container {
+    gap: 10px;
+  }
+  .nav-links {
+    margin-left: 6px;
+  }
+  .nav-link {
+    padding: 8px 11px;
+  }
+  .search-trigger {
+    min-width: 0;
+  }
+  .search-trigger .search-label,
+  .xp-chip {
+    display: none;
+  }
+}
+
+@media (max-width: 960px) {
+  .search-trigger kbd,
+  .brand span:last-child,
+  .nav-link.desktop-only {
+    display: none;
+  }
+}
+
+.topbar .container {
+  max-width: 1320px;
+}

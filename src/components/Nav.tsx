@@ -42,7 +42,7 @@ export function TopBar({ onSearch }: { onSearch: () => void }) {
         </Link>
         <nav className="nav-links" aria-label="Principale">
           {LINKS.map((l) => (
-            <NavLink key={l.to} to={l.to} end={l.end} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            <NavLink key={l.to} to={l.to} end={l.end} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''} ${l.desktopOnly ? 'desktop-only' : ''}`}>
               {({ isActive }) => (
                 <>
                   {isActive && <motion.span layoutId="nav-pill" className="pill" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
@@ -55,7 +55,7 @@ export function TopBar({ onSearch }: { onSearch: () => void }) {
         </nav>
         <div className="spacer" />
         <button className="search-trigger" onClick={onSearch}>
-          <ISearch width={16} height={16} /> Cerca argomento <kbd>⌘K</kbd>
+          <ISearch width={16} height={16} /> <span className="search-label">Cerca argomento</span> <kbd>⌘K</kbd>
         </button>
         <span className="chip" title="Giorni consecutivi di studio">
           <motion.span animate={streak > 0 ? { scale: [1, 1.25, 1] } : {}} transition={{ repeat: Infinity, repeatDelay: 3, duration: 0.6 }}>
@@ -63,7 +63,7 @@ export function TopBar({ onSearch }: { onSearch: () => void }) {
           </motion.span>
           {streak}
         </span>
-        <span className="chip hide-mobile" title="Punti esperienza">
+        <span className="chip hide-mobile xp-chip" title="Punti esperienza">
           ⚡ {state.xp.toLocaleString('it-IT')}
         </span>
         <button className="icon-btn" onClick={onSearch} aria-label="Cerca" style={{ display: 'none' }} data-mobile-search>
