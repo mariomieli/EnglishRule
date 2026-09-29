@@ -7,7 +7,15 @@ const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 /** null se il cloud non è configurato: l'app funziona solo in locale. */
 export const supabase: SupabaseClient | null = url && key ? createClient(url, key, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }) : null;
 
-export const googleEnabled = import.meta.env.VITE_AUTH_GOOGLE === 'true';
+/** Provider di login attivi, letti dalla configurazione di Supabase: attivare Google non richiede un nuovo deploy. */
+let providers: Promise<{ google: boolean }> | null = null;
+export function authProviders() {
+  providers ??= fetch(`${url}/auth/v1/settings`, { headers: { apikey: key! } })
+    .then((r) => r.json())
+    .then((s) => ({ google: !!s?.external?.google || import.meta.env.VITE_AUTH_GOOGLE === 'true' }))
+    .catch(() => ({ google: import.meta.env.VITE_AUTH_GOOGLE === 'true' }));
+  return providers;
+}
 
 /** URL a cui tornare dopo conferma email, reset password o login Google. */
 export const redirectUrl = () => `${window.location.origin}${import.meta.env.BASE_URL}account`;

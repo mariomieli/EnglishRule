@@ -3,7 +3,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Page } from '../components/ui';
 import { useStore } from '../lib/store';
-import { googleEnabled, redirectUrl, supabase } from '../lib/sync/cloud';
+import { authProviders, redirectUrl, supabase } from '../lib/sync/cloud';
 
 type Mode = 'login' | 'signup' | 'forgot' | 'recovery';
 
@@ -105,6 +105,10 @@ function AuthForm({ mode, setMode }: { mode: Mode; setMode: (m: Mode) => void })
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const navigate = useNavigate();
+  const [googleEnabled, setGoogle] = useState(false);
+  useEffect(() => {
+    authProviders().then((p) => setGoogle(p.google));
+  }, []);
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
