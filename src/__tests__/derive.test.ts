@@ -3,6 +3,7 @@ import { deriveExercises } from '../data/derive';
 import type { Lesson } from '../data/types';
 import { evaluate, isComplete, solution } from '../lib/grading';
 import { pickExercises } from '../lib/pick';
+import { bestBlocks } from '../lib/rulematch';
 import { looseKey } from '../lib/utils';
 
 const modules = import.meta.glob<Record<string, Lesson[]>>('../data/lessons/*.ts', { eager: true });
@@ -62,5 +63,34 @@ describe('elenco leggero delle lezioni (meta.gen.ts)', () => {
       expect(l?.exercises.length).toBe(meta.exerciseCount);
     }
     expect(await loadLesson('non-esiste')).toBeUndefined();
+  });
+});
+
+describe('teoria pertinente per esercizio (rulemap.gen.ts)', () => {
+  it('è aggiornata e coerente: se fallisce, eseguire npm run gen:rulemap', async () => {
+    const { RULE_MAP } = await import('../data/rulemap.gen');
+    const { bestBlocks, RULE_TYPES } = await import('../lib/rulematch');
+    let total = 0;
+    let mapped = 0;
+    for (const l of RAW) {
+      const exs = [...l.exercises, ...deriveExercises(l.exercises)];
+      expect(RULE_MAP[l.id]).toHaveLength(exs.length);
+      exs.forEach((e, i) => {
+        expect(RULE_MAP[l.id][i]).toEqual(bestBlocks(l.theory, e));
+        for (const k of RULE_MAP[l.id][i]) expect(RULE_TYPES).toContain(l.theory[k].type);
+        total++;
+        if (RULE_MAP[l.id][i].length) mapped++;
+      });
+    }
+    expect(mapped / total).toBeGreaterThan(0.9);
+  });
+
+  it('sceglie il blocco che contiene il termine in grassetto della spiegazione quando è in un solo blocco', () => {
+    const theory = [
+      { type: 'rule', title: 'Regola uno', body: 'Con **is** si parla di una persona.' },
+      { type: 'rule', title: 'Regola due', body: 'Con **are** si parla di più persone.' },
+    ] as Lesson['theory'];
+    const e = { type: 'mcq', prompt: 'They ___ happy.', options: ['is', 'are'], answer: 1, explain: 'Con **they** serve **are**.' } as Lesson['exercises'][number];
+    expect(bestBlocks(theory, e)).toEqual([1]);
   });
 });

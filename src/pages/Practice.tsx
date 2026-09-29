@@ -17,6 +17,7 @@ import { canSpeak, sfx } from '../lib/audio';
 import { reviewQueue, starsFor, today, useStore } from '../lib/store';
 import { badgesOf, unlockedIds } from '../lib/badges';
 import { pickExercises } from '../lib/pick';
+import { RULE_TYPES } from '../lib/rulematch';
 import { pct } from '../lib/utils';
 
 interface Item {
@@ -138,6 +139,8 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
   const [bestCombo, setBestCombo] = useState(0);
   const [msg, setMsg] = useState('');
   const [rule, setRule] = useState(false);
+  const [ruleMap, setRuleMap] = useState<Record<string, number[][]> | null>(null);
+  const [showAll, setShowAll] = useState(false);
   const [hold, setHold] = useState(false); // l'utente ha fermato l'avanzamento automatico
   const [done, setDone] = useState<null | { score: number; xp: number; stars: number; improved: boolean; goal: boolean; seconds: number }>(null);
   const [floats, setFloats] = useState<{ id: number; x: number; y: number; n: number }[]>([]);
@@ -203,6 +206,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
       setAnswer(null);
       setChecked(false);
       setRule(false);
+      setShowAll(false);
       setHold(false);
       return;
     }
@@ -275,7 +279,11 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
   const sol = solution(item.ex);
   const mine = !correct && checked ? given(item.ex, answer) : null;
   const ruleLesson = lessonById(item.lessonId);
-  const ruleBlocks = ruleBody?.theory.filter((b) => b.type === 'rule' || b.type === 'formula' || b.type === 'warning' || b.type === 'tip' || b.type === 'compare' || b.type === 'table') ?? [];
+  const allRuleBlocks = ruleBody?.theory.filter((b) => RULE_TYPES.includes(b.type)) ?? [];
+  // la parte di teoria più pertinente all'esercizio (calcolata in fase di build); se non c'è, tutta
+  const relevant = (ruleMap?.[item?.lessonId ?? '']?.[item?.index ?? -1] ?? []).flatMap((i) => (ruleBody?.theory[i] ? [ruleBody.theory[i]] : []));
+  const ruleBlocks = relevant.length && !showAll ? relevant : allRuleBlocks;
+  const canNarrow = relevant.length > 0 && relevant.length < allRuleBlocks.length;
 
   return (
     <div className="practice">
@@ -346,7 +354,14 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
                     </button>
                   )}
                   {!correct && ruleBlocks.length > 0 && (
-                    <button className="btn btn-ghost btn-sm" style={{ marginTop: 8 }} onClick={() => setRule(true)}>
+                    <button
+                      className="btn btn-ghost btn-sm"
+                      style={{ marginTop: 8 }}
+                      onClick={() => {
+                        setRule(true);
+                        if (!ruleMap) void import('../data/rulemap.gen').then((m) => setRuleMap(m.RULE_MAP));
+                      }}
+                    >
                       📖 Rivedi la regola
                     </button>
                   )}
@@ -383,6 +398,11 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
                 </button>
               </div>
               <Theory blocks={ruleBlocks} />
+              {canNarrow && (
+                <button className="btn btn-ghost btn-sm" style={{ marginTop: 12, marginRight: 8 }} onClick={() => setShowAll((v) => !v)}>
+                  {showAll ? 'Mostra solo la parte pertinente' : 'Mostra tutta la teoria della lezione'}
+                </button>
+              )}
               <Link to={`/lesson/${ruleLesson.id}`} className="btn btn-ghost btn-sm" style={{ marginTop: 12 }}>
                 Apri la lezione completa
               </Link>

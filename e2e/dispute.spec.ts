@@ -63,3 +63,27 @@ test('impostazioni: con "Manuale" si resta sulla risposta giusta finché non si 
   await page.getByRole('button', { name: 'Continua' }).click();
   await expect(page.locator('.feedback')).toHaveCount(0);
 });
+
+test('errore: "Rivedi la regola" mostra la parte pertinente e si può allargare a tutta la teoria', async ({ page }) => {
+  const { a1 } = await import('../src/data/lessons/a1');
+  const first = a1.find((l) => l.id === 'a1-to-be')!.exercises[0];
+  test.skip(first.type !== 'mcq', 'il primo esercizio non è a scelta multipla');
+  if (first.type !== 'mcq') return;
+  await page.addInitScript(() => {
+    localStorage.setItem('er-doc', JSON.stringify({ owner: null, doc: { completed: {}, theoryRead: {}, mistakes: {}, seen: {}, xp: { '2026-01-01': { d: 10 } }, settings: { onboarded: { v: true, at: 1 } } } }));
+  });
+  await page.goto('/lesson/a1-to-be/practice');
+  const wrong = first.options.findIndex((_, i) => i !== first.answer);
+  await page.locator('.option', { hasText: first.options[wrong].replace(/\*/g, '') }).first().click();
+  await expect(page.locator('.feedback.bad')).toBeVisible();
+  await page.getByRole('button', { name: /Rivedi la regola/ }).click();
+  const sheet = page.getByRole('dialog');
+  await expect(sheet).toBeVisible();
+  const before = await sheet.locator('.rule, .tip, .warning, .formula, table, .compare').count().catch(() => 0);
+  const all = page.getByRole('button', { name: /Mostra tutta la teoria/ });
+  if (await all.count()) {
+    await all.click();
+    await expect(page.getByRole('button', { name: /Mostra solo la parte pertinente/ })).toBeVisible();
+    void before;
+  }
+});

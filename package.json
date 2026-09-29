@@ -15,7 +15,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "gen:meta": "tsx scripts/gen-meta.ts",
-    "prebuild": "tsx scripts/gen-meta.ts"
+    "prebuild": "tsx scripts/gen-meta.ts && tsx scripts/gen-rulemap.ts",
+    "gen:rulemap": "tsx scripts/gen-rulemap.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
