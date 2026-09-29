@@ -3669,3 +3669,10 @@ main:focus {
     margin-left: 24px;
   }
 }
+
+/* su desktop il pulsante "Accedi" c'è già nella barra in alto: la scheda di invito serve solo su telefono e tablet */
+@media (hover: hover) and (pointer: fine) {
+  .login-card-wrap {
+    display: none;
+  }
+}

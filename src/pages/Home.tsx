@@ -63,7 +63,7 @@ export function Home() {
               </Link>
             </motion.div>
             {cloud && !user && (
-              <motion.div variants={rise}>
+              <motion.div variants={rise} className="login-card-wrap">
                 <Link to="/account" className="card login-card">
                   <span className="avatar">☁️</span>
                   <span style={{ flex: 1, minWidth: 0 }}>
