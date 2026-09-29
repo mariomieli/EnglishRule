@@ -56,6 +56,8 @@ test('riordino usando solo la tastiera', async ({ page }) => {
   await expect(page.getByRole('group', { name: 'La tua frase' }).locator('button')).toHaveCount(n - 1);
   await bank.first().focus();
   await page.keyboard.press('Space');
+  // "Verifica" si abilita solo a frase completa: si aspetta prima di premere Invio (altrimenti la corsa con lo stato dà falsi errori)
+  await expect(page.getByRole('button', { name: 'Verifica' })).toBeEnabled();
   await page.getByRole('button', { name: 'Verifica' }).focus();
   await page.keyboard.press('Enter');
   await expect(page.locator('.feedback')).toBeVisible();
