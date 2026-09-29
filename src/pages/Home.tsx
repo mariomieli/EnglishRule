@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
-import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
-import { useRef, type MouseEvent } from 'react';
+import { AnimatePresence, motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { IArrow, ITarget } from '../components/Icons';
 import { Counter, LevelBadge, Page } from '../components/ui';
@@ -78,7 +78,7 @@ export function Home() {
             )}
           </motion.div>
 
-          <motion.div className="hero-visual" style={{ y: yVisual, opacity }} aria-hidden>
+          <motion.div className="hero-visual" style={{ y: yVisual, opacity }}>
             <HeroVisual />
           </motion.div>
         </section>
@@ -178,35 +178,55 @@ export function Home() {
   );
 }
 
-const SENTENCES = [
-  { lv: 'A1', before: 'She ', hl: 'is', after: ' a teacher.' },
-  { lv: 'B1', before: 'She ', hl: 'has been teaching', after: ' for ten years.' },
-  { lv: 'C1', before: '', hl: 'Had she known', after: ', she would have left.' },
+const STEPS = [
+  { topic: 'to be', before: 'She ', hl: 'is', after: ' a teacher.', note: 'Le fondamenta: essere, articoli, pronomi.' },
+  { topic: 'past simple', before: 'She ', hl: 'worked', after: ' as a teacher last year.', note: 'Racconta il passato con date precise.' },
+  { topic: 'present perfect continuous', before: 'She ', hl: 'has been teaching', after: ' for ten years.', note: 'Un\u2019azione iniziata nel passato e ancora in corso.' },
+  { topic: 'wish + past perfect', before: 'She ', hl: 'wishes she had studied', after: ' harder.', note: 'Rimpianti e sfumature con il past perfect.' },
+  { topic: 'inversione', before: '', hl: 'Had she known', after: ', she would have left.', note: 'Stile ed enfasi: l\u2019inversione al posto di \u201cif\u201d.' },
+  { topic: 'congiuntivo formale', before: '', hl: 'Were she to resign', after: ', the board would be at a loss.', note: 'Registro formale, come un madrelingua.' },
 ];
 
-/** Stessa lingua a livelli diversi: tre frasi sempre più precise. */
+const reducedMotion = () => typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/** Scala dei livelli: la stessa frase diventa più precisa da A1 a C2. */
 function HeroVisual() {
+  const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    // si ferma con il mouse o il focus sopra (e non parte se l'utente preferisce meno animazioni)
+    if (paused || reducedMotion()) return;
+    const t = setInterval(() => setI((n) => (n + 1) % STEPS.length), 2800);
+    return () => clearInterval(t);
+  }, [paused]);
+  const lv = LEVELS[i];
+  const s = STEPS[i];
   return (
-    <div className="hero-sentences">
-      {SENTENCES.map((s, i) => (
-        <motion.div
-          key={s.lv}
-          className={`hero-sentence s${i}`}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: [0, -6, 0] }}
-          transition={{ opacity: { delay: 0.3 + i * 0.25 }, y: { delay: 0.8 + i * 0.4, duration: 5, repeat: Infinity, ease: 'easeInOut' } }}
-        >
-          <LevelBadge id={s.lv} size={40} />
-          <span>
+    <div className="hero-ladder" role="group" aria-label="La stessa frase a livelli diversi" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
+      <span className="hl-glow" style={{ background: lv.from }} aria-hidden />
+      <div className="hl-rail">
+        {LEVELS.map((l, k) => (
+          <button key={l.id} type="button" className={`hl-step ${k === i ? 'on' : ''}`} onClick={() => setI(k)} aria-label={`Livello ${l.id}`} aria-pressed={k === i}>
+            <LevelBadge id={l.id} size={k === i ? 60 : 46} />
+          </button>
+        ))}
+      </div>
+      <div className="hl-main">
+        <div className="hl-eyebrow eyebrow-lv" style={{ '--lv': lv.from } as CSSProperties}>
+          {lv.name} · {s.topic}
+        </div>
+        <AnimatePresence mode="wait">
+          <motion.div key={lv.id} className="hl-card" lang="en" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
             {s.before}
             <mark>{s.hl}</mark>
             {s.after}
-          </span>
-        </motion.div>
-      ))}
-      <motion.p className="hero-caption" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
-        La stessa lingua, sempre più precisa
-      </motion.p>
+          </motion.div>
+        </AnimatePresence>
+        <p className="hl-note" aria-live="polite">
+          {s.note}
+        </p>
+        <p className="hero-caption">La stessa lingua, sempre più precisa</p>
+      </div>
     </div>
   );
 }
