@@ -1,50 +1,22 @@
-import type { User } from '@supabase/supabase-js';
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import type { LevelId } from '../../data/types';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { supabase } from '../sync/cloud';
-import { settingsOf, type Doc, type Settings, type ThemePref } from '../sync/doc';
-import { starsFor, systemTheme, today, view, type State, type Theme } from './derived';
+import { settingsOf, type Doc, type Settings } from '../sync/doc';
+import { starsFor, systemTheme, today, view, type Theme } from './derived';
 import { DOC_KEY, THEME_KEY, deviceId, loadSaved, store, type Saved } from './persist';
 import { addXpTo, clearMistakeIn, completeOnboardingIn, finishLessonIn, finishSpeakingIn, markSeenIn, markTheoryIn, recordAnswerIn, recordMistakeIn, resetDoc, setSettingIn } from './reducers';
-import { useCloud, type SyncInfo } from './useCloud';
+import { StoreCtx, type Actions } from './context';
+import { useCloud } from './useCloud';
 
-interface Actions {
-  addXp: (n: number) => void;
-  finishLesson: (id: string, score: number) => { stars: number; improved: boolean };
-  finishSpeaking: (id: string, score: number) => { stars: number; improved: boolean };
-  markTheory: (id: string) => void;
-  recordAnswer: (lessonId: string, index: number, ok: boolean) => void;
-  recordMistake: (lessonId: string, index: number) => void;
-  clearMistake: (lessonId: string, index: number) => void;
-  markSeen: (lessonId: string, indices: number[]) => void;
-  setTheme: (t: ThemePref) => void;
-  toggleSound: () => void;
-  setPlacement: (l: LevelId) => void;
-  completeOnboarding: (o: { goal?: number; level?: LevelId }) => void;
-  setDailyGoal: (n: number) => void;
-  setAutoCheck: (on: boolean) => void;
-  setAdvanceMs: (ms: number) => void;
-  reset: () => void;
-  syncNow: () => Promise<void>;
-  signOut: () => Promise<void>;
-}
 
-interface Ctx extends Actions {
-  state: State;
-  user: User | null;
-  cloud: boolean;
-  sync: SyncInfo;
-  ready: boolean;
-}
-
-const StoreCtx = createContext<Ctx>(null!);
 const now = () => Date.now();
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const dev = useMemo(deviceId, []);
+  const dev = useMemo(() => deviceId(), []);
   const [saved, setSaved] = useState<Saved>(() => loadSaved(dev));
   const docRef = useRef(saved.doc);
-  docRef.current = saved.doc;
+  useEffect(() => {
+    docRef.current = saved.doc;
+  }, [saved.doc]);
   const { user, sync, ready, syncNow, signOut } = useCloud(saved, setSaved);
 
   // tema del dispositivo, aggiornato se l'utente lo cambia mentre l'app è aperta
@@ -106,4 +78,3 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   return <StoreCtx.Provider value={{ state, user, cloud: !!supabase, sync, ready, ...actions, syncNow, signOut }}>{children}</StoreCtx.Provider>;
 }
 
-export const useStore = () => useContext(StoreCtx);

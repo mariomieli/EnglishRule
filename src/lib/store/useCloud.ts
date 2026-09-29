@@ -11,6 +11,8 @@ export interface SyncInfo {
   error: string | null;
 }
 
+const LOCAL: SyncInfo = { status: 'local', at: null, error: null };
+
 /**
  * Account e sincronizzazione con il cloud: sessione utente, fusione dei progressi,
  * aggiornamenti in tempo reale tra dispositivi. Senza cloud configurato non fa nulla.
@@ -20,9 +22,11 @@ export function useCloud(saved: Saved, setSaved: Dispatch<SetStateAction<Saved>>
   const [sync, setSync] = useState<SyncInfo>({ status: 'local', at: null, error: null });
   const [ready, setReady] = useState(!supabase); // sessione utente già letta (per non mostrare l'onboarding a chi ha un account)
   const docRef = useRef(saved.doc);
-  docRef.current = saved.doc;
   const userRef = useRef<User | null>(null);
-  userRef.current = user;
+  useEffect(() => {
+    docRef.current = saved.doc;
+    userRef.current = user;
+  }, [saved.doc, user]);
   const lastSynced = useRef<string | null>(null);
   const inFlight = useRef<Promise<void> | null>(null);
   const again = useRef(false);
@@ -81,10 +85,7 @@ export function useCloud(saved: Saved, setSaved: Dispatch<SetStateAction<Saved>>
   // cambio utente: i dati locali di un altro account non si mescolano mai
   useEffect(() => {
     if (!supabase) return;
-    if (!user) {
-      setSync({ status: 'local', at: null, error: null });
-      return;
-    }
+    if (!user) return;
     setSaved((s) => {
       if (s.owner && s.owner !== user.id) return { owner: user.id, doc: keepTheme(s.doc) };
       // progressi fatti da ospite: vengono aggiunti all'account
@@ -142,10 +143,12 @@ export function useCloud(saved: Saved, setSaved: Dispatch<SetStateAction<Saved>>
     if (!supabase) return;
     await syncNow().catch(() => {});
     await supabase.auth.signOut();
+    setSync(LOCAL);
     // il dispositivo torna "ospite" e pulito: i dati restano al sicuro nell'account
     setSaved((s) => ({ owner: null, doc: keepTheme(s.doc) }));
     lastSynced.current = null;
   }, [syncNow, setSaved]);
 
-  return { user, sync, ready, syncNow, signOut };
+  // senza account lo stato è sempre "locale" (derivato, non salvato)
+  return { user, sync: user ? sync : LOCAL, ready, syncNow, signOut };
 }

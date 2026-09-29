@@ -122,7 +122,7 @@ describe('intervalli adattivi', () => {
   it('gli esercizi sbagliati spesso tornano prima, quelli sempre giusti più tardi', () => {
     expect(srsMultiplier(0, 0)).toBe(1);
     expect(srsMultiplier(1, 5)).toBeCloseTo(0.85);
-    expect(srsMultiplier(9, 0)).toBe(0.55 > 0.5 ? 0.55 : 0.5); // al massimo 3 errori contano
+    expect(srsMultiplier(9, 0)).toBeCloseTo(0.55); // al massimo 3 errori contano
     expect(srsMultiplier(0, 4)).toBe(1.3);
   });
 

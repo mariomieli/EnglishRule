@@ -124,11 +124,17 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
 
   useEffect(() => onClose(), [loc.pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // il testo cercato si azzera alla chiusura (non all'apertura: niente aggiornamenti di stato dentro un effetto)
+  const close = () => {
+    setQ('');
+    setActive(0);
+    onClose();
+  };
+
   useEffect(() => {
     if (open) {
-      setQ('');
-      setActive(0);
-      setTimeout(() => inputRef.current?.focus(), 30);
+      const t = setTimeout(() => inputRef.current?.focus(), 30);
+      return () => clearTimeout(t);
     }
   }, [open]);
 
@@ -149,13 +155,13 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
 
   const go = (id: string) => {
     navigate(`/lesson/${id}`);
-    onClose();
+    close();
   };
 
   return (
     <AnimatePresence>
       {open && (
-        <motion.div className="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+        <motion.div className="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onMouseDown={(e) => e.target === e.currentTarget && close()}>
           <motion.div className="palette" role="dialog" aria-label="Cerca lezioni" initial={{ y: -20, scale: 0.96, opacity: 0 }} animate={{ y: 0, scale: 1, opacity: 1 }} exit={{ y: -10, scale: 0.98, opacity: 0 }} transition={{ type: 'spring', stiffness: 380, damping: 30 }}>
             <input
               ref={inputRef}
@@ -173,7 +179,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
                   e.preventDefault();
                   setActive((a) => Math.max(0, a - 1));
                 } else if (e.key === 'Enter' && results[active]) go(results[active].id);
-                else if (e.key === 'Escape') onClose();
+                else if (e.key === 'Escape') close();
               }}
               aria-label="Cerca"
             />

@@ -125,8 +125,9 @@ export function Profile() {
   const [stats, setStats] = useState(() => analyticsEnabled());
   const done = Object.keys(state.completed).length;
   const streak = currentStreak(state);
+  const [nowDate] = useState(() => new Date());
   const days = Array.from({ length: 7 }, (_, k) => {
-    const d = new Date();
+    const d = new Date(nowDate);
     d.setDate(d.getDate() - (6 - k));
     const key = today(d);
     return { key, label: d.toLocaleDateString('it-IT', { weekday: 'short' }).slice(0, 3), xp: state.xpByDay[key] ?? 0 };

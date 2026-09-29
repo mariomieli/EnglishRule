@@ -4,7 +4,8 @@
 //   persist.ts   salvataggio locale
 //   useCloud.ts  account e sincronizzazione
 //   provider.tsx composizione: contesto React e azioni
-export { StoreProvider, useStore } from './provider';
+export { StoreProvider } from './provider';
+export { useStore } from './context';
 export { currentStreak, reviewQueue, starsFor, today, upcomingReviews } from './derived';
 export type { LessonProgress, Mistake, State, Theme, ThemePref } from './derived';
 export type { SyncStatus } from './useCloud';

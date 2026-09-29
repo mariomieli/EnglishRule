@@ -2,4 +2,6 @@
 try {
   var t = localStorage.getItem('er-theme');
   document.documentElement.dataset.theme = t || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-} catch (e) {}
+} catch {
+  /* storage non disponibile: vale il tema del dispositivo */
+}
