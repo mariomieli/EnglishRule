@@ -3431,6 +3431,7 @@ main:focus {
 }
 
 .road-card {
+  --topic: var(--lv-from); /* i riquadri dei numeri usano il colore del livello */
   position: relative;
   overflow: hidden;
   display: flex;
@@ -3553,7 +3554,7 @@ main:focus {
 .road-foot {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 10px;
   margin-top: 12px;
   color: var(--text-3);

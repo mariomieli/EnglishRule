@@ -107,11 +107,10 @@ export function LevelPage() {
             {shown.map(({ l, i }) => {
               const p = state.completed[l.id];
               const isNext = i === firstTodo;
-              const t = topicOf(l.id);
               return (
                 <motion.div key={l.id} variants={rise} className="road-item">
                   <span className={`road-dot ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} aria-hidden />
-                  <Link to={`/lesson/${l.id}`} className={`road-card ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} data-n={i + 1} style={{ '--topic': t.color } as CSSProperties}>
+                  <Link to={`/lesson/${l.id}`} className={`road-card ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} data-n={i + 1}>
                     <div className="road-node">
                       <span className="num">{i + 1}</span>
                       {p && <span className="check">✓</span>}
@@ -124,7 +123,6 @@ export function LevelPage() {
                       <h3>{l.title}</h3>
                       <div className="sub">{l.subtitle}</div>
                       <div className="road-foot">
-                        <span className="topic-chip">{t.label}</span>
                         {p ? (
                           <Stars n={p.stars} />
                         ) : (
