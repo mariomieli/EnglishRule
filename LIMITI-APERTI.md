@@ -7,7 +7,7 @@ Ultimo aggiornamento: 30/09/2026. I punti del piano non ancora fatti (classifica
 - (Fatto il 30/09: migrazioni Supabase applicate e verificate dall'esterno: `progress` e `events` non sono leggibili con la chiave pubblica, le viste esistono. Restano le statistiche da consultare dal pannello.)
 - **Informativa privacy e consenso** per le statistiche anonime, ora attive di default (spegnibili dal profilo, rispettano Do Not Track e Global Privacy Control). Supabase vede comunque gli indirizzi IP nei propri registri: da dire nell'informativa. Da valutare con il consulente legale (GDPR).
 - **Logo in SVG o PNG trasparente**: il file originale ha lo sfondo bianco, la trasparenza l'ho ricavata in automatico (alone ai bordi, "buchi" bianchi nelle lettere e, g, R; per questo il logo completo sta su una targa bianca nel tema scuro).
-- **Prove su dispositivi veri**: icone PWA e iOS "aggiungi alla home", VoiceOver, TalkBack, login Google e Supabase reale, microfono e dettato.
+- (Fatto il 30/09: prove su dispositivi veri riuscite secondo Mario, senza problemi segnalati. Restano non verificati in modo sistematico VoiceOver e TalkBack.)
 
 ## Ripasso e feedback
 - Un esercizio indovinato per caso alla prima volta sale comunque di scatola (1 giorno), poi gli intervalli si adattano solo dopo qualche risposta.
