@@ -2670,6 +2670,12 @@ tbody tr:hover {
   color: var(--good);
 }
 
+.w-near {
+  color: var(--warn);
+  text-decoration: underline dotted;
+  text-underline-offset: 4px;
+}
+
 .w-miss {
   color: var(--bad);
   text-decoration: underline wavy;
@@ -3000,4 +3006,27 @@ tbody tr:hover {
   cursor: pointer;
   background: var(--accent);
   color: white;
+}
+
+.tips-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--info-bg);
+}
+
+.tip-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.tip-text {
+  font-size: 0.9rem;
+  color: var(--text-2);
+  margin-top: 3px;
 }

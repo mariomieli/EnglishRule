@@ -11,6 +11,7 @@ import { SCENARIOS, scenarioById, scenariosByLevel } from '../data/speaking';
 import type { SpeakingScenario, SpeakingTurn } from '../data/types';
 import { canSpeak, sfx, speak } from '../lib/audio';
 import { rise, stagger } from '../lib/motion';
+import { alignWords, problemWords, tipsFor, type WordResult } from '../lib/pronunciation';
 import { alignRepeat, checkReply, checkTargets, words } from '../lib/speech-eval';
 import { starsFor, useStore } from '../lib/store';
 import { speechSupported, useSpeech } from '../lib/useSpeech';
@@ -450,6 +451,7 @@ function VoiceInput({ onText, continuous, disabled, maxSeconds, placeholder }: {
 
 function RepeatTurn({ turn, sound, onComplete }: { turn: Extract<SpeakingTurn, { type: 'repeat' }>; sound: boolean; onComplete: Complete }) {
   const [res, setRes] = useState<ReturnType<typeof alignRepeat> | null>(null);
+  const [detail, setDetail] = useState<WordResult[]>([]);
   const [best, setBest] = useState(0);
   const [said, setSaid] = useState('');
   const [slow, setSlow] = useState(false);
@@ -458,6 +460,7 @@ function RepeatTurn({ turn, sound, onComplete }: { turn: Extract<SpeakingTurn, {
   const evaluate = (t: string) => {
     const r = alignRepeat(turn.en, t);
     setRes(r);
+    setDetail(alignWords(turn.en, t));
     setSaid(t);
     setBest((b) => Math.max(b, r.score));
     if (sound) (r.score >= 80 ? sfx.correct : sfx.wrong)();
@@ -468,9 +471,18 @@ function RepeatTurn({ turn, sound, onComplete }: { turn: Extract<SpeakingTurn, {
       <div className="ex-type">🔁 Ascolta e ripeti</div>
       <div className="repeat-line">
         {res ? (
-          res.words.map((w, i) => (
-            <motion.span key={i} className={res.hit[i] ? 'w-ok' : 'w-miss'} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
-              {w}{' '}
+          detail.map((w, i) => (
+            <motion.span
+              key={i}
+              className={`w-${w.status}`}
+              role={w.status !== 'ok' && canSpeak ? 'button' : undefined}
+              onClick={w.status !== 'ok' && canSpeak ? () => speak(w.word, { rate: 0.6 }) : undefined}
+              style={w.status !== 'ok' && canSpeak ? { cursor: 'pointer' } : undefined}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.03 }}
+            >
+              {w.word}{' '}
             </motion.span>
           ))
         ) : (
@@ -498,9 +510,10 @@ function RepeatTurn({ turn, sound, onComplete }: { turn: Extract<SpeakingTurn, {
       )}
       {res && (
         <motion.div className={`form-msg ${pass ? 'ok' : 'err'}`} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: 12 }}>
-          {pass ? `Ottima pronuncia: ${res.score}% delle parole riconosciute.` : `${res.score}% delle parole riconosciute. Le parole in rosso non sono state capite: riascolta e riprova.`}
+          {pass ? `Ottima pronuncia: ${res.score}% delle parole riconosciute.` : `${res.score}% delle parole riconosciute. Rosso: non capita. Arancione: quasi giusta. Tocca una parola per riascoltarla.`}
         </motion.div>
       )}
+      {res && <PronunciationTips words={problemWords(detail)} />}
       {pass ? (
         <button className="btn btn-good btn-block" onClick={() => onComplete({ points: best / 100 }, said, true)}>
           Continua
@@ -515,6 +528,36 @@ function RepeatTurn({ turn, sound, onComplete }: { turn: Extract<SpeakingTurn, {
           )}
         </>
       )}
+    </div>
+  );
+}
+
+function PronunciationTips({ words: list }: { words: WordResult[] }) {
+  if (!list.length) return null;
+  return (
+    <div className="tips-box">
+      {list.map((w) => {
+        const tips = tipsFor(w.word);
+        return (
+          <div key={w.word} className="tip-row">
+            <div className="tip-head">
+              <strong className={`w-${w.status}`}>{w.word}</strong>
+              {w.heard && <span className="faint"> · ho capito «{w.heard}»</span>}
+              {!w.heard && <span className="faint"> · non l'ho sentita</span>}
+              {canSpeak && (
+                <button type="button" className="speak-btn" aria-label={`Ascolta ${w.word}`} onClick={() => speak(w.word, { rate: 0.6 })}>
+                  <ISpeaker width={15} height={15} />
+                </button>
+              )}
+            </div>
+            {tips.map((t) => (
+              <div key={t} className="tip-text">
+                {t}
+              </div>
+            ))}
+          </div>
+        );
+      })}
     </div>
   );
 }

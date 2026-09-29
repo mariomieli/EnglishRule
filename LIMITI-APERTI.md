@@ -1,7 +1,7 @@
 # Limiti aperti (da colmare)
 
 Elenco vivo dei limiti rimasti dopo ogni miglioramento. Quando uno viene chiuso, cancellarlo o spostarlo in "Chiusi".
-Ultimo aggiornamento: 29/09/2026.
+Ultimo aggiornamento: 29/09/2026 (punti 1-5).
 
 ## Nessuna verifica nel browser (vale per tutti i punti sotto)
 - Nulla di quanto sotto è stato provato dal vivo (schermate, tastiera mobile, animazioni): sono stati eseguiti solo tsc, lint, validate e i test da riga di comando. Fare un giro completo su telefono e desktop.
@@ -33,6 +33,15 @@ Ultimo aggiornamento: 29/09/2026.
 - Gli indici dei derivati dipendono dall'ordine degli esercizi "riordina" e "giusta o sbagliata" nella lezione: cambiare o riordinare quelli sfasa progressi ed errori già salvati.
 - `validate` controlla solo i dati grezzi delle lezioni; i derivati sono coperti da `npm run test:derive`.
 
+## 5. Pronuncia nello speaking
+- La valutazione si basa sul riconoscimento vocale del browser: misura se il testo viene capito, non la pronuncia vera (accento, intonazione, durata delle vocali). Un nome proprio o una parola rara può risultare "mancata" senza colpa dell'utente.
+- Il punteggio e il passaggio (80%) contano solo le parole esatte; le parole "quasi giuste" (arancione) non danno punteggio parziale.
+- I consigli sono regole sulle lettere della parola (th, h iniziale, -ed, ee/ea, consonante finale...): non guardano il suono davvero sbagliato, e sono scritti solo in italiano per chi parla italiano.
+- Solo il turno "Ascolta e ripeti" ha parola per parola e consigli: "Rispondi" e "Parla liberamente" non danno feedback di pronuncia.
+- Nessuna memoria dei suoni deboli tra una sessione e l'altra (per esempio "sbagli spesso il th"), nessuna esercitazione dedicata alle coppie minime (ship/sheep).
+- Il livello di confidenza del riconoscimento (`confidence`) non è usato: non affidabile su tutti i browser (Safari lo restituisce spesso a 0).
+- Firefox non ha il riconoscimento vocale: si scrive la risposta e il feedback di pronuncia perde senso.
+
 ## Tecnico generale (dal piano iniziale)
 - Bundle oltre 600 kB (dati delle lezioni tutti caricati): serve code splitting per livello.
 - Lint: 11 warning preesistenti (refs in render, setState in effect, ecc.) in src/lib/store.tsx e src/pages/Profile.tsx.
@@ -40,4 +49,4 @@ Ultimo aggiornamento: 29/09/2026.
 - `useStore()` troppo centrale (28 archi, `store.tsx` con coesione bassa): da spezzare in parti.
 
 ## Prossimi punti del piano
-5 Speaking con valutazione pronuncia · 6 obiettivo giornaliero, badge, classifica · 7 promemoria push · 8 riepilogo settimanale · 9 offline vero · 10 onboarding · 11 login Apple/email e cancellazione account · 12 voci TTS migliori · 13 Vitest · 14 CI · 15 performance · 16 accessibilità · 17 sicurezza Supabase (RLS) · 18 store a fette · 19 analytics rispettosi della privacy · 20 SEO e condivisione.
+6 obiettivo giornaliero, badge, classifica · 7 promemoria push · 8 riepilogo settimanale · 9 offline vero · 10 onboarding · 11 login Apple/email e cancellazione account · 12 voci TTS migliori · 13 Vitest · 14 CI · 15 performance · 16 accessibilità · 17 sicurezza Supabase (RLS) · 18 store a fette · 19 analytics rispettosi della privacy · 20 SEO e condivisione.

@@ -1,4 +1,5 @@
 // Test della valutazione delle risposte parlate: `npm run test:speech`
+import { alignWords, problemWords, tipsFor } from '../src/lib/pronunciation';
 import { alignRepeat, checkReply, checkTargets, normSpeech } from '../src/lib/speech-eval';
 let f = 0;
 const ok = (c: boolean, m: string) => c || (f++, console.log('  FALLITO:', m));
@@ -19,5 +20,24 @@ ok(normSpeech("If I'd known, I'd have told you").includes('if i had known i woul
 ok(normSpeech("I'd need help").includes('i would need'), "I'd need");
 ok(normSpeech("It's here and she's been there").includes('it is here and she has been there'), "'s = is / has");
 ok(normSpeech("John's car").includes("john's car"), 'genitivo sassone intatto');
+{
+  const w = alignWords('I think the ship is here', 'I sink the sheep is here');
+  const by = Object.fromEntries(w.map((x) => [x.word, x]));
+  ok(by.i.status === 'ok' && by.is.status === 'ok' && by.here.status === 'ok', 'parole giuste');
+  ok(by.think.status === 'near' && by.think.heard === 'sink', `think/sink: ${JSON.stringify(by.think)}`);
+  ok(by.ship.status === 'near' && by.ship.heard === 'sheep', 'ship/sheep vicine');
+  const m = alignWords('Nice to meet you', 'nice meet you');
+  ok(m.find((x) => x.word === 'to')?.status === 'miss' && m.filter((x) => x.status === 'ok').length === 3, 'parola saltata');
+  const c = alignWords('I like coffee', 'I like banana');
+  ok(c[2].status === 'miss' && c[2].heard === 'banana', 'parola sostituita');
+  ok(alignWords('hello', '').every((x) => x.status === 'miss' && !x.heard), 'niente detto');
+  ok(alignWords('', 'hello').length === 0, 'niente atteso');
+  ok(tipsFor('think')[0].startsWith('th'), 'consiglio th');
+  ok(tipsFor('hotel').some((t) => t.startsWith('h iniziale')), 'consiglio h');
+  ok(tipsFor('wanted').some((t) => t.startsWith('-ed')), 'consiglio -ed');
+  ok(tipsFor('dog').some((t) => t.startsWith('Consonante finale')), 'consiglio consonante finale');
+  ok(problemWords(alignWords('the the cat', 'a a cat'), 3).length === 1, 'niente doppioni');
+  ok(problemWords(alignWords('a b cat', 'x y z'), 3).every((r) => r.word.length > 1), 'niente parole da una lettera');
+}
 console.log(f ? `${f} test falliti` : 'OK: valutazione del parlato verificata');
 process.exit(f ? 1 : 0);
