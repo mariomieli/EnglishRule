@@ -4,7 +4,7 @@ Elenco vivo dei limiti rimasti. Quando uno viene chiuso si cancella da qui.
 Ultimo aggiornamento: 30/09/2026. I punti del piano non ancora fatti (classifica, promemoria push, riepilogo settimanale, offline avanzato, login Apple e cancellazione account, voci TTS migliori, SEO) sono stati scartati da Mario.
 
 ## Da fare da parte di Mario (non posso farlo io)
-- **Applicare le due migrazioni su Supabase** nel SQL Editor: `supabase/migrations/20260930000000_hardening.sql` (limiti sulla tabella dei progressi) e `20260930000001_events.sql` (tabella delle statistiche anonime, con le viste `events_lesson_funnel`, `events_hard_exercises`, `events_disputed_answers`). Finché la seconda non c'è, le statistiche falliscono in silenzio (errore 404 nella console del browser).
+- (Fatto il 30/09: migrazioni Supabase applicate e verificate dall'esterno: `progress` e `events` non sono leggibili con la chiave pubblica, le viste esistono. Restano le statistiche da consultare dal pannello.)
 - **Informativa privacy e consenso** per le statistiche anonime, ora attive di default (spegnibili dal profilo, rispettano Do Not Track e Global Privacy Control). Supabase vede comunque gli indirizzi IP nei propri registri: da dire nell'informativa. Da valutare con il consulente legale (GDPR).
 - **Logo in SVG o PNG trasparente**: il file originale ha lo sfondo bianco, la trasparenza l'ho ricavata in automatico (alone ai bordi, "buchi" bianchi nelle lettere e, g, R; per questo il logo completo sta su una targa bianca nel tema scuro).
 - **Prove su dispositivi veri**: icone PWA e iOS "aggiungi alla home", VoiceOver, TalkBack, login Google e Supabase reale, microfono e dettato.
