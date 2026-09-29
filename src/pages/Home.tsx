@@ -7,6 +7,8 @@ import { Counter, LevelBadge, Page } from '../components/ui';
 import { rise, stagger } from '../lib/motion';
 import { LESSONS, lessonsByLevel } from '../data';
 import { LEVELS, type LevelMeta } from '../data/levels';
+import { TopicIcon } from '../components/TopicIcon';
+import { topicOf } from '../data/topics';
 import logoMark from '../assets/logo-mark.png';
 import { currentStreak, today, useStore } from '../lib/store';
 import { pct } from '../lib/utils';
@@ -113,7 +115,9 @@ export function Home() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
           <Link to={`/lesson/${next.id}`} className="card continue-card" style={{ display: 'flex' }}>
             <span className="glow" />
-            <div className="emoji">{next.icon}</div>
+            <div className="emoji" style={{ color: topicOf(next.id).color }}>
+                <TopicIcon lessonId={next.id} size={30} />
+              </div>
             <div className="grow">
               <div className="eyebrow">{isNew ? 'Prima lezione' : 'Prossima lezione consigliata'} · {next.level}</div>
               <h3>{next.title}</h3>

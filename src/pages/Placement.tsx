@@ -3,6 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IArrow, IClose } from '../components/Icons';
+import { TopicIcon } from '../components/TopicIcon';
+import { topicOf } from '../data/topics';
 import { Rich } from '../components/Rich';
 import { LevelBadge, Page } from '../components/ui';
 import { lessonById, lessonsByLevel } from '../data';
@@ -145,7 +147,9 @@ export function Placement() {
               {recs.length === 0 && <p className="muted">Hai risposto bene a tutto ciò che ti è stato chiesto fino al tuo livello. Parti dalle lezioni del livello {lv.id}.</p>}
               {recs.map(({ l, misses }) => (
                 <Link key={l.id} to={`/lesson/${l.id}`} className="lesson-row" style={{ marginBottom: 8 }}>
-                  <div className="lesson-node">{l.icon}</div>
+                  <div className="lesson-node" style={{ color: topicOf(l.id).color }}>
+                    <TopicIcon lessonId={l.id} size={22} />
+                  </div>
                   <div className="info">
                     <h3>{l.title}</h3>
                     <div className="sub">

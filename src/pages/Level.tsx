@@ -1,8 +1,10 @@
 import { motion, useScroll, useSpring } from 'framer-motion';
-import { useEffect, type CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { IArrow, IBack, IClock } from '../components/Icons';
 import { Theory } from '../components/Theory';
+import { TopicIcon, TopicIconById } from '../components/TopicIcon';
+import { TOPICS, topicOf, type TopicId } from '../data/topics';
 import { LevelBadge, Page, ProgressRing, Stars } from '../components/ui';
 import { rise, stagger } from '../lib/motion';
 import { lessonById, lessonsByLevel, nextLesson } from '../data';
@@ -45,16 +47,21 @@ export function LevelPage() {
   const { id = '' } = useParams();
   const lv = levelById(id);
   const { state } = useStore();
+  const [topic, setTopic] = useState<TopicId | 'all'>('all');
   if (!lv) return <Page><div className="container narrow"><div className="card empty-state"><div className="e">🧭</div><h2>Livello non trovato</h2><Link to="/levels" className="btn btn-primary">Tutti i livelli</Link></div></div></Page>;
 
   const lessons = lessonsByLevel(lv.id);
   const done = lessons.filter((l) => state.completed[l.id]).length;
   const firstTodo = lessons.findIndex((l) => !state.completed[l.id]);
   const vars = { '--lv-from': lv.from, '--lv-to': lv.to } as CSSProperties;
+  const minutes = lessons.reduce((a, l) => a + l.minutes, 0);
+  const stars = lessons.reduce((a, l) => a + (state.completed[l.id]?.stars ?? 0), 0);
+  const topics = TOPICS.map((t) => ({ t, n: lessons.filter((l) => topicOf(l.id).id === t.id).length })).filter((x) => x.n > 0);
+  const shown = lessons.map((l, i) => ({ l, i })).filter(({ l }) => topic === 'all' || topicOf(l.id).id === topic);
 
   return (
     <Page>
-      <div className="container narrow" style={vars}>
+      <div className="container" style={vars}>
         <Link to="/levels" className="back">
           <IBack /> Tutti i livelli
         </Link>
@@ -69,41 +76,71 @@ export function LevelPage() {
               {lv.name} {lv.emoji}
             </h1>
             <p className="desc">{lv.description}</p>
+            <div className="hero-stats">
+              <span className="chip">{lessons.length} lezioni</span>
+              <span className="chip">
+                <IClock width={14} height={14} /> circa {minutes} min
+              </span>
+              <span className="chip">⭐ {stars}/{lessons.length * 3}</span>
+            </div>
           </div>
           <ProgressRing value={pct(done, lessons.length)} from={lv.from} to={lv.to} label={`${done}/${lessons.length}`} />
         </motion.div>
 
-        <motion.div className="path" variants={stagger} initial="hidden" animate="show">
-          <div className="path-line">
-            <motion.div initial={{ height: 0 }} animate={{ height: `${pct(done, lessons.length)}%` }} transition={{ duration: 1.2, delay: 0.4 }} />
-          </div>
-          {lessons.map((l, i) => {
-            const p = state.completed[l.id];
-            const isNext = i === firstTodo;
-            return (
-              <motion.div key={l.id} variants={rise}>
-                <Link to={`/lesson/${l.id}`} className="lesson-row" style={isNext ? { borderColor: lv.from, boxShadow: `0 0 0 1px ${lv.from}55, 0 12px 40px -18px ${lv.from}` } : undefined}>
-                  <motion.div className={`lesson-node ${p ? 'done' : ''}`} whileHover={{ rotate: [0, -8, 8, 0], scale: 1.08 }} transition={{ duration: 0.4 }}>
-                    {l.icon}
-                    {p && <span className="check">✓</span>}
-                  </motion.div>
-                  <div className="info">
-                    <div className="faint" style={{ fontSize: '.75rem', fontWeight: 700 }}>
-                      LEZIONE {i + 1}
-                      {isNext && <span style={{ color: lv.from }}> · CONSIGLIATA</span>}
+        <div className="topic-filters" role="group" aria-label="Filtra per argomento">
+          <button className={`topic-filter ${topic === 'all' ? 'on' : ''}`} onClick={() => setTopic('all')} aria-pressed={topic === 'all'}>
+            Tutte <span>{lessons.length}</span>
+          </button>
+          {topics.map(({ t, n }) => (
+            <button key={t.id} className={`topic-filter ${topic === t.id ? 'on' : ''}`} style={{ '--topic': t.color } as CSSProperties} onClick={() => setTopic(t.id)} aria-pressed={topic === t.id}>
+              <TopicIconById topic={t.id} size={15} /> {t.short} <span>{n}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="road-wrap">
+          {topic === 'all' && (
+            <div className="road-line" aria-hidden>
+              <motion.div initial={{ height: 0 }} animate={{ height: `${pct(done, lessons.length)}%` }} transition={{ duration: 1.2, delay: 0.4 }} />
+            </div>
+          )}
+          <motion.div className={`road ${topic === 'all' ? '' : 'flat'}`} variants={stagger} initial="hidden" animate="show" key={topic}>
+            {shown.map(({ l, i }) => {
+              const p = state.completed[l.id];
+              const isNext = i === firstTodo;
+              const t = topicOf(l.id);
+              return (
+                <motion.div key={l.id} variants={rise} className="road-item">
+                  <span className={`road-dot ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} aria-hidden />
+                  <Link to={`/lesson/${l.id}`} className={`road-card ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} data-n={i + 1} style={{ '--topic': t.color } as CSSProperties}>
+                    <div className="road-node">
+                      <TopicIconById topic={t.id} size={26} />
+                      {p && <span className="check">✓</span>}
                     </div>
-                    <h3>{l.title}</h3>
-                    <div className="sub">{l.subtitle}</div>
-                  </div>
-                  <div className="meta">
-                    {p ? <Stars n={p.stars} /> : <span className="mins" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><IClock width={15} height={15} /> {l.minutes} min</span>}
-                    <IArrow width={18} />
-                  </div>
-                </Link>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+                    <div className="info">
+                      <div className="road-top">
+                        <span>Lezione {i + 1}</span>
+                        {isNext && <span className="road-next">Consigliata</span>}
+                      </div>
+                      <h3>{l.title}</h3>
+                      <div className="sub">{l.subtitle}</div>
+                      <div className="road-foot">
+                        <span className="topic-chip">{t.label}</span>
+                        {p ? (
+                          <Stars n={p.stars} />
+                        ) : (
+                          <span className="mins">
+                            <IClock width={14} height={14} /> {l.minutes} min
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </div>
 
         {scenariosByLevel(lv.id).length > 0 && (
           <>
@@ -159,8 +196,8 @@ export function LessonPage() {
           <IBack /> Livello {lv.id} · {lv.name}
         </Link>
         <motion.div className="lesson-header" variants={stagger} initial="hidden" animate="show">
-          <motion.div variants={rise} className="emoji" whileHover={{ rotate: [0, -10, 10, 0] }}>
-            {lesson.icon}
+          <motion.div variants={rise} className="emoji" style={{ color: topicOf(lesson.id).color }} whileHover={{ rotate: [0, -10, 10, 0] }}>
+            <TopicIcon lessonId={lesson.id} size={34} />
           </motion.div>
           <motion.div variants={rise} style={{ minWidth: 0 }}>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', marginBottom: 8 }}>

@@ -2,6 +2,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { LESSONS } from '../data';
+import { topicOf } from '../data/topics';
+import { TopicIcon } from './TopicIcon';
 import logoMark from '../assets/logo-mark.png';
 import { currentStreak, reviewQueue, useStore } from '../lib/store';
 import { normalize } from '../lib/utils';
@@ -187,7 +189,9 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
               {results.length === 0 && <div className="empty">Nessun argomento trovato per “{q}”</div>}
               {results.map((l, i) => (
                 <button key={l.id} className={`res ${i === active ? 'active' : ''}`} onMouseEnter={() => setActive(i)} onClick={() => go(l.id)}>
-                  <span className="e">{l.icon}</span>
+                  <span className="e" style={{ color: topicOf(l.id).color }}>
+                    <TopicIcon lessonId={l.id} size={20} />
+                  </span>
                   <span style={{ flex: 1, minWidth: 0 }}>
                     <div className="t">{l.title}</div>
                     <div className="s">{l.subtitle}</div>

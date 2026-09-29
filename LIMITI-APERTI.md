@@ -56,6 +56,11 @@ Ultimo aggiornamento: 30/09/2026. I punti del piano non ancora fatti (classifica
 - Il prefetch in background scarica tutti i livelli e le pagine (circa 600 kB) dopo l'avvio, salvo "risparmio dati": non c'è una scelta dell'utente.
 - Il logo è PNG (raster). Nessuna misura reale (Lighthouse, Core Web Vitals) su dispositivi veri. Il service worker non ha precache versionato per gli asset con hash.
 
+## Pagina del livello e icone
+- Le emoji delle lezioni sono sostituite da 10 icone di argomento (verbi e tempi, frasi e domande, nomi, modali, ipotesi, passivo, frasi complesse, confronti, preposizioni, stile) con colori coerenti. L'assegnazione lezione-argomento è manuale (`src/data/topics.ts`): una lezione nuova senza voce ricade su "Verbi e tempi". Il campo `icon` con l'emoji resta nei dati ma non è più usato.
+- Il percorso a zig-zag e i filtri per argomento non sono stati visti né provati dal vivo: la colonna di destra scende di mezza scheda con un margine fisso, quindi con titoli molto lunghi le schede possono non allinearsi bene. Nel filtro attivo il percorso diventa una griglia semplice, senza linea centrale.
+- Restano emoji nelle altre parti (icone dei dialoghi di speaking, titoli di sezione, tipi di esercizio): non toccate.
+
 ## Zoom e ridimensionamento della finestra
 - Su mobile lo zoom con le dita è bloccato (meta viewport, `touch-action`, eventi di gesto su iOS): contrasta con WCAG 1.4.4 (chi ha difficoltà visive non può ingrandire la pagina). Scelta di Mario; la regola axe `meta-viewport` è disattivata nei test.
 - Su desktop, sotto 1200 px di larghezza la pagina si rimpicciolisce in proporzione (CSS `zoom` sulla radice, calcolato in `src/lib/fitWindow.ts`) e le regole responsive valgono solo sui dispositivi touch (`(hover: none)`). Con finestre molto strette il testo diventa minuscolo (a 400 px è circa un terzo); nessuna dimensione minima. Non provato dal vivo: possibili scostamenti nelle animazioni di posizione (linguetta del menu, tessere del riordino) e nei pannelli fissi; il `zoom` CSS richiede browser recenti (Chrome, Safari, Firefox 126+).

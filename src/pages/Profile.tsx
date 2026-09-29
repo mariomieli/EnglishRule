@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { IArrow, IRepeat } from '../components/Icons';
+import { TopicIcon } from '../components/TopicIcon';
+import { topicOf } from '../data/topics';
 import { Counter, LevelBadge, Page } from '../components/ui';
 import { rise, stagger } from '../lib/motion';
 import { LESSONS, lessonById, lessonsByLevel } from '../data';
@@ -97,7 +99,9 @@ export function Review() {
                 return (
                   <motion.div key={id} variants={rise}>
                     <Link to={`/lesson/${id}`} className="lesson-row">
-                      <div className="lesson-node">{l.icon}</div>
+                      <div className="lesson-node" style={{ color: topicOf(l.id).color }}>
+                        <TopicIcon lessonId={l.id} size={22} />
+                      </div>
                       <div className="info">
                         <h3>{l.title}</h3>
                         <div className="sub">
