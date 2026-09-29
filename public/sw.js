@@ -1,6 +1,6 @@
 // Service worker: funziona offline dopo la prima visita.
 // Navigazioni: rete prima, poi cache. Asset con hash: cache prima.
-const CACHE = 'er-v2';
+const CACHE = 'er-v3';
 // radice del sito ("/" o "/EnglishRule/")
 const ROOT = new URL(self.registration.scope).pathname;
 
