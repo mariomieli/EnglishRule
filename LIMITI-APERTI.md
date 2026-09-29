@@ -1,7 +1,7 @@
 # Limiti aperti (da colmare)
 
 Elenco vivo dei limiti rimasti dopo ogni miglioramento. Quando uno viene chiuso, cancellarlo o spostarlo in "Chiusi".
-Ultimo aggiornamento: 29/09/2026 (punti 1-6, 10, 13-19).
+Ultimo aggiornamento: 29/09/2026 (punti 1-6, 10, 13-19; gli altri punti del piano sono stati scartati da Mario).
 
 ## Nessuna verifica nel browser (vale per tutti i punti sotto)
 - Nulla di quanto sotto è stato provato dal vivo (schermate, tastiera mobile, animazioni): sono stati eseguiti solo tsc, lint, validate e i test da riga di comando. Fare un giro completo su telefono e desktop.
@@ -117,6 +117,3 @@ Ultimo aggiornamento: 29/09/2026 (punti 1-6, 10, 13-19).
 - Lint: 11 warning preesistenti (refs in render, setState in effect, ecc.) in src/lib/store.tsx e src/pages/Profile.tsx.
 - Nessun test automatico dell'interfaccia (solo script su logica): mancano Vitest e uno smoke test Playwright in CI.
 - `useStore()` troppo centrale (28 archi, `store.tsx` con coesione bassa): da spezzare in parti.
-
-## Prossimi punti del piano
-6 (classifica) · 7 promemoria push · 8 riepilogo settimanale · 9 offline vero · 11 login Apple/email e cancellazione account · 12 voci TTS migliori · 20 SEO e condivisione.
