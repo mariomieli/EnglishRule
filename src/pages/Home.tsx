@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
 import { useRef, type MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
@@ -6,6 +7,7 @@ import { Counter, LevelBadge, Page } from '../components/ui';
 import { rise, stagger } from '../lib/motion';
 import { LESSONS, lessonsByLevel } from '../data';
 import { LEVELS, type LevelMeta } from '../data/levels';
+import logoMark from '../assets/logo-mark.png';
 import { currentStreak, today, useStore } from '../lib/store';
 import { pct } from '../lib/utils';
 
@@ -175,7 +177,9 @@ export function Home() {
           </motion.div>
         )}
 
-        <footer className="footer">EnglishRule · Livelli secondo il Quadro Comune Europeo di Riferimento (QCER) · I tuoi progressi restano sul tuo dispositivo</footer>
+        <footer className="footer">
+          <img src={logoMark} alt="" height={28} style={{ display: 'block', margin: '0 auto 8px', height: 28, width: 'auto' }} />
+          EnglishRule · Livelli secondo il Quadro Comune Europeo di Riferimento (QCER) · I tuoi progressi restano sul tuo dispositivo</footer>
       </div>
     </Page>
   );
@@ -261,7 +265,7 @@ export function LevelCard({ lv, recommended }: { lv: LevelMeta; recommended?: bo
           <div className="top">
             <LevelBadge id={lv.id} size={52} />
             <div>
-              <div className="eyebrow" style={{ color: lv.from }}>
+              <div className="eyebrow eyebrow-lv" style={{ '--lv': lv.from } as CSSProperties}>
                 {lv.tagline}
               </div>
               <h3>

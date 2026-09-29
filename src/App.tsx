@@ -87,6 +87,18 @@ function Shell() {
   return (
     <div className="app">
       <AnimatedBackground />
+      <a
+        className="skip-link"
+        href="#contenuto"
+        onClick={(e) => {
+          e.preventDefault();
+          const target = document.querySelector<HTMLElement>('main');
+          target?.setAttribute('tabindex', '-1');
+          target?.focus();
+        }}
+      >
+        Vai al contenuto
+      </a>
       {!focus && <TopBar onSearch={() => setSearch(true)} />}
       <Suspense fallback={<PageLoading />}>
       <AnimatePresence mode="wait">

@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Page } from '../components/ui';
+import { LogoLockup, Page } from '../components/ui';
 import { useStore } from '../lib/store';
 import { authProviders, redirectUrl, supabase } from '../lib/sync/cloud';
 
@@ -41,7 +41,12 @@ export function Account() {
 
   return (
     <Page>
-      <div className="container narrow" style={{ maxWidth: 480 }}>{user && mode !== 'recovery' ? <SignedIn /> : <AuthForm mode={mode} setMode={setMode} />}</div>
+      <div className="container narrow" style={{ maxWidth: 480 }}>
+        <div style={{ textAlign: 'center', marginBottom: 18 }}>
+          <LogoLockup />
+        </div>
+        {user && mode !== 'recovery' ? <SignedIn /> : <AuthForm mode={mode} setMode={setMode} />}
+      </div>
     </Page>
   );
 }

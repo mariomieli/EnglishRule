@@ -1,11 +1,11 @@
 // Service worker: funziona offline dopo la prima visita.
 // Navigazioni: rete prima, poi cache. Asset con hash: cache prima.
-const CACHE = 'er-v1';
+const CACHE = 'er-v2';
 // radice del sito ("/" o "/EnglishRule/")
 const ROOT = new URL(self.registration.scope).pathname;
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll([ROOT, ROOT + 'favicon.svg', ROOT + 'manifest.webmanifest'])));
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll([ROOT, ROOT + 'icon-192.png', ROOT + 'manifest.webmanifest'])));
   self.skipWaiting();
 });
 

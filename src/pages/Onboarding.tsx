@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { IArrow } from '../components/Icons';
-import { LevelBadge } from '../components/ui';
+import { LevelBadge, LogoLockup } from '../components/ui';
 import { lessonsByLevel } from '../data';
 import { LEVELS, levelById } from '../data/levels';
 import type { LevelId } from '../data/types';
@@ -39,6 +39,9 @@ export function Onboarding() {
 
   return (
     <main className="container narrow onboarding">
+      <div style={{ marginBottom: 22 }}>
+        <LogoLockup />
+      </div>
       <div className="ob-dots" aria-label={`Passo ${step + 1} di 3`}>
         {[0, 1, 2].map((i) => (
           <span key={i} className={i <= step ? 'on' : ''} />

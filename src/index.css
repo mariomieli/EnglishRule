@@ -9,13 +9,14 @@
   --border-strong: rgba(255, 255, 255, 0.2);
   --text: #f4f2ff;
   --text-2: #b9b5d9;
-  --text-3: #8480ab;
+  --text-3: #9d99c6;
   --accent: #8b6cff;
   --accent-2: #ff4fa3;
   --accent-3: #ffb347;
   --good: #2ee6a6;
   --good-bg: rgba(46, 230, 166, 0.12);
   --bad: #ff5c7a;
+  --bad-text: #ff5c7a;
   --bad-bg: rgba(255, 92, 122, 0.12);
   --warn: #ffc94d;
   --warn-bg: rgba(255, 201, 77, 0.1);
@@ -41,13 +42,14 @@
   --border-strong: rgba(40, 30, 110, 0.2);
   --text: #16123a;
   --text-2: #4a4575;
-  --text-3: #7a76a0;
+  --text-3: #625e8a;
   --accent: #6d4aff;
   --accent-2: #e8388c;
   --accent-3: #f08c00;
   --good: #0fa878;
   --good-bg: rgba(15, 168, 120, 0.1);
   --bad: #e23355;
+  --bad-text: #b8203f;
   --bad-bg: rgba(226, 51, 85, 0.09);
   --warn: #b77900;
   --warn-bg: rgba(240, 160, 0, 0.1);
@@ -269,14 +271,35 @@ main {
 }
 
 .brand .logo {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg, #7c5cff, #ff4fa3 55%, #ffb347);
-  color: white;
-  box-shadow: 0 6px 20px -6px #ff4fa3;
+  height: 36px;
+  width: auto;
+  display: block;
+}
+
+.brand-text .b1 {
+  color: var(--text);
+}
+
+.brand-text .b2 {
+  color: #e0303c;
+}
+
+:root[data-theme='light'] .brand-text .b1 {
+  color: #0b3675;
+}
+
+.logo-plate {
+  display: inline-flex;
+  padding: 14px 22px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.5);
+}
+
+.logo-plate img {
+  height: clamp(44px, 9vw, 64px);
+  width: auto;
+  display: block;
 }
 
 .nav-links {
@@ -534,6 +557,15 @@ kbd {
   font-size: 0.74rem;
   font-weight: 700;
   color: var(--text-3);
+}
+
+.eyebrow-lv {
+  color: color-mix(in srgb, var(--lv) 78%, #fff);
+}
+
+/* nel tema chiaro i colori dei livelli sono troppo chiari per il testo piccolo: si scuriscono */
+:root[data-theme='light'] .eyebrow-lv {
+  color: color-mix(in srgb, var(--lv) 45%, #000);
 }
 
 .muted {
@@ -2230,7 +2262,7 @@ tbody tr:hover {
 }
 
 .badge-item.locked .t {
-  color: var(--text-3);
+  color: var(--text-2);
 }
 
 .empty-state {
@@ -3123,4 +3155,32 @@ tbody tr:hover {
   justify-content: center;
   gap: 18px;
   flex-wrap: wrap;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+main:focus {
+  outline: none;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
 }

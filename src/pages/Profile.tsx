@@ -252,7 +252,7 @@ export function Profile() {
                   <div style={{ fontWeight: 700 }}>Azzera i progressi</div>
                   <div className="faint" style={{ fontSize: '.85rem' }}>Cancella XP, lezioni ed errori salvati{user ? ' su tutti i tuoi dispositivi' : ''}</div>
                 </div>
-                <button className="btn btn-ghost btn-sm" style={{ color: 'var(--bad)' }} onClick={() => confirm(user ? 'Vuoi davvero cancellare tutti i progressi del tuo account, su tutti i dispositivi? Non si può annullare.' : 'Vuoi davvero cancellare tutti i progressi? Non si può annullare.') && reset()}>
+                <button className="btn btn-ghost btn-sm" style={{ color: 'var(--bad-text)' }} onClick={() => confirm(user ? 'Vuoi davvero cancellare tutti i progressi del tuo account, su tutti i dispositivi? Non si può annullare.' : 'Vuoi davvero cancellare tutti i progressi? Non si può annullare.') && reset()}>
                   Azzera
                 </button>
               </div>

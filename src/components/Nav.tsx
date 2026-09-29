@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { LESSONS } from '../data';
+import logoMark from '../assets/logo-mark.png';
 import { currentStreak, reviewQueue, useStore } from '../lib/store';
 import { normalize } from '../lib/utils';
 import { IBook, IHome, IMic, IMoon, IRepeat, ISearch, ISun, ITarget, IUser } from './Icons';
@@ -33,12 +34,11 @@ export function TopBar({ onSearch }: { onSearch: () => void }) {
     <header className={`topbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="container">
         <Link to="/" className="brand" aria-label="EnglishRule, home">
-          <motion.span className="logo" whileHover={{ rotate: -12, scale: 1.08 }} transition={{ type: 'spring', stiffness: 400 }}>
-            <svg width="20" height="20" viewBox="0 0 64 64" aria-hidden>
-              <path d="M42 19H24v26h18M24 32h14" fill="none" stroke="#fff" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </motion.span>
-          <span>EnglishRule</span>
+          <motion.img className="logo" src={logoMark} alt="" whileHover={{ rotate: -6, scale: 1.08 }} transition={{ type: 'spring', stiffness: 400 }} />
+          <span className="brand-text" aria-label="EnglishRule">
+            <span className="b1">English</span>
+            <span className="b2">Rule</span>
+          </span>
         </Link>
         <nav className="nav-links" aria-label="Principale">
           {LINKS.map((l) => (

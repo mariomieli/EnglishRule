@@ -136,3 +136,12 @@ export function Page({ children, className }: { children: React.ReactNode; class
     </motion.main>
   );
 }
+
+/** Logo completo (simbolo e scritta) su una targa bianca: la scritta blu resta leggibile anche nel tema scuro. */
+export function LogoLockup() {
+  return (
+    <span className="logo-plate">
+      <img src={`${import.meta.env.BASE_URL}logo.png`} alt="EnglishRule" width={720} height={207} />
+    </span>
+  );
+}

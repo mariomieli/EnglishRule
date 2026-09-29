@@ -62,7 +62,7 @@ export function LevelPage() {
           <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(600px circle at 0% 0%, ${lv.from}30, transparent 60%)`, pointerEvents: 'none' }} />
           <LevelBadge id={lv.id} size={80} />
           <div className="grow">
-            <div className="eyebrow" style={{ color: lv.from }}>
+            <div className="eyebrow eyebrow-lv" style={{ '--lv': lv.from } as CSSProperties}>
               {lv.tagline}
             </div>
             <h1>
@@ -109,7 +109,7 @@ export function LevelPage() {
           <>
             <div className="section-title">
               <div>
-                <div className="eyebrow" style={{ color: lv.from }}>
+                <div className="eyebrow eyebrow-lv" style={{ '--lv': lv.from } as CSSProperties}>
                   Conversazione
                 </div>
                 <h2>🎙️ Speaking {lv.id}</h2>

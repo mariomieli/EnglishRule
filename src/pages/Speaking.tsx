@@ -51,7 +51,7 @@ export function SpeakingHub() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <LevelBadge id={lv.id} size={40} />
                   <div>
-                    <div className="eyebrow" style={{ color: lv.from }}>
+                    <div className="eyebrow eyebrow-lv" style={{ '--lv': lv.from } as CSSProperties}>
                       {lv.tagline}
                     </div>
                     <h2 style={{ fontSize: '1.4rem' }}>{lv.name}</h2>
