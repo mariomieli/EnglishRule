@@ -7,7 +7,7 @@
  * Gli eventi vanno nella tabella `events` di Supabase (vedi supabase/migrations/…_events.sql).
  */
 
-export type EventName = 'onboarding_done' | 'lesson_start' | 'lesson_done' | 'session_abandon' | 'exercise_wrong' | 'placement_done' | 'review_start' | 'review_done';
+export type EventName = 'onboarding_done' | 'lesson_start' | 'lesson_done' | 'session_abandon' | 'exercise_wrong' | 'placement_done' | 'review_start' | 'review_done' | 'answer_disputed';
 export type EventProps = Record<string, string | number | boolean>;
 
 interface Row {

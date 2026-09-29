@@ -22,6 +22,8 @@ interface Actions {
   setPlacement: (l: LevelId) => void;
   completeOnboarding: (o: { goal?: number; level?: LevelId }) => void;
   setDailyGoal: (n: number) => void;
+  setAutoCheck: (on: boolean) => void;
+  setAdvanceMs: (ms: number) => void;
   reset: () => void;
   syncNow: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -94,6 +96,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setPlacement: (l) => setSetting('placement', l),
       completeOnboarding: (o) => update((d) => completeOnboardingIn(d, o, now())),
       setDailyGoal: (n) => setSetting('dailyGoal', n),
+      setAutoCheck: (on) => setSetting('autoCheck', on),
+      setAdvanceMs: (ms) => setSetting('advanceMs', ms),
       // nuova "epoca": l'azzeramento si propaga a tutti i dispositivi e vince sui dati precedenti
       reset: () => update((d) => resetDoc(d, now())),
     };

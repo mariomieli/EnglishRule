@@ -27,6 +27,8 @@ export interface State {
   sound: boolean;
   placement: LevelId | null;
   onboarded: boolean;
+  autoCheck: boolean;
+  advanceMs: number;
 }
 
 export const today = (d = new Date()) =>

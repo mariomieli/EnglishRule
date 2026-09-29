@@ -9,7 +9,7 @@ create table if not exists public.events (
   session text        not null check (char_length(session) between 4 and 24), -- casuale, vive solo finché la pagina è aperta
   name    text        not null check (name in (
             'onboarding_done', 'lesson_start', 'lesson_done', 'session_abandon',
-            'exercise_wrong', 'placement_done', 'review_start', 'review_done')),
+            'exercise_wrong', 'placement_done', 'review_start', 'review_done', 'answer_disputed')),
   props   jsonb       not null default '{}'::jsonb
           check (jsonb_typeof(props) = 'object' and pg_column_size(props) <= 512),
   app     text        check (char_length(app) <= 20)
@@ -55,3 +55,15 @@ revoke all on public.events_lesson_funnel, public.events_hard_exercises from ano
 
 -- Conservazione: cancellare gli eventi più vecchi di 180 giorni (da schedulare, es. con pg_cron):
 --   delete from public.events where at < now() - interval '180 days';
+
+-- Risposte scritte che l'utente ritiene giuste anche se il confronto le ha rifiutate: servono a
+-- scoprire le varianti valide da aggiungere agli esercizi di traduzione e correzione.
+create or replace view public.events_disputed_answers as
+select props->>'lesson' as lesson, (props->>'index')::int as esercizio, props->>'type' as tipo, count(*) as contestazioni
+from public.events
+where name = 'answer_disputed' and at > now() - interval '90 days'
+group by 1, 2, 3
+order by contestazioni desc
+limit 100;
+
+revoke all on public.events_disputed_answers from anon, authenticated;

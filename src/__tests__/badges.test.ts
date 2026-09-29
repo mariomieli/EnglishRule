@@ -19,6 +19,8 @@ const empty = (): State => ({
   sound: true,
   placement: null,
   onboarded: false,
+  autoCheck: true,
+  advanceMs: 1100,
 });
 
 describe('traguardi', () => {

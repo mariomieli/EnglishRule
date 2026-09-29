@@ -61,6 +61,8 @@ export interface Settings {
   dailyGoal: number;
   placement: LevelId | null;
   onboarded: boolean;
+  autoCheck: boolean; // verifica automatica di scelta multipla, giusta/sbagliata e abbinamenti
+  advanceMs: number; // pausa prima di passare da soli all'esercizio dopo una risposta giusta (0 = manuale)
 }
 
 export type Stamped<T> = { v: T; at: number };
@@ -77,7 +79,7 @@ export interface Doc {
   settings: { [K in keyof Settings]?: Stamped<Settings[K]> };
 }
 
-export const DEFAULT_SETTINGS: Settings = { theme: 'system', sound: true, dailyGoal: 50, placement: null, onboarded: false };
+export const DEFAULT_SETTINGS: Settings = { theme: 'system', sound: true, dailyGoal: 50, placement: null, onboarded: false, autoCheck: true, advanceMs: 1100 };
 
 export const emptyDoc = (): Doc => ({ completed: {}, theoryRead: {}, mistakes: {}, seen: {}, xp: {}, settings: {} });
 
@@ -187,6 +189,8 @@ export function settingsOf(d: Doc): Settings {
     dailyGoal: d.settings.dailyGoal?.v ?? DEFAULT_SETTINGS.dailyGoal,
     placement: d.settings.placement?.v ?? DEFAULT_SETTINGS.placement,
     onboarded: d.settings.onboarded?.v ?? DEFAULT_SETTINGS.onboarded,
+    autoCheck: d.settings.autoCheck?.v ?? DEFAULT_SETTINGS.autoCheck,
+    advanceMs: d.settings.advanceMs?.v ?? DEFAULT_SETTINGS.advanceMs,
   };
 }
 

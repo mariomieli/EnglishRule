@@ -97,7 +97,7 @@ export function Review() {
 }
 
 export function Profile() {
-  const { state, setTheme, toggleSound, setDailyGoal, reset, user, cloud, sync } = useStore();
+  const { state, setTheme, toggleSound, setDailyGoal, setAutoCheck, setAdvanceMs, reset, user, cloud, sync } = useStore();
   const [stats, setStats] = useState(() => analyticsEnabled());
   const done = Object.keys(state.completed).length;
   const streak = currentStreak(state);
@@ -235,6 +235,32 @@ export function Profile() {
                 <button className={`switch ${state.sound ? 'on' : ''}`} onClick={toggleSound} role="switch" aria-checked={state.sound} aria-label="Effetti sonori">
                   <motion.span layout className="knob" transition={{ type: 'spring', stiffness: 600, damping: 32 }} />
                 </button>
+              </div>
+              <div className="setting">
+                <div>
+                  <div style={{ fontWeight: 700 }}>Verifica automatica</div>
+                  <div className="faint" style={{ fontSize: '.85rem' }}>Scelta multipla, giusta/sbagliata e abbinamenti si verificano appena rispondi</div>
+                </div>
+                <button className={`switch ${state.autoCheck ? 'on' : ''}`} onClick={() => setAutoCheck(!state.autoCheck)} role="switch" aria-checked={state.autoCheck} aria-label="Verifica automatica">
+                  <motion.span layout className="knob" transition={{ type: 'spring', stiffness: 600, damping: 32 }} />
+                </button>
+              </div>
+              <div className="setting">
+                <div>
+                  <div style={{ fontWeight: 700 }}>Dopo una risposta giusta</div>
+                  <div className="faint" style={{ fontSize: '.85rem' }}>Pausa prima di passare all'esercizio successivo; tocca la spiegazione per fermarti</div>
+                </div>
+                <div className="seg">
+                  {[
+                    { ms: 0, label: 'Manuale' },
+                    { ms: 1100, label: '1 s' },
+                    { ms: 3000, label: '3 s' },
+                  ].map((o) => (
+                    <button key={o.ms} className={state.advanceMs === o.ms ? 'on' : ''} onClick={() => setAdvanceMs(o.ms)}>
+                      {o.label}
+                    </button>
+                  ))}
+                </div>
               </div>
               <div className="setting">
                 <div>

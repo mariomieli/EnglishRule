@@ -138,6 +138,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
   const [bestCombo, setBestCombo] = useState(0);
   const [msg, setMsg] = useState('');
   const [rule, setRule] = useState(false);
+  const [hold, setHold] = useState(false); // l'utente ha fermato l'avanzamento automatico
   const [done, setDone] = useState<null | { score: number; xp: number; stars: number; improved: boolean; goal: boolean; seconds: number }>(null);
   const [floats, setFloats] = useState<{ id: number; x: number; y: number; n: number }[]>([]);
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -189,7 +190,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
 
   // scelta multipla, giusta/sbagliata e abbinamenti: appena si risponde si verifica da soli
   // (con una breve pausa per far vedere la selezione). Completamento e riordino restano manuali.
-  const autoCheck = !!item && !checked && answer !== null && (item.ex.type === 'mcq' || item.ex.type === 'judge' || item.ex.type === 'match');
+  const autoCheck = state.autoCheck && !!item && !checked && answer !== null && (item.ex.type === 'mcq' || item.ex.type === 'judge' || item.ex.type === 'match');
   useEffect(() => {
     if (!autoCheck) return;
     const t = setTimeout(check, 350);
@@ -202,6 +203,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
       setAnswer(null);
       setChecked(false);
       setRule(false);
+      setHold(false);
       return;
     }
     // fine sessione
@@ -221,11 +223,32 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
   }, [pos, queue.length, firstTry, total, mode, lessonId, addXp, finishLesson, state.sound, state.xpByDay, state.dailyGoal]);
 
   // risposta giusta: si va avanti da soli dopo un attimo (Invio o "Continua" per anticipare)
+  const advancing = checked && correct && !done && !hold && state.advanceMs > 0;
   useEffect(() => {
-    if (!checked || !correct || done) return;
-    const t = setTimeout(next, 1100);
+    if (!advancing) return;
+    const t = setTimeout(next, state.advanceMs);
     return () => clearTimeout(t);
-  }, [checked, correct, done, next]);
+  }, [advancing, state.advanceMs, next]);
+
+  // risposta scritta rifiutata ma giusta: l'utente può contestarla e viene contata come corretta
+  const dispute = () => {
+    if (!item || !checked || correct) return;
+    setCorrect(true);
+    setMsg('Va bene, la conto giusta!');
+    if (state.sound) sfx.correct();
+    track('answer_disputed', { lesson: item.lessonId, index: item.index, type: item.ex.type });
+    if (item.retry) return;
+    recordAnswer(item.lessonId, item.index, true);
+    clearMistake(item.lessonId, item.index);
+    setFirstTry((n) => n + 1);
+    setCombo(1);
+    setBestCombo((b) => Math.max(b, 1));
+    // toglie il secondo tentativo che era stato messo in coda
+    setQueue((q) => {
+      const i = q.findLastIndex((x) => x.retry && x.lessonId === item.lessonId && x.index === item.index);
+      return i < 0 ? q : q.filter((_, k) => k !== i);
+    });
+  };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -293,11 +316,12 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
         </div>
       </div>
 
+      {advancing && <motion.div key={pos} className="advance-bar" initial={{ scaleX: 1 }} animate={{ scaleX: 0 }} transition={{ duration: state.advanceMs / 1000, ease: 'linear' }} />}
       <motion.div className={`practice-foot ${checked ? (correct ? 'good' : 'bad') : ''}`} layout>
         <div className="container narrow">
           <AnimatePresence mode="wait">
             {checked ? (
-              <motion.div key="fb" className={`feedback ${correct ? 'good' : 'bad'}`} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} aria-live="polite">
+              <motion.div key="fb" onClick={() => correct && setHold(true)} className={`feedback ${correct ? 'good' : 'bad'}`} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} aria-live="polite">
                 <motion.div className="badge" initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 400, damping: 15 }}>
                   {correct ? '✓' : '✗'}
                 </motion.div>
@@ -316,6 +340,11 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
                   <div className="explain">
                     <Rich text={item.ex.explain} />
                   </div>
+                  {!correct && (item.ex.type === 'translate' || item.ex.type === 'correct' || item.ex.type === 'listen') && (
+                    <button className="btn btn-ghost btn-sm" style={{ marginTop: 8, marginRight: 8 }} onClick={dispute}>
+                      ✋ La mia risposta è giusta
+                    </button>
+                  )}
                   {!correct && ruleBlocks.length > 0 && (
                     <button className="btn btn-ghost btn-sm" style={{ marginTop: 8 }} onClick={() => setRule(true)}>
                       📖 Rivedi la regola
@@ -325,7 +354,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
               </motion.div>
             ) : (
               <motion.div key="hint" className="faint hide-mobile" style={{ flex: 1, fontSize: '.85rem', fontWeight: 600 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                {autoCheckType(item.ex.type) ? 'Scegli la risposta: la verifica è automatica' : <>Premi <kbd>Invio</kbd> per verificare</>}
+                {state.autoCheck && autoCheckType(item.ex.type) ? 'Scegli la risposta: la verifica è automatica' : <>Premi <kbd>Invio</kbd> per verificare</>}
                 {item.ex.type === 'mcq' && (
                   <>
                     {' '}

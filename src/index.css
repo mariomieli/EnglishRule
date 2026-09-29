@@ -3184,3 +3184,15 @@ main:focus {
 .skip-link:focus {
   transform: none;
 }
+
+.advance-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  z-index: 5;
+  transform-origin: left;
+  background: var(--good);
+  pointer-events: none;
+}
