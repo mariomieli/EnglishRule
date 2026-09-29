@@ -16,10 +16,11 @@ import {
   type LessonProgress,
   type Settings,
   type Theme,
+  type ThemePref,
 } from './sync/doc';
 import { syncDoc } from './sync/cloud';
 
-export type { LessonProgress, Theme };
+export type { LessonProgress, Theme, ThemePref };
 
 export interface Mistake {
   lessonId: string;
@@ -39,7 +40,8 @@ export interface State {
   streak: { count: number; last: string | null; best: number };
   xpByDay: Record<string, number>;
   dailyGoal: number;
-  theme: Theme;
+  theme: Theme; // tema effettivamente mostrato
+  themePref: ThemePref; // scelta dell'utente (system = come il dispositivo)
   sound: boolean;
   placement: LevelId | null;
 }
@@ -63,6 +65,13 @@ const store = {
       return localStorage.getItem(k);
     } catch {
       return null;
+    }
+  },
+  remove: (k: string) => {
+    try {
+      localStorage.removeItem(k);
+    } catch {
+      /* ignora */
     }
   },
   set: (k: string, v: string) => {
@@ -111,7 +120,9 @@ export function currentStreak(s: State) {
 
 export const starsFor = (score: number) => (score >= 90 ? 3 : score >= 70 ? 2 : score >= 50 ? 1 : 0);
 
-function view(doc: Doc): State {
+const systemTheme = (): Theme => (typeof matchMedia !== 'undefined' && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+
+function view(doc: Doc, sys: Theme): State {
   const byDay = xpByDay(doc);
   const s = settingsOf(doc);
   const mistakes: Record<string, Mistake> = {};
@@ -128,6 +139,8 @@ function view(doc: Doc): State {
     streak: streakOf(byDay),
     xpByDay: byDay,
     ...s,
+    themePref: s.theme,
+    theme: s.theme === 'system' ? sys : s.theme,
   };
 }
 
@@ -139,7 +152,7 @@ interface Actions {
   recordMistake: (lessonId: string, index: number) => void;
   clearMistake: (lessonId: string, index: number) => void;
   markSeen: (lessonId: string, indices: number[]) => void;
-  setTheme: (t: Theme) => void;
+  setTheme: (t: ThemePref) => void;
   toggleSound: () => void;
   setPlacement: (l: LevelId) => void;
   setDailyGoal: (n: number) => void;
@@ -170,7 +183,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const inFlight = useRef<Promise<void> | null>(null);
   const again = useRef(false);
 
-  const state = useMemo(() => view(saved.doc), [saved.doc]);
+  // tema del dispositivo, aggiornato se l'utente lo cambia mentre l'app è aperta
+  const [sys, setSys] = useState<Theme>(systemTheme);
+  useEffect(() => {
+    const mq = matchMedia('(prefers-color-scheme: light)');
+    const on = () => setSys(mq.matches ? 'light' : 'dark');
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
+
+  const state = useMemo(() => view(saved.doc, sys), [saved.doc, sys]);
 
   // persistenza locale (sempre: l'app funziona anche offline e senza account)
   useEffect(() => {
@@ -179,9 +201,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.dataset.theme = state.theme;
-    store.set(THEME_KEY, state.theme);
+    // salviamo solo una scelta esplicita: senza, al prossimo avvio vale il tema del dispositivo
+    if (state.themePref === 'system') store.remove(THEME_KEY);
+    else store.set(THEME_KEY, state.themePref);
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', state.theme === 'dark' ? '#0b0a1a' : '#f6f4ff');
-  }, [state.theme]);
+  }, [state.theme, state.themePref]);
 
   const update = useCallback((f: (d: Doc) => Doc) => setSaved((s) => ({ ...s, doc: f(s.doc) })), []);
   const now = () => Date.now();

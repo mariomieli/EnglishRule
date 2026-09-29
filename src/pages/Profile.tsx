@@ -233,11 +233,12 @@ export function Profile() {
               <div className="setting">
                 <div>
                   <div style={{ fontWeight: 700 }}>Tema</div>
-                  <div className="faint" style={{ fontSize: '.85rem' }}>Chiaro o scuro</div>
+                  <div className="faint" style={{ fontSize: '.85rem' }}>Auto segue l'impostazione del dispositivo</div>
                 </div>
                 <div className="seg">
-                  <button className={state.theme === 'light' ? 'on' : ''} onClick={() => setTheme('light')}>☀️ Chiaro</button>
-                  <button className={state.theme === 'dark' ? 'on' : ''} onClick={() => setTheme('dark')}>🌙 Scuro</button>
+                  <button className={state.themePref === 'system' ? 'on' : ''} onClick={() => setTheme('system')}>📱 Auto</button>
+                  <button className={state.themePref === 'light' ? 'on' : ''} onClick={() => setTheme('light')}>☀️ Chiaro</button>
+                  <button className={state.themePref === 'dark' ? 'on' : ''} onClick={() => setTheme('dark')}>🌙 Scuro</button>
                 </div>
               </div>
               <div className="setting">

@@ -16,6 +16,8 @@
 import type { LevelId } from '../../data/types';
 
 export type Theme = 'dark' | 'light';
+/** Preferenza dell'utente: 'system' segue il tema del dispositivo. */
+export type ThemePref = Theme | 'system';
 
 export interface LessonProgress {
   best: number; // percentuale 0-100
@@ -33,7 +35,7 @@ export interface MistakeEntry {
 }
 
 export interface Settings {
-  theme: Theme;
+  theme: ThemePref;
   sound: boolean;
   dailyGoal: number;
   placement: LevelId | null;
@@ -52,7 +54,7 @@ export interface Doc {
   settings: { [K in keyof Settings]?: Stamped<Settings[K]> };
 }
 
-export const DEFAULT_SETTINGS: Settings = { theme: 'dark', sound: true, dailyGoal: 50, placement: null };
+export const DEFAULT_SETTINGS: Settings = { theme: 'system', sound: true, dailyGoal: 50, placement: null };
 
 export const emptyDoc = (): Doc => ({ completed: {}, theoryRead: {}, mistakes: {}, seen: {}, xp: {}, settings: {} });
 
