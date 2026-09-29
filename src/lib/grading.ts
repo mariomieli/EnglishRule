@@ -56,3 +56,19 @@ export const typeLabel: Record<Exercise['type'], { label: string; icon: string }
   judge: { label: 'Giusta o sbagliata?', icon: '⚖️' },
   match: { label: 'Abbina le coppie', icon: '🔗' },
 };
+
+/** Risposta dell'utente in forma di testo, per confrontarla con la soluzione nel feedback. */
+export function given(ex: Exercise, a: Answer): string | null {
+  switch (ex.type) {
+    case 'mcq':
+      return typeof a === 'number' ? ex.options[a] ?? null : null;
+    case 'fill':
+      return typeof a === 'string' && a.trim() ? ex.prompt.replace(/_{2,}/, `==${a.trim()}==`) : null;
+    case 'order':
+      return Array.isArray(a) ? a.join(' ') : null;
+    case 'judge':
+      return typeof a === 'boolean' ? (a ? 'Hai detto: corretta' : 'Hai detto: sbagliata') : null;
+    case 'match':
+      return null;
+  }
+}

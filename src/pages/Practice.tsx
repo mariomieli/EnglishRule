@@ -3,9 +3,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ExerciseView } from '../components/Exercises';
-import { evaluate, isComplete, solution, typeLabel, type Answer } from '../lib/grading';
+import { evaluate, given, isComplete, solution, typeLabel, type Answer } from '../lib/grading';
 import { IClose } from '../components/Icons';
 import { Rich } from '../components/Rich';
+import { Theory } from '../components/Theory';
 import { Counter, Stars } from '../components/ui';
 import { lessonById, nextLesson } from '../data';
 import { levelById } from '../data/levels';
@@ -103,6 +104,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
   const [combo, setCombo] = useState(0);
   const [bestCombo, setBestCombo] = useState(0);
   const [msg, setMsg] = useState('');
+  const [rule, setRule] = useState(false);
   const [done, setDone] = useState<null | { score: number; xp: number; stars: number; improved: boolean; goal: boolean; seconds: number }>(null);
   const [floats, setFloats] = useState<{ id: number; x: number; y: number; n: number }[]>([]);
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -152,6 +154,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
       setPos((p) => p + 1);
       setAnswer(null);
       setChecked(false);
+      setRule(false);
       return;
     }
     // fine sessione
@@ -191,6 +194,9 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
 
   const tl = typeLabel[item.ex.type];
   const sol = solution(item.ex);
+  const mine = !correct && checked ? given(item.ex, answer) : null;
+  const ruleLesson = lessonById(item.lessonId);
+  const ruleBlocks = ruleLesson?.theory.filter((b) => b.type === 'rule' || b.type === 'formula' || b.type === 'warning' || b.type === 'tip' || b.type === 'compare' || b.type === 'table') ?? [];
 
   return (
     <div className="practice">
@@ -241,6 +247,11 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
                 </motion.div>
                 <div style={{ minWidth: 0 }}>
                   <h4>{msg}</h4>
+                  {mine && (
+                    <div className="answer mine">
+                      Tu: <Rich text={mine} />
+                    </div>
+                  )}
                   {!correct && sol && (
                     <div className="answer">
                       Soluzione: <Rich text={sol} />
@@ -249,6 +260,11 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
                   <div className="explain">
                     <Rich text={item.ex.explain} />
                   </div>
+                  {!correct && ruleBlocks.length > 0 && (
+                    <button className="btn btn-ghost btn-sm" style={{ marginTop: 8 }} onClick={() => setRule(true)}>
+                      📖 Rivedi la regola
+                    </button>
+                  )}
                 </div>
               </motion.div>
             ) : (
@@ -268,6 +284,27 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
           </button>
         </div>
       </motion.div>
+
+      <AnimatePresence>
+        {rule && ruleLesson && (
+          <motion.div className="rule-sheet-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setRule(false)}>
+            <motion.div className="rule-sheet" role="dialog" aria-label={`Regola: ${ruleLesson.title}`} initial={{ y: 80 }} animate={{ y: 0 }} exit={{ y: 80 }} onClick={(e) => e.stopPropagation()}>
+              <div className="rule-sheet-head">
+                <h3>
+                  {ruleLesson.icon} {ruleLesson.title}
+                </h3>
+                <button className="icon-btn" onClick={() => setRule(false)} aria-label="Chiudi">
+                  <IClose />
+                </button>
+              </div>
+              <Theory blocks={ruleBlocks} />
+              <Link to={`/lesson/${ruleLesson.id}`} className="btn btn-ghost btn-sm" style={{ marginTop: 12 }}>
+                Apri la lezione completa
+              </Link>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {floats.map((f) => (
