@@ -29,3 +29,7 @@ supabase/.branches
 
 graphify-out/
 .claude/
+
+# Playwright
+test-results/
+playwright-report/
