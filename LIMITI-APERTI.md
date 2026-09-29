@@ -58,7 +58,7 @@ Ultimo aggiornamento: 30/09/2026. I punti del piano non ancora fatti (classifica
 
 ## Pagina del livello e icone
 - Al posto delle emoji delle lezioni ci sono i numeri (1, 2, 3... all'interno del livello), ovunque compariva l'icona; le 10 icone di argomento sono state scartate. Resta l'argomento come etichetta colorata e come filtro (assegnazione lezione-argomento manuale in `src/data/topics.ts`; una lezione nuova senza voce ricade su "Verbi e tempi"). Il campo `icon` con l'emoji resta nei dati ma non è più usato.
-- Il percorso a zig-zag e i filtri per argomento non sono stati visti né provati dal vivo: la colonna di destra scende di mezza scheda con un margine fisso, quindi con titoli molto lunghi le schede possono non allinearsi bene. Nel filtro attivo il percorso diventa una griglia semplice, senza linea centrale.
+- La pagina del livello segue il brief Level-2a ("Il sentiero"): testata compatta, linea centrale che si riempie e schede alternate. I filtri per argomento sono stati tolti di proposito; l'argomento è l'etichetta sopra il titolo di ogni scheda. Non vista dal vivo. Per non rovinare la lista del Ripasso (che usa la classe `.path`) le classi nuove del contenitore si chiamano `.level-path`. Le regole per lo schermo stretto valgono solo sui dispositivi touch.
 - Restano emoji nelle altre parti (icone dei dialoghi di speaking, titoli di sezione, tipi di esercizio): non toccate.
 
 ## Zoom e ridimensionamento della finestra

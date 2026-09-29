@@ -1,9 +1,9 @@
 import { motion, useScroll, useSpring } from 'framer-motion';
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useEffect, type CSSProperties } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { IArrow, IBack, IClock } from '../components/Icons';
 import { Theory } from '../components/Theory';
-import { TOPICS, topicOf, type TopicId } from '../data/topics';
+import { topicOf } from '../data/topics';
 import { LevelBadge, Page, ProgressRing, Stars } from '../components/ui';
 import { rise, stagger } from '../lib/motion';
 import { lessonById, lessonNumber, lessonsByLevel, nextLesson } from '../data';
@@ -46,7 +46,6 @@ export function LevelPage() {
   const { id = '' } = useParams();
   const lv = levelById(id);
   const { state } = useStore();
-  const [topic, setTopic] = useState<TopicId | 'all'>('all');
   if (!lv) return <Page><div className="container narrow"><div className="card empty-state"><div className="e">🧭</div><h2>Livello non trovato</h2><Link to="/levels" className="btn btn-primary">Tutti i livelli</Link></div></div></Page>;
 
   const lessons = lessonsByLevel(lv.id);
@@ -55,8 +54,6 @@ export function LevelPage() {
   const vars = { '--lv-from': lv.from, '--lv-to': lv.to } as CSSProperties;
   const minutes = lessons.reduce((a, l) => a + l.minutes, 0);
   const stars = lessons.reduce((a, l) => a + (state.completed[l.id]?.stars ?? 0), 0);
-  const topics = TOPICS.map((t) => ({ t, n: lessons.filter((l) => topicOf(l.id).id === t.id).length })).filter((x) => x.n > 0);
-  const shown = lessons.map((l, i) => ({ l, i })).filter(({ l }) => topic === 'all' || topicOf(l.id).id === topic);
 
   return (
     <Page>
@@ -64,73 +61,41 @@ export function LevelPage() {
         <Link to="/levels" className="back">
           <IBack /> Tutti i livelli
         </Link>
-        <motion.div className="card level-hero" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(600px circle at 0% 0%, ${lv.from}30, transparent 60%)`, pointerEvents: 'none' }} />
-          <LevelBadge id={lv.id} size={80} />
+        <motion.div className="path-head" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <span className="path-glow" aria-hidden />
+          <LevelBadge id={lv.id} size={76} />
           <div className="grow">
             <div className="eyebrow eyebrow-lv" style={{ '--lv': lv.from } as CSSProperties}>
               {lv.tagline}
             </div>
-            <h1>
-              {lv.name}
-            </h1>
-            <p className="desc">{lv.description}</p>
-            <div className="hero-stats">
-              <span className="chip">{lessons.length} lezioni</span>
-              <span className="chip">
-                <IClock width={14} height={14} /> circa {minutes} min
-              </span>
-              <span className="chip">⭐ {stars}/{lessons.length * 3}</span>
-            </div>
+            <h1>{lv.name}</h1>
+            <p className="desc">
+              {lessons.length} lezioni · circa {minutes} min · ⭐ {stars}/{lessons.length * 3}
+            </p>
           </div>
-          <ProgressRing value={pct(done, lessons.length)} from={lv.from} to={lv.to} label={`${done}/${lessons.length}`} />
+          <ProgressRing value={pct(done, lessons.length)} size={84} stroke={8} from={lv.from} to={lv.to} label={`${done}/${lessons.length}`} />
         </motion.div>
 
-        <div className="topic-filters" role="group" aria-label="Filtra per argomento">
-          <button className={`topic-filter ${topic === 'all' ? 'on' : ''}`} onClick={() => setTopic('all')} aria-pressed={topic === 'all'}>
-            Tutte <span>{lessons.length}</span>
-          </button>
-          {topics.map(({ t, n }) => (
-            <button key={t.id} className={`topic-filter ${topic === t.id ? 'on' : ''}`} style={{ '--topic': t.color } as CSSProperties} onClick={() => setTopic(t.id)} aria-pressed={topic === t.id}>
-              {t.short} <span>{n}</span>
-            </button>
-          ))}
-        </div>
-
-        <div className="road-wrap">
-          {topic === 'all' && (
-            <div className="road-line" aria-hidden>
-              <motion.div initial={{ height: 0 }} animate={{ height: `${pct(done, lessons.length)}%` }} transition={{ duration: 1.2, delay: 0.4 }} />
-            </div>
-          )}
-          <motion.div className={`road ${topic === 'all' ? '' : 'flat'}`} variants={stagger} initial="hidden" animate="show" key={topic}>
-            {shown.map(({ l, i }) => {
+        <div className="level-path">
+          <div className="level-path-line" aria-hidden>
+            <motion.div initial={{ height: 0 }} animate={{ height: `${pct(done, lessons.length)}%` }} transition={{ duration: 1.2, delay: 0.4 }} />
+          </div>
+          <motion.div variants={stagger} initial="hidden" animate="show" className="path-list">
+            {lessons.map((l, i) => {
               const p = state.completed[l.id];
               const isNext = i === firstTodo;
+              const t = topicOf(l.id);
               return (
-                <motion.div key={l.id} variants={rise} className="road-item">
-                  <span className={`road-dot ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} aria-hidden />
-                  <Link to={`/lesson/${l.id}`} className={`road-card ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} data-n={i + 1}>
-                    <div className="road-node">
-                      <span className="num">{i + 1}</span>
-                      {p && <span className="check">✓</span>}
-                    </div>
-                    <div className="info">
-                      <div className="road-top">
-                        <span>Lezione {i + 1}</span>
-                        {isNext && <span className="road-next">Consigliata</span>}
-                      </div>
-                      <h3>{l.title}</h3>
-                      <div className="sub">{l.subtitle}</div>
-                      <div className="road-foot">
-                        {p ? (
-                          <Stars n={p.stars} />
-                        ) : (
-                          <span className="mins">
-                            <IClock width={14} height={14} /> {l.minutes} min
-                          </span>
-                        )}
-                      </div>
+                <motion.div key={l.id} variants={rise} className={`path-row ${i % 2 ? 'left' : 'right'}`}>
+                  <span className={`path-node ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} aria-hidden>
+                    {p ? '✓' : i + 1}
+                  </span>
+                  <Link to={`/lesson/${l.id}`} className={`path-card ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} style={{ '--topic': t.color } as CSSProperties} aria-label={`Lezione ${i + 1}: ${l.title}${p ? ', completata' : ''}${isNext ? ', consigliata' : ''}`}>
+                    <div className="path-topic">{t.short}</div>
+                    <h3>{l.title}</h3>
+                    <div className="sub">{l.subtitle}</div>
+                    <div className="path-foot">
+                      {p ? <Stars n={p.stars} /> : isNext ? <span className="path-next">Consigliata · {l.minutes} min</span> : <span className="mins">{l.minutes} min</span>}
                     </div>
                   </Link>
                 </motion.div>

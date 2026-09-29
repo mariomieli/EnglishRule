@@ -1011,33 +1011,6 @@ kbd {
   }
 }
 
-/* ---------- Pagina livello ---------- */
-
-.level-hero {
-  position: relative;
-  padding: 34px;
-  overflow: hidden;
-  display: flex;
-  gap: 28px;
-  align-items: center;
-}
-
-.level-hero h1 {
-  font-size: clamp(2rem, calc(5 * var(--vw)), 3.2rem);
-  font-weight: 800;
-}
-
-.level-hero .desc {
-  color: var(--text-2);
-  margin: 10px 0 0;
-  max-width: 560px;
-}
-
-.level-hero .grow {
-  flex: 1;
-  min-width: 0;
-}
-
 .back {
   display: inline-flex;
   align-items: center;
@@ -1062,22 +1035,6 @@ kbd {
   display: flex;
   flex-direction: column;
   gap: 14px;
-}
-
-.path-line {
-  position: absolute;
-  left: 37px;
-  top: 30px;
-  bottom: 30px;
-  width: 3px;
-  border-radius: 3px;
-  background: var(--border);
-  overflow: hidden;
-}
-
-.path-line > div {
-  width: 100%;
-  background: linear-gradient(180deg, var(--lv-from), var(--lv-to));
 }
 
 .lesson-row {
@@ -1176,21 +1133,12 @@ kbd {
 }
 
 @media (max-width: 600px) and (hover: none) {
-  .level-hero {
-    padding: 22px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 18px;
-  }
   .lesson-row {
     padding: 12px 14px 12px 10px;
     gap: 12px;
   }
   .lesson-row .meta .mins {
     display: none;
-  }
-  .path-line {
-    left: 33px;
   }
 }
 
@@ -3303,299 +3251,6 @@ main:focus {
   }
 }
 
-/* ---------- Pagina del livello: percorso a zig-zag ---------- */
-
-.hero-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.topic-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 22px 0 6px;
-}
-
-.topic-filter {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border-radius: 99px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text-2);
-  font-weight: 700;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
-}
-
-.topic-filter svg {
-  color: var(--topic, var(--accent));
-}
-
-.topic-filter span {
-  font-size: 0.75rem;
-  color: var(--text-3);
-}
-
-.topic-filter:hover {
-  border-color: var(--border-strong);
-}
-
-.topic-filter.on {
-  color: var(--text);
-  border-color: var(--topic, var(--accent));
-  background: color-mix(in srgb, var(--topic, var(--accent)) 14%, transparent);
-}
-
-.road-wrap {
-  position: relative;
-  margin: 22px 0 34px;
-}
-
-.road-line {
-  position: absolute;
-  left: 50%;
-  top: 30px;
-  bottom: 30px;
-  width: 4px;
-  transform: translateX(-50%);
-  background: var(--border-strong);
-  border-radius: 4px;
-}
-
-.road-line > div {
-  width: 100%;
-  border-radius: 4px;
-  background: linear-gradient(var(--lv-from), var(--lv-to));
-}
-
-.road {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 72px;
-  row-gap: 18px;
-  align-items: start;
-}
-
-/* la colonna di destra scende di mezza scheda: il percorso serpeggia */
-.road:not(.flat) .road-item:nth-child(even) {
-  margin-top: 56px;
-}
-
-.road.flat {
-  column-gap: 20px;
-}
-
-.road-item {
-  position: relative;
-}
-
-.road-dot {
-  position: absolute;
-  top: 40px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--bg);
-  border: 4px solid var(--border-strong);
-  z-index: 1;
-}
-
-.road-item:nth-child(odd) .road-dot {
-  right: -45px;
-}
-
-.road-item:nth-child(even) .road-dot {
-  left: -45px;
-}
-
-.road-dot.done {
-  background: var(--lv-from);
-  border-color: var(--lv-from);
-}
-
-.road-dot.next {
-  border-color: var(--lv-from);
-  box-shadow: 0 0 0 5px color-mix(in srgb, var(--lv-from) 25%, transparent);
-}
-
-.road.flat .road-dot {
-  display: none;
-}
-
-.road-card {
-  --topic: var(--lv-from); /* i riquadri dei numeri usano il colore del livello */
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 18px 18px 16px;
-  border-radius: 24px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(12px);
-  transition: transform 0.2s, border-color 0.2s, background 0.2s;
-}
-
-/* numero della lezione in filigrana */
-.road-card::before {
-  content: attr(data-n);
-  position: absolute;
-  right: 14px;
-  top: -6px;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-weight: 800;
-  font-size: 5rem;
-  line-height: 1;
-  color: color-mix(in srgb, var(--lv-from) 13%, transparent);
-  pointer-events: none;
-}
-
-.road-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--border-strong);
-  background: var(--surface-2);
-}
-
-.road-card.next {
-  border-color: var(--lv-from);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--lv-from) 35%, transparent), 0 16px 44px -20px var(--lv-from);
-}
-
-.road-node {
-  position: relative;
-  width: 56px;
-  height: 56px;
-  border-radius: 18px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  color: var(--text); /* testo scuro/chiaro del tema: il colore del livello da solo non ha contrasto sufficiente */
-  background: color-mix(in srgb, var(--lv-from) 16%, var(--surface-solid));
-  border: 2px solid color-mix(in srgb, var(--lv-from) 45%, transparent);
-}
-
-.road-card.done .road-node {
-  border-color: var(--lv-from);
-  box-shadow: 0 8px 22px -10px var(--lv-from);
-}
-
-.road-node .check {
-  position: absolute;
-  right: -6px;
-  bottom: -6px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--good);
-  color: #04261a;
-  font-size: 0.7rem;
-  font-weight: 900;
-  display: grid;
-  place-items: center;
-  border: 2px solid var(--bg);
-}
-
-.road-card .info {
-  flex: 1;
-  min-width: 0;
-  position: relative;
-}
-
-.road-top {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-3);
-}
-
-.road-next {
-  padding: 2px 8px;
-  border-radius: 99px;
-  font-size: 0.66rem;
-  letter-spacing: 0.06em;
-  color: var(--text);
-  background: color-mix(in srgb, var(--lv-from) 24%, transparent);
-}
-
-.road-card h3 {
-  margin: 4px 0 2px;
-  font-family: 'Inter', sans-serif;
-  font-size: 1.08rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1.25;
-}
-
-.road-card .sub {
-  color: var(--text-2);
-  font-size: 0.88rem;
-  line-height: 1.35;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.road-foot {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-  margin-top: 12px;
-  color: var(--text-3);
-  font-size: 0.82rem;
-  font-weight: 600;
-}
-
-.road-foot .mins {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.topic-chip {
-  padding: 3px 10px;
-  border-radius: 99px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: color-mix(in srgb, var(--topic) 62%, var(--text));
-  background: color-mix(in srgb, var(--topic) 14%, transparent);
-}
-
-@media (max-width: 860px) and (hover: none) {
-  .road {
-    grid-template-columns: 1fr;
-  }
-  .road:not(.flat) .road-item:nth-child(even) {
-    margin-top: 0;
-  }
-  .road-line,
-  .road-dot {
-    display: none;
-  }
-}
-
-/* numero della lezione al posto delle icone */
-.road-node .num {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-weight: 800;
-  font-size: 1.6rem;
-  line-height: 1;
-}
-
 .lesson-node,
 .continue-card .emoji,
 .lesson-header .emoji,
@@ -3751,6 +3406,235 @@ main:focus {
   .hl-step,
   .hl-glow,
   .hl-link {
+    transition: none;
+  }
+}
+
+/* ---------- Pagina del livello: il sentiero ---------- */
+
+.path-head {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin: 8px 0 36px;
+}
+
+.path-head h1 {
+  font-size: clamp(2rem, calc(4.5 * var(--vw)), 2.6rem);
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.path-head .desc {
+  margin-top: 6px;
+  color: var(--text-2);
+  font-size: 0.92rem;
+}
+
+.path-head .grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.path-glow {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  left: -120px;
+  top: -160px;
+  background: var(--lv-from);
+  opacity: var(--blob-opacity);
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.level-path {
+  position: relative;
+  max-width: 760px;
+  margin-inline: auto;
+  margin-bottom: 34px;
+}
+
+.level-path-line {
+  position: absolute;
+  left: 50%;
+  top: 30px;
+  bottom: 30px;
+  width: 4px;
+  margin-left: -2px;
+  border-radius: 4px;
+  background: var(--border-strong);
+  overflow: hidden;
+}
+
+.level-path-line > div {
+  width: 100%;
+  background: linear-gradient(var(--lv-from), var(--lv-to));
+}
+
+.path-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.path-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 76px 1fr;
+  align-items: center;
+  gap: 18px;
+}
+
+.path-node {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font: 800 22px 'Bricolage Grotesque', sans-serif;
+  background: var(--surface-solid);
+  color: var(--text-3);
+  border: 3px solid var(--border-strong);
+}
+
+.path-node.done {
+  background: linear-gradient(135deg, var(--lv-from), var(--lv-to));
+  color: #06231b;
+  border-color: transparent;
+}
+
+/* la lezione consigliata: nodo grande con pulsazione. Il numero resta nel colore del testo (il colore del livello da solo non ha contrasto sufficiente) */
+.path-node.next {
+  width: 76px;
+  height: 76px;
+  font-size: 28px;
+  background: var(--bg);
+  color: var(--text);
+  border-color: var(--lv-from);
+  animation: path-pulse 2s ease-in-out infinite;
+}
+
+.path-card {
+  grid-row: 1;
+  display: block;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  transition: transform 0.25s;
+}
+
+.path-card:hover {
+  transform: translateY(-3px);
+}
+
+.path-row.right .path-card {
+  grid-column: 3;
+  text-align: left;
+}
+
+.path-row.left .path-card {
+  grid-column: 1;
+  text-align: right;
+}
+
+.path-card.next {
+  padding: 18px 20px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--lv-from) 22%, transparent), color-mix(in srgb, var(--lv-to) 5%, transparent));
+  border-color: var(--lv-from);
+  box-shadow: 0 14px 44px -18px var(--lv-from);
+}
+
+.path-topic {
+  font: 700 0.69rem/1 Inter, sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--topic) 60%, var(--text));
+}
+
+.path-card h3 {
+  margin: 4px 0;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.path-card.next h3 {
+  font-size: 1.25rem;
+}
+
+.path-card .sub {
+  color: var(--text-2);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.path-foot {
+  margin-top: 8px;
+  font: 700 0.75rem Inter, sans-serif;
+  color: var(--text-3);
+}
+
+.path-row.left .path-foot {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.path-next {
+  color: color-mix(in srgb, var(--lv-from) 55%, var(--text));
+}
+
+@keyframes path-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--lv-from) 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 14px transparent;
+  }
+}
+
+@media (max-width: 720px) and (hover: none) {
+  .path-head {
+    gap: 14px;
+  }
+  .level-path-line {
+    left: 30px;
+  }
+  .path-row {
+    grid-template-columns: 60px 1fr;
+    gap: 14px;
+  }
+  .path-node,
+  .path-node.next {
+    grid-column: 1;
+    width: 52px;
+    height: 52px;
+    font-size: 20px;
+  }
+  .path-row.right .path-card,
+  .path-row.left .path-card {
+    grid-column: 2;
+    text-align: left;
+  }
+  .path-row.left .path-foot {
+    justify-content: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .path-node.next {
+    animation: none;
+  }
+  .path-card {
     transition: none;
   }
 }
