@@ -2838,3 +2838,36 @@ tbody tr:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* ---------- Login rapido ---------- */
+
+.login-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-top: 18px;
+  max-width: 520px;
+}
+
+@media (max-width: 760px) {
+  .topbar .container {
+    gap: 8px;
+  }
+  .theme-btn {
+    display: none;
+  }
+  .login-btn {
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .topbar .chip {
+    padding: 7px 9px;
+  }
+  /* da ospite il pulsante Accedi ha la precedenza sul nome del marchio */
+  .topbar:has(.login-btn) .brand span:last-child {
+    display: none;
+  }
+}

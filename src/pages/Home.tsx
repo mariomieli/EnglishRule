@@ -29,6 +29,7 @@ export function Home() {
   const startIdx = LESSONS.findIndex((l) => l.level === startLevel);
   const next = [...LESSONS.slice(Math.max(0, startIdx)), ...LESSONS.slice(0, Math.max(0, startIdx))].find((l) => !state.completed[l.id]) ?? LESSONS[0];
   const isNew = done === 0 && !state.placement;
+  const { user, cloud } = useStore();
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
@@ -67,6 +68,20 @@ export function Home() {
                 <ITarget /> {state.placement ? `Il tuo livello: ${state.placement}` : 'Scopri il tuo livello'}
               </Link>
             </motion.div>
+            {cloud && !user && (
+              <motion.div variants={rise}>
+                <Link to="/account" className="card login-card">
+                  <span className="avatar">☁️</span>
+                  <span style={{ flex: 1, minWidth: 0 }}>
+                    <strong>Accedi o crea un account</strong>
+                    <span className="faint" style={{ display: 'block', fontSize: '.85rem' }}>
+                      Salva i progressi e ritrovali su ogni dispositivo
+                    </span>
+                  </span>
+                  <span className="btn btn-primary btn-sm">Accedi</span>
+                </Link>
+              </motion.div>
+            )}
           </motion.div>
 
           <motion.div className="hero-visual" style={{ y: yVisual, opacity }} aria-hidden>

@@ -76,11 +76,11 @@ export function TopBar({ onSearch }: { onSearch: () => void }) {
               <span className="badge-dot" style={{ background: sync.status === 'synced' ? 'var(--good)' : sync.status === 'error' ? 'var(--bad)' : sync.status === 'offline' ? 'var(--warn)' : 'var(--accent)' }} />
             </Link>
           ) : (
-            <Link to="/account" className="btn btn-primary btn-sm hide-mobile">
-              Accedi
+            <Link to="/account" className="btn btn-primary btn-sm login-btn">
+              <IUser width={16} height={16} /> Accedi
             </Link>
           ))}
-        <button className="icon-btn" onClick={() => setTheme(state.theme === 'dark' ? 'light' : 'dark')} aria-label={state.theme === 'dark' ? 'Tema chiaro' : 'Tema scuro'}>
+        <button className="icon-btn theme-btn" onClick={() => setTheme(state.theme === 'dark' ? 'light' : 'dark')} aria-label={state.theme === 'dark' ? 'Tema chiaro' : 'Tema scuro'}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.span key={state.theme} initial={{ rotate: -90, opacity: 0, scale: 0.5 }} animate={{ rotate: 0, opacity: 1, scale: 1 }} exit={{ rotate: 90, opacity: 0, scale: 0.5 }} transition={{ duration: 0.25 }} style={{ display: 'grid' }}>
               {state.theme === 'dark' ? <ISun /> : <IMoon />}
