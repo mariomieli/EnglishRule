@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import { AnimatePresence, motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
-import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import { Fragment, useEffect, useRef, useState, type MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { IArrow, ITarget } from '../components/Icons';
 import { Counter, LevelBadge, Page } from '../components/ui';
@@ -206,9 +206,12 @@ function HeroVisual() {
       <span className="hl-glow" style={{ background: lv.from }} aria-hidden />
       <div className="hl-rail">
         {LEVELS.map((l, k) => (
-          <button key={l.id} type="button" className={`hl-step ${k === i ? 'on' : ''}`} onClick={() => setI(k)} aria-label={`Livello ${l.id}`} aria-pressed={k === i}>
-            <LevelBadge id={l.id} size={k === i ? 60 : 46} />
-          </button>
+          <Fragment key={l.id}>
+            {k > 0 && <span className={`hl-link ${k <= i ? 'on' : ''}`} style={{ '--from': LEVELS[k - 1].from, '--to': l.from } as CSSProperties} aria-hidden />}
+            <button type="button" className={`hl-step ${k === i ? 'on' : ''} ${k < i ? 'past' : ''}`} style={{ '--lv': l.from } as CSSProperties} onClick={() => setI(k)} aria-label={`Livello ${l.id}`} aria-pressed={k === i}>
+              <LevelBadge id={l.id} size={k === i ? 60 : 46} />
+            </button>
+          </Fragment>
         ))}
       </div>
       <div className="hl-main">

@@ -3667,16 +3667,19 @@ main:focus {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
 }
 
-.hl-rail::before {
-  content: '';
-  position: absolute;
-  inset: 24px auto 24px 50%;
-  width: 2px;
-  translate: -50% 0;
+/* tratto tra due livelli: grigio finché non è raggiunto, poi sfuma dal colore di un livello all'altro */
+.hl-link {
+  width: 4px;
+  height: 16px;
+  border-radius: 4px;
   background: var(--border-strong);
+  transition: background 0.5s, height 0.3s;
+}
+
+.hl-link.on {
+  background: linear-gradient(var(--from), var(--to));
 }
 
 .hl-step {
@@ -3689,8 +3692,22 @@ main:focus {
   transition: opacity 0.3s;
 }
 
+.hl-step.past {
+  opacity: 0.85;
+}
+
 .hl-step.on {
   opacity: 1;
+}
+
+/* il livello attivo ha un anello nel suo colore */
+.hl-step.on::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 20px;
+  border: 2px solid color-mix(in srgb, var(--lv) 55%, transparent);
+  pointer-events: none;
 }
 
 .hl-main {
@@ -3732,7 +3749,8 @@ main:focus {
 
 @media (prefers-reduced-motion: reduce) {
   .hl-step,
-  .hl-glow {
+  .hl-glow,
+  .hl-link {
     transition: none;
   }
 }
