@@ -208,7 +208,6 @@ export function Profile() {
         )}
 
         <div className="profile-grid" style={{ marginTop: 18 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             <motion.div className="card" style={{ padding: 24 }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h3>Ultimi 7 giorni</h3>
@@ -245,10 +244,8 @@ export function Profile() {
                 );
               })}
             </motion.div>
-          </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-            <motion.div className="card" style={{ padding: 24 }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
+            <motion.div className="card span-2" style={{ padding: 24 }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
               <h3 style={{ marginBottom: 14 }}>
                 Traguardi <span className="faint" style={{ fontSize: '.9rem' }}>{bs.filter((b) => b.ok).length}/{bs.length}</span>
               </h3>
@@ -263,9 +260,11 @@ export function Profile() {
               </div>
             </motion.div>
 
-            <motion.div className="card settings-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+            <motion.div className="card settings-card span-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
               <h3>Impostazioni</h3>
 
+              <div className="settings-groups">
+                <div className="set-col">
               <div className="set-group">Aspetto e suoni</div>
               <SettingRow ico="🎨" title="Tema" desc="Auto segue il dispositivo">
                 <div className="seg">
@@ -278,6 +277,27 @@ export function Profile() {
                 <Switch on={state.sound} onClick={toggleSound} label="Effetti sonori" />
               </SettingRow>
 
+              <div className="set-group">Privacy e dati</div>
+              {cloud && (
+                <SettingRow ico="📊" title="Statistiche anonime" desc={browserSaysNo() ? 'Disattivate: il tuo browser chiede di non essere tracciato' : 'Aiutano a migliorare le lezioni. Nessun cookie, nessun dato personale'}>
+                  <Switch
+                    on={stats}
+                    disabled={browserSaysNo()}
+                    onClick={() => {
+                      setAnalytics(!stats);
+                      setStats(!stats);
+                    }}
+                    label="Statistiche anonime"
+                  />
+                </SettingRow>
+              )}
+              <SettingRow ico="🗑️" title="Azzera i progressi" desc={`Cancella XP, lezioni ed errori${user ? ' su tutti i tuoi dispositivi' : ''}`} danger>
+                <button className="btn btn-ghost btn-sm danger-btn" onClick={() => confirm(user ? 'Vuoi davvero cancellare tutti i progressi del tuo account, su tutti i dispositivi? Non si può annullare.' : 'Vuoi davvero cancellare tutti i progressi? Non si può annullare.') && reset()}>
+                  Azzera
+                </button>
+              </SettingRow>
+                </div>
+                <div className="set-col">
               <div className="set-group">Esercizi</div>
               <SettingRow ico="⚡" title="Verifica automatica" desc="Si verifica appena rispondi (scelta multipla, giusto/sbagliato, abbinamenti)">
                 <Switch on={state.autoCheck} onClick={() => setAutoCheck(!state.autoCheck)} label="Verifica automatica" />
@@ -305,27 +325,9 @@ export function Profile() {
                 </div>
               </SettingRow>
 
-              <div className="set-group">Privacy e dati</div>
-              {cloud && (
-                <SettingRow ico="📊" title="Statistiche anonime" desc={browserSaysNo() ? 'Disattivate: il tuo browser chiede di non essere tracciato' : 'Aiutano a migliorare le lezioni. Nessun cookie, nessun dato personale'}>
-                  <Switch
-                    on={stats}
-                    disabled={browserSaysNo()}
-                    onClick={() => {
-                      setAnalytics(!stats);
-                      setStats(!stats);
-                    }}
-                    label="Statistiche anonime"
-                  />
-                </SettingRow>
-              )}
-              <SettingRow ico="🗑️" title="Azzera i progressi" desc={`Cancella XP, lezioni ed errori${user ? ' su tutti i tuoi dispositivi' : ''}`} danger>
-                <button className="btn btn-ghost btn-sm danger-btn" onClick={() => confirm(user ? 'Vuoi davvero cancellare tutti i progressi del tuo account, su tutti i dispositivi? Non si può annullare.' : 'Vuoi davvero cancellare tutti i progressi? Non si può annullare.') && reset()}>
-                  Azzera
-                </button>
-              </SettingRow>
+                </div>
+              </div>
             </motion.div>
-          </div>
         </div>
       </div>
     </Page>
