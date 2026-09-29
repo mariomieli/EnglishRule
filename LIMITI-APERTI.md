@@ -61,6 +61,9 @@ Ultimo aggiornamento: 29/09/2026 (punti 1-6, 10, 13-19).
 - Nessuna richiesta di permesso per i promemoria (arrivano col punto 7).
 - Il test per l'utente che ha già dati da un vecchio dispositivo senza account: vede l'onboarding una volta (poi `onboarded` si sincronizza con l'account se ne crea uno).
 
+## Verifica automatica delle risposte
+- Scelta multipla, giusta/sbagliata e abbinamenti si verificano da soli 350 ms dopo la risposta: non si può più cambiare idea dopo aver toccato un'opzione (prima si poteva finché non si premeva Verifica). Completamento, riordino e le voci scritte restano manuali. Nessuna opzione per tornare al vecchio comportamento.
+
 ## 13-14. Test e CI
 - Gli smoke test Playwright coprono 4 percorsi, tastiera, CSP, axe (10 pagine x 2 temi) e statistiche; non coprono: accesso e sincronizzazione con Supabase reale (nessuna credenziale di prova, la CI costruisce senza cloud), cambio di dispositivo, speaking con microfono, dettato con audio, installazione come PWA, uso offline.
 - Il test dell'esercizio assume che il primo esercizio di "Il verbo To Be" sia a scelta multipla: se la sequenza curata cambia va aggiornato.

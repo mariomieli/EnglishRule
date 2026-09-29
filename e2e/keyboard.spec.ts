@@ -10,11 +10,9 @@ test('tastiera: link "Vai al contenuto" e sessione di esercizi senza mouse', asy
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Vai al contenuto' })).toBeFocused();
 
-  // esercizio a scelta multipla: opzioni come gruppo di radio, scelta con i numeri, Invio per verificare e continuare
+  // esercizio a scelta multipla: opzioni come gruppo di radio, scelta con i numeri, verifica automatica, Invio per continuare
   await expect(page.getByRole('radiogroup')).toBeVisible();
   await page.keyboard.press('1');
-  await expect(page.getByRole('radio', { checked: true })).toHaveCount(1);
-  await page.keyboard.press('Enter');
   await expect(page.locator('.feedback')).toBeVisible();
   await expect(page.locator('.feedback')).toHaveAttribute('aria-live', 'polite');
   await page.keyboard.press('Enter');

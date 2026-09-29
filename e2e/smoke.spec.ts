@@ -22,8 +22,7 @@ test('salta l\'onboarding e fai un esercizio con feedback', async ({ page }) => 
   // scegliamo la prima opzione qualunque sia il tipo: se non è a scelta multipla il test sale ai tipi testuali
   const option = page.locator('.option').first();
   await expect(option).toBeVisible();
-  await option.click();
-  await page.getByRole('button', { name: 'Verifica' }).click();
+  await option.click(); // la verifica parte da sola
   await expect(page.locator('.feedback')).toBeVisible();
   await expect(page.getByRole('button', { name: /Continua|Vedi risultato/ })).toBeVisible();
 });

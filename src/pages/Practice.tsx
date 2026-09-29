@@ -30,6 +30,8 @@ const PRAISE = ['Ottimo!', 'Perfetto!', 'Esatto!', 'Bravissimo!', 'Grande!', 'Im
 const OOPS = ['Non proprio.', 'Quasi!', 'Ops, non è così.', 'Riproviamo più tardi.'];
 const pick = (a: string[]) => a[Math.floor(Math.random() * a.length)];
 
+const autoCheckType = (t: Exercise['type']) => t === 'mcq' || t === 'judge' || t === 'match';
+
 const usable = (e: Exercise) => e.type !== 'listen' || canSpeak;
 
 function Loading({ failed }: { failed?: boolean }) {
@@ -185,6 +187,15 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
     }
   }, [item, checked, answer, combo, mode, state.sound, clearMistake, recordMistake, recordAnswer]);
 
+  // scelta multipla, giusta/sbagliata e abbinamenti: appena si risponde si verifica da soli
+  // (con una breve pausa per far vedere la selezione). Completamento e riordino restano manuali.
+  const autoCheck = !!item && !checked && answer !== null && (item.ex.type === 'mcq' || item.ex.type === 'judge' || item.ex.type === 'match');
+  useEffect(() => {
+    if (!autoCheck) return;
+    const t = setTimeout(check, 350);
+    return () => clearTimeout(t);
+  }, [autoCheck, answer, check]);
+
   const next = useCallback(() => {
     if (pos + 1 < queue.length) {
       setPos((p) => p + 1);
@@ -307,7 +318,7 @@ function Session({ items, mode, lessonId, title }: { items: Item[]; mode: 'lesso
               </motion.div>
             ) : (
               <motion.div key="hint" className="faint hide-mobile" style={{ flex: 1, fontSize: '.85rem', fontWeight: 600 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                Premi <kbd>Invio</kbd> per verificare
+                {autoCheckType(item.ex.type) ? 'Scegli la risposta: la verifica è automatica' : <>Premi <kbd>Invio</kbd> per verificare</>}
                 {item.ex.type === 'mcq' && (
                   <>
                     {' '}
