@@ -25,6 +25,7 @@ function randomDoc(dev: string): Doc {
     d.xp[`2026-09-${10 + rnd(10)}`] = { [dev]: rnd(200) };
   }
   if (rnd(2)) d.settings.theme = { v: rnd(2) ? 'dark' : 'light', at: rnd(1000) };
+  if (rnd(2)) d.settings.onboarded = { v: rnd(2) === 1, at: rnd(1000) };
   if (rnd(2)) d.settings.dailyGoal = { v: [30, 50, 100][rnd(3)], at: rnd(1000) };
   return d;
 }

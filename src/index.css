@@ -3030,3 +3030,97 @@ tbody tr:hover {
   color: var(--text-2);
   margin-top: 3px;
 }
+
+.onboarding {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.ob-dots {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 26px;
+}
+
+.ob-dots span {
+  height: 6px;
+  flex: 1;
+  border-radius: 99px;
+  background: var(--border-strong);
+  transition: background 0.3s;
+}
+
+.ob-dots span.on {
+  background: var(--accent);
+}
+
+.ob-title {
+  font-size: clamp(1.9rem, 5vw, 2.6rem);
+  font-weight: 800;
+  margin: 8px 0 12px;
+  line-height: 1.15;
+}
+
+.ob-options,
+.ob-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.ob-option,
+.ob-level {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.ob-option .e {
+  font-size: 1.8rem;
+}
+
+.ob-option strong,
+.ob-level strong {
+  display: block;
+}
+
+.ob-option small,
+.ob-level small {
+  color: var(--text-3);
+  font-size: 0.85rem;
+}
+
+.ob-option.on,
+.ob-level.on {
+  border-color: var(--accent);
+  background: var(--info-bg);
+}
+
+.ob-actions {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ob-links {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}

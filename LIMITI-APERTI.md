@@ -1,7 +1,7 @@
 # Limiti aperti (da colmare)
 
 Elenco vivo dei limiti rimasti dopo ogni miglioramento. Quando uno viene chiuso, cancellarlo o spostarlo in "Chiusi".
-Ultimo aggiornamento: 29/09/2026 (punti 1-6).
+Ultimo aggiornamento: 29/09/2026 (punti 1-6 e 10).
 
 ## Nessuna verifica nel browser (vale per tutti i punti sotto)
 - Nulla di quanto sotto è stato provato dal vivo (schermate, tastiera mobile, animazioni): sono stati eseguiti solo tsc, lint, validate e i test da riga di comando. Fare un giro completo su telefono e desktop.
@@ -52,6 +52,15 @@ Ultimo aggiornamento: 29/09/2026 (punti 1-6).
 - Nessun test automatico per i traguardi (`badges.ts` dipende dai dati caricati da Vite, non eseguibili con tsx); la serie con congelamento è invece coperta in `test:sync`.
 - Nessun badge grafico dedicato: sono emoji.
 
+## 10. Onboarding
+- Non provato dal vivo, e non ho verificato a mano i casi limite: primo avvio senza account, primo avvio di un utente con account su un dispositivo nuovo (deve aspettare la sincronizzazione e poi saltare l'onboarding), "Salta", "Indietro", test di livello dal secondo passo.
+- Compare solo aprendo la home (`/`): chi entra da un link diretto a una lezione lo salta (e non viene segnato come completato).
+- Sono 3 passi ma nessuna domanda sul motivo per cui si studia (lavoro, viaggi, esami): non c'è personalizzazione dei contenuti oltre a tempo e livello.
+- I minuti al giorno sono tradotti in XP con una tabella fissa (5, 10, 15, 25 minuti = 30, 50, 100, 150 XP), non misurata sui tempi reali di una sessione.
+- Scegliere il livello a mano imposta lo stesso valore del test di livello (`placement`): il traguardo si chiama ora "Livello stabilito" e si sblocca anche senza test, e la home non distingue le due origini.
+- Nessuna richiesta di permesso per i promemoria (arrivano col punto 7).
+- Il test per l'utente che ha già dati da un vecchio dispositivo senza account: vede l'onboarding una volta (poi `onboarded` si sincronizza con l'account se ne crea uno).
+
 ## Tecnico generale (dal piano iniziale)
 - Bundle oltre 600 kB (dati delle lezioni tutti caricati): serve code splitting per livello.
 - Lint: 11 warning preesistenti (refs in render, setState in effect, ecc.) in src/lib/store.tsx e src/pages/Profile.tsx.
@@ -59,4 +68,4 @@ Ultimo aggiornamento: 29/09/2026 (punti 1-6).
 - `useStore()` troppo centrale (28 archi, `store.tsx` con coesione bassa): da spezzare in parti.
 
 ## Prossimi punti del piano
-6 (classifica) · 7 promemoria push · 8 riepilogo settimanale · 9 offline vero · 10 onboarding · 11 login Apple/email e cancellazione account · 12 voci TTS migliori · 13 Vitest · 14 CI · 15 performance · 16 accessibilità · 17 sicurezza Supabase (RLS) · 18 store a fette · 19 analytics rispettosi della privacy · 20 SEO e condivisione.
+6 (classifica) · 7 promemoria push · 8 riepilogo settimanale · 9 offline vero · 11 login Apple/email e cancellazione account · 12 voci TTS migliori · 13 Vitest · 14 CI · 15 performance · 16 accessibilità · 17 sicurezza Supabase (RLS) · 18 store a fette · 19 analytics rispettosi della privacy · 20 SEO e condivisione.

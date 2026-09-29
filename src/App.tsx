@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { CommandPalette, TabBar, TopBar } from './components/Nav';
 import { AnimatedBackground } from './components/ui';
-import { StoreProvider } from './lib/store';
+import { StoreProvider, useStore } from './lib/store';
+import { Onboarding } from './pages/Onboarding';
 import { Home } from './pages/Home';
 import { LessonPage, LevelPage, Levels } from './pages/Level';
 import { Account } from './pages/Account';
@@ -16,6 +17,10 @@ function Shell() {
   const location = useLocation();
   const [search, setSearch] = useState(false);
   // durante esercizi e test nascondiamo la navigazione per concentrarsi
+  const { state, user, sync, ready } = useStore();
+  // primo avvio: solo dalla home, e non per chi ha già progressi o un account ancora in sincronizzazione
+  const settled = !user || sync.status === 'synced' || sync.status === 'offline' || sync.status === 'error';
+  const firstRun = ready && settled && !state.onboarded && state.xp === 0 && Object.keys(state.completed).length === 0 && !state.placement;
   const focus = /\/practice$/.test(location.pathname) || /^\/speaking\/.+/.test(location.pathname);
 
   useEffect(() => {
@@ -36,6 +41,14 @@ function Shell() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, [location.pathname]);
+
+  if (firstRun && location.pathname === '/')
+    return (
+      <div className="app">
+        <AnimatedBackground />
+        <Onboarding />
+      </div>
+    );
 
   return (
     <div className="app">

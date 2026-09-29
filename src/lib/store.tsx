@@ -48,6 +48,7 @@ export interface State {
   themePref: ThemePref; // scelta dell'utente (system = come il dispositivo)
   sound: boolean;
   placement: LevelId | null;
+  onboarded: boolean;
 }
 
 export type SyncStatus = 'local' | 'syncing' | 'synced' | 'offline' | 'error';
@@ -172,6 +173,7 @@ interface Actions {
   setTheme: (t: ThemePref) => void;
   toggleSound: () => void;
   setPlacement: (l: LevelId) => void;
+  completeOnboarding: (o: { goal?: number; level?: LevelId }) => void;
   setDailyGoal: (n: number) => void;
   reset: () => void;
   syncNow: () => Promise<void>;
@@ -183,6 +185,7 @@ interface Ctx extends Actions {
   user: User | null;
   cloud: boolean;
   sync: { status: SyncStatus; at: number | null; error: string | null };
+  ready: boolean; // sessione utente già letta (per non mostrare l'onboarding a chi ha un account)
 }
 
 const StoreCtx = createContext<Ctx>(null!);
@@ -192,6 +195,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [saved, setSaved] = useState<Saved>(() => loadSaved(dev));
   const [user, setUser] = useState<User | null>(null);
   const [sync, setSync] = useState<Ctx['sync']>({ status: 'local', at: null, error: null });
+  const [ready, setReady] = useState(!supabase);
   const docRef = useRef(saved.doc);
   docRef.current = saved.doc;
   const userRef = useRef<User | null>(null);
@@ -273,7 +277,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const u = session?.user ?? null;
       setUser((prev) => (prev?.id === u?.id ? prev : u));
     };
-    supabase.auth.getSession().then(({ data }) => apply(data.session));
+    supabase.auth.getSession().then(({ data }) => {
+      apply(data.session);
+      setReady(true);
+    });
     const { data } = supabase.auth.onAuthStateChange((_e, session) => apply(session));
     return () => data.subscription.unsubscribe();
   }, []);
@@ -433,6 +440,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setTheme: (t) => setSetting('theme', t),
       toggleSound: () => setSetting('sound', !settingsOf(docRef.current).sound),
       setPlacement: (l) => setSetting('placement', l),
+      completeOnboarding: ({ goal, level }) =>
+        update((d) => {
+          const at = now();
+          const settings = { ...d.settings, onboarded: { v: true, at } } as Doc['settings'];
+          if (goal) settings.dailyGoal = { v: goal, at };
+          if (level) settings.placement = { v: level, at };
+          return { ...d, settings };
+        }),
       setDailyGoal: (n) => setSetting('dailyGoal', n),
       // nuova "epoca": l'azzeramento si propaga a tutti i dispositivi e vince sui dati precedenti
       reset: () => setSaved((s) => ({ ...s, doc: { ...keepTheme(s.doc), epoch: now() } })),
@@ -440,7 +455,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [addXp, finishLesson, finishSpeaking, update, setSetting],
   );
 
-  return <StoreCtx.Provider value={{ state, user, cloud: !!supabase, sync, ...actions, syncNow, signOut }}>{children}</StoreCtx.Provider>;
+  return <StoreCtx.Provider value={{ state, user, cloud: !!supabase, sync, ready, ...actions, syncNow, signOut }}>{children}</StoreCtx.Provider>;
 }
 
 function keepTheme(d: Doc): Doc {

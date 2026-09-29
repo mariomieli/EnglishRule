@@ -32,7 +32,7 @@ export function badgesOf(s: State): Badge[] {
     make('lall', '🎓', 'Tutte le lezioni', `Completa tutte le ${LESSONS.length} lezioni`, done, LESSONS.length),
     make('p1', '💯', 'Punteggio perfetto', 'Ottieni 100% in una lezione', perfect, 1),
     make('p10', '🏅', '10 punteggi perfetti', 'Ottieni 100% in 10 lezioni', perfect, 10),
-    make('place', '🎯', 'Test di livello', 'Fai il test di livello', s.placement ? 1 : 0, 1),
+    make('place', '🎯', 'Livello stabilito', 'Fai il test o scegli il tuo livello', s.placement ? 1 : 0, 1),
     make('s3', '🔥', 'Serie di 3 giorni', 'Studia 3 giorni di fila', s.streak.best, 3),
     make('s7', '⚡', 'Serie di 7 giorni', 'Studia 7 giorni di fila', s.streak.best, 7),
     make('s14', '🌈', 'Serie di 14 giorni', 'Studia 14 giorni di fila', s.streak.best, 14),

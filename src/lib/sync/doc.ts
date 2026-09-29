@@ -60,6 +60,7 @@ export interface Settings {
   sound: boolean;
   dailyGoal: number;
   placement: LevelId | null;
+  onboarded: boolean;
 }
 
 export type Stamped<T> = { v: T; at: number };
@@ -76,7 +77,7 @@ export interface Doc {
   settings: { [K in keyof Settings]?: Stamped<Settings[K]> };
 }
 
-export const DEFAULT_SETTINGS: Settings = { theme: 'system', sound: true, dailyGoal: 50, placement: null };
+export const DEFAULT_SETTINGS: Settings = { theme: 'system', sound: true, dailyGoal: 50, placement: null, onboarded: false };
 
 export const emptyDoc = (): Doc => ({ completed: {}, theoryRead: {}, mistakes: {}, seen: {}, xp: {}, settings: {} });
 
@@ -185,6 +186,7 @@ export function settingsOf(d: Doc): Settings {
     sound: d.settings.sound?.v ?? DEFAULT_SETTINGS.sound,
     dailyGoal: d.settings.dailyGoal?.v ?? DEFAULT_SETTINGS.dailyGoal,
     placement: d.settings.placement?.v ?? DEFAULT_SETTINGS.placement,
+    onboarded: d.settings.onboarded?.v ?? DEFAULT_SETTINGS.onboarded,
   };
 }
 
