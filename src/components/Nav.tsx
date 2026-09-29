@@ -71,7 +71,7 @@ export function TopBar({ onSearch }: { onSearch: () => void }) {
         </button>
         {cloud &&
           (user ? (
-            <Link to="/account" className="avatar" aria-label="Il tuo account" title={user.email}>
+            <Link to="/profile" className="avatar" aria-label="Il tuo profilo" title={user.email}>
               {(user.email ?? '?')[0].toUpperCase()}
               <span className="badge-dot" style={{ background: sync.status === 'synced' ? 'var(--good)' : sync.status === 'error' ? 'var(--bad)' : sync.status === 'offline' ? 'var(--warn)' : 'var(--accent)' }} />
             </Link>
