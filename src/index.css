@@ -3553,10 +3553,38 @@ main:focus {
 }
 
 .path-topic {
-  font: 700 0.69rem/1 Inter, sans-serif;
-  letter-spacing: 0.08em;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px 5px 9px;
+  border-radius: 99px;
+  border: 1px solid color-mix(in srgb, var(--topic) 38%, transparent);
+  background: color-mix(in srgb, var(--topic) 16%, transparent);
+  font: 800 0.74rem/1 Inter, sans-serif;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--topic) 60%, var(--text));
+  color: color-mix(in srgb, var(--topic) 55%, var(--text));
+}
+
+.path-topic::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--topic);
+}
+
+/* filo colorato sul lato della scheda rivolto verso il sentiero */
+.path-row.right .path-card {
+  border-left: 5px solid var(--topic);
+}
+
+.path-row.left .path-card {
+  border-right: 5px solid var(--topic);
+}
+
+.path-card h3 {
+  margin-top: 8px;
 }
 
 .path-card h3 {
@@ -3601,6 +3629,10 @@ main:focus {
 }
 
 @media (max-width: 720px) and (hover: none) {
+  .path-row.left .path-card {
+    border-right: 1px solid var(--border);
+    border-left: 5px solid var(--topic);
+  }
   .path-head {
     gap: 14px;
   }
