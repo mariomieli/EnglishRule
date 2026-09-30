@@ -18,6 +18,7 @@ export interface State {
   theoryRead: Record<string, true>;
   mistakes: Record<string, Mistake>;
   srs: Record<string, SrsCard>;
+  vocab: Record<string, SrsCard>;
   seen: Record<string, Record<number, number>>;
   streak: { count: number; last: string | null; best: number; freezes: number };
   xpByDay: Record<string, number>;
@@ -72,6 +73,7 @@ export function view(doc: Doc, sys: Theme): State {
     theoryRead,
     mistakes,
     srs: doc.srs ?? {},
+    vocab: doc.vocab ?? {},
     seen: doc.seen as State['seen'],
     streak: streakOf(byDay),
     xpByDay: byDay,

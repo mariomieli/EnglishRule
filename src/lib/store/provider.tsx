@@ -3,7 +3,7 @@ import { supabase } from '../sync/cloud';
 import { settingsOf, type Doc, type Settings } from '../sync/doc';
 import { starsFor, systemTheme, today, view, type Theme } from './derived';
 import { DOC_KEY, THEME_KEY, deviceId, loadSaved, store, type Saved } from './persist';
-import { addXpTo, clearMistakeIn, completeOnboardingIn, finishLessonIn, finishSpeakingIn, markSeenIn, markTheoryIn, recordAnswerIn, recordMistakeIn, resetDoc, setSettingIn } from './reducers';
+import { addXpTo, clearMistakeIn, completeOnboardingIn, finishLessonIn, finishSpeakingIn, markSeenIn, markTheoryIn, recordAnswerIn, recordMistakeIn, recordVocabIn, resetDoc, setSettingIn } from './reducers';
 import { StoreCtx, type Actions } from './context';
 import { useCloud } from './useCloud';
 
@@ -60,6 +60,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       finishSpeaking: (id, score) => finish('speaking', id, score),
       markTheory: (id) => update((d) => markTheoryIn(d, id, now())),
       recordAnswer: (lessonId, index, ok) => update((d) => recordAnswerIn(d, lessonId, index, ok, now())),
+      recordVocab: (id, ok) => update((d) => recordVocabIn(d, id, ok, now())),
       recordMistake: (lessonId, index) => update((d) => recordMistakeIn(d, lessonId, index, now())),
       clearMistake: (lessonId, index) => update((d) => clearMistakeIn(d, lessonId, index, now())),
       markSeen: (lessonId, indices) => update((d) => markSeenIn(d, lessonId, indices)),

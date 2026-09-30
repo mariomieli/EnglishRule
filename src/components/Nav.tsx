@@ -5,12 +5,13 @@ import { LESSONS, lessonNumber } from '../data';
 import logoMark from '../assets/logo-mark.png';
 import { currentStreak, reviewQueue, useStore } from '../lib/store';
 import { normalize } from '../lib/utils';
-import { IBook, IHome, IMic, IMoon, IRepeat, ISearch, ISun, ITarget, IUser } from './Icons';
+import { IBook, IBulb, IHome, IMic, IMoon, IRepeat, ISearch, ISun, ITarget, IUser } from './Icons';
 import { LevelBadge } from './ui';
 
 const LINKS = [
   { to: '/', label: 'Home', icon: IHome, end: true },
   { to: '/levels', label: 'Livelli', icon: IBook },
+  { to: '/vocab', label: 'Parole', icon: IBulb },
   { to: '/speaking', label: 'Speaking', icon: IMic },
   { to: '/review', label: 'Ripasso', icon: IRepeat },
   { to: '/test', label: 'Test', icon: ITarget, desktopOnly: true },

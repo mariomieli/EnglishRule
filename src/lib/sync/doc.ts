@@ -11,6 +11,7 @@
  * - mistakes: ogni errore ha data di registrazione e data di "risolto";
  *   vince l'evento più recente (un errore risolto su un dispositivo sparisce anche sugli altri).
  * - srs: ripetizione dilazionata per esercizio; vince l'ultima risposta (last-writer-wins).
+ * - vocab: come srs, ma una scheda per parola (chiave = id della parola).
  * - theoryRead: unione.
  * - impostazioni: vince la modifica più recente (last-writer-wins) campo per campo.
  */
@@ -44,6 +45,7 @@ export interface SrsCard {
   at: number; // ultima risposta
   lapses?: number; // quante volte è stato sbagliato
   streak?: number; // risposte giuste di fila
+  since?: number; // solo vocabolario: quando la parola è stata incontrata la prima volta
 }
 
 /** Giorni di attesa per scatola: sbagliato = 0 (subito), poi 1, 3, 7, 14, 30, 60, 120. */
@@ -83,6 +85,7 @@ export interface Doc {
   completed: Record<string, LessonProgress>;
   speaking?: Record<string, LessonProgress>; // scenari di conversazione
   srs?: Record<string, SrsCard>; // ripetizione dilazionata, chiave "lezione#indice"
+  vocab?: Record<string, SrsCard>; // ripetizione dilazionata del vocabolario, chiave = id parola
   theoryRead: Record<string, number>;
   mistakes: Record<string, MistakeEntry>;
   seen: Record<string, Record<string, number>>;
@@ -142,13 +145,14 @@ export function mergeDocs(a: Doc, b: Doc): Doc {
     settings,
   };
   if (a.speaking || b.speaking) out.speaking = mergeMap(a.speaking, b.speaking, progress);
-  if (a.srs || b.srs)
-    out.srs = mergeMap(a.srs, b.srs, (x, y) => {
-      if (!x) return y!;
-      if (!y) return x;
-      if (x.at !== y.at) return x.at > y.at ? x : y;
-      return stable(x) >= stable(y) ? x : y;
-    });
+  const card = (x?: SrsCard, y?: SrsCard): SrsCard => {
+    if (!x) return y!;
+    if (!y) return x;
+    if (x.at !== y.at) return x.at > y.at ? x : y;
+    return stable(x) >= stable(y) ? x : y;
+  };
+  if (a.srs || b.srs) out.srs = mergeMap(a.srs, b.srs, card);
+  if (a.vocab || b.vocab) out.vocab = mergeMap(a.vocab, b.vocab, card);
   if (a.epoch) out.epoch = a.epoch; // epoche uguali: stesso valore da entrambi i lati
   return out;
 }
@@ -185,6 +189,7 @@ export function sanitize(raw: unknown): Doc {
   };
   if (obj(r.speaking)) out.speaking = r.speaking;
   if (obj(r.srs)) out.srs = r.srs;
+  if (obj(r.vocab)) out.vocab = r.vocab;
   if (typeof r.epoch === "number" && r.epoch > 0) out.epoch = r.epoch;
   return out;
 }

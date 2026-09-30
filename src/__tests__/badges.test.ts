@@ -10,6 +10,7 @@ const empty = (): State => ({
   theoryRead: {},
   mistakes: {},
   srs: {},
+  vocab: {},
   seen: {},
   streak: { count: 0, last: null, best: 0, freezes: 0 },
   xpByDay: {},

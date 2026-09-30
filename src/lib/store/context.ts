@@ -11,6 +11,7 @@ export interface Actions {
   finishSpeaking: (id: string, score: number) => { stars: number; improved: boolean };
   markTheory: (id: string) => void;
   recordAnswer: (lessonId: string, index: number, ok: boolean) => void;
+  recordVocab: (id: string, ok: boolean) => void;
   recordMistake: (lessonId: string, index: number) => void;
   clearMistake: (lessonId: string, index: number) => void;
   markSeen: (lessonId: string, indices: number[]) => void;

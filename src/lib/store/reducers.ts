@@ -26,6 +26,11 @@ export const recordAnswerIn = (d: Doc, lessonId: string, index: number, ok: bool
   return { ...d, srs: { ...d.srs, [k]: nextSrs(d.srs?.[k], lessonId, index, ok, at) } };
 };
 
+export const recordVocabIn = (d: Doc, id: string, ok: boolean, at: number): Doc => {
+  const prev = d.vocab?.[id];
+  return { ...d, vocab: { ...d.vocab, [id]: { ...nextSrs(prev, id, 0, ok, at), since: prev?.since ?? at } } };
+};
+
 export const recordMistakeIn = (d: Doc, lessonId: string, index: number, at: number): Doc => {
   const k = `${lessonId}#${index}`;
   const m = d.mistakes[k];

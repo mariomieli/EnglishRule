@@ -19,6 +19,8 @@ const Profile = lazy(() => import('./pages/Profile').then((m) => ({ default: m.P
 const Review = lazy(() => import('./pages/Profile').then((m) => ({ default: m.Review })));
 const SpeakingHub = lazy(() => import('./pages/Speaking').then((m) => ({ default: m.SpeakingHub })));
 const SpeakingSession = lazy(() => import('./pages/Speaking').then((m) => ({ default: m.SpeakingSession })));
+const VocabHub = lazy(() => import('./pages/Vocab').then((m) => ({ default: m.VocabHub })));
+const VocabPractice = lazy(() => import('./pages/Vocab').then((m) => ({ default: m.VocabPractice })));
 const Onboarding = lazy(() => import('./pages/Onboarding').then((m) => ({ default: m.Onboarding })));
 
 function PageLoading() {
@@ -60,7 +62,7 @@ function Shell() {
     const run = () => {
       if (conn?.saveData) return;
       void prefetchAllLessons();
-      for (const load of [() => import('./pages/Level'), () => import('./pages/Practice'), () => import('./pages/Profile'), () => import('./pages/Speaking'), () => import('./pages/Placement'), () => import('./pages/Account')]) void load().catch(() => undefined);
+      for (const load of [() => import('./pages/Level'), () => import('./pages/Practice'), () => import('./pages/Profile'), () => import('./pages/Speaking'), () => import('./pages/Placement'), () => import('./pages/Account'), () => import('./pages/Vocab')]) void load().catch(() => undefined);
     };
     if ('requestIdleCallback' in window) {
       const id = requestIdleCallback(run, { timeout: 10000 });
@@ -114,6 +116,8 @@ function Shell() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/speaking" element={<SpeakingHub />} />
           <Route path="/speaking/:id" element={<SpeakingSession />} />
+          <Route path="/vocab" element={<VocabHub />} />
+          <Route path="/vocab/:level/practice" element={<VocabPractice />} />
           <Route path="/account" element={<Account />} />
           <Route path="*" element={<Home />} />
         </Routes>

@@ -85,6 +85,28 @@ placement.forEach((q, i) => {
   if (!q.lesson || !lessons.some((l) => l.id === q.lesson)) errors.push(`placement ${i + 1}: lezione mancante o inesistente (${q.lesson})`);
 });
 
+// vocabolario: parole uniche, campi pieni, niente trattini lunghi, la frase contiene la parola
+{
+  const { flatten } = await import('../src/data/vocab/types');
+  const { A1_THEMES } = await import('../src/data/vocab/a1');
+  const { A2_THEMES } = await import('../src/data/vocab/a2');
+  const all = [...flatten('A1', A1_THEMES), ...flatten('A2', A2_THEMES)];
+  const seenIds = new Set<string>();
+  const seenEn = new Set<string>();
+  for (const w of all) {
+    const at = (m: string) => errors.push(`vocabolario ${w.id}: ${m}`);
+    if (seenIds.has(w.id)) at('id duplicato');
+    seenIds.add(w.id);
+    const en = w.en.toLowerCase();
+    if (seenEn.has(en)) at('parola già presente in un altro livello o tema');
+    seenEn.add(en);
+    if (!w.en || !w.it || !w.ex || !w.exIt) at('campo vuoto');
+    if (/[–—]/.test(w.en + w.it + w.ex + w.exIt)) at('trattino lungo');
+    if (/\s{2,}/.test(w.en + w.it + w.ex + w.exIt)) warn.push(`vocabolario ${w.id}: spazi doppi`);
+  }
+  console.log('Vocabolario:', { A1: all.filter((w) => w.level === 'A1').length, A2: all.filter((w) => w.level === 'A2').length });
+}
+
 const perLevel = lessons.reduce<Record<string, number>>((a, l) => ((a[l.level] = (a[l.level] ?? 0) + 1), a), {});
 console.log('Lezioni per livello:', perLevel, '· totale', lessons.length, '· esercizi', lessons.reduce((a, l) => a + l.exercises.length, 0));
 console.log('Placement per livello:', byLevel);
