@@ -3553,28 +3553,10 @@ main:focus {
 }
 
 .path-topic {
-  display: inline-block;
-  padding: 7px 14px;
-  border-radius: 10px;
-  background: var(--topic);
-  box-shadow: 0 8px 18px -10px var(--topic);
-  font: 800 0.8rem/1 Inter, sans-serif;
-  letter-spacing: 0.07em;
+  font: 700 0.69rem/1 Inter, sans-serif;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--on-topic, #fff);
-}
-
-/* filo colorato sul lato della scheda rivolto verso il sentiero */
-.path-row.right .path-card {
-  border-left: 5px solid var(--topic);
-}
-
-.path-row.left .path-card {
-  border-right: 5px solid var(--topic);
-}
-
-.path-card h3 {
-  margin-top: 8px;
+  color: color-mix(in srgb, var(--topic) 60%, var(--text));
 }
 
 .path-card h3 {
@@ -3619,10 +3601,6 @@ main:focus {
 }
 
 @media (max-width: 720px) and (hover: none) {
-  .path-row.left .path-card {
-    border-right: 1px solid var(--border);
-    border-left: 5px solid var(--topic);
-  }
   .path-head {
     gap: 14px;
   }
@@ -3657,39 +3635,4 @@ main:focus {
   .path-card {
     transition: none;
   }
-}
-
-/* argomento in alto in nero, titolo della lezione come etichetta colorata */
-.path-card .path-topic {
-  display: block;
-  padding: 0;
-  border-radius: 0;
-  background: none;
-  box-shadow: none;
-  color: var(--text);
-  font-weight: 900;
-  font-size: 0.85rem;
-}
-
-.path-card h3 {
-  margin: 8px 0 10px;
-  line-height: 1.6;
-}
-
-.path-card h3 span {
-  display: inline;
-  padding: 7px 14px;
-  border-radius: 10px;
-  background: var(--topic);
-  box-shadow: 0 8px 18px -10px var(--topic);
-  color: var(--on-topic, #fff);
-  font: 800 0.95rem/1.6 Inter, sans-serif;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-}
-
-.path-card.next h3 span {
-  font-size: 1.05rem;
 }
