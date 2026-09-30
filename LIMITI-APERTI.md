@@ -61,6 +61,11 @@ Ultimo aggiornamento: 30/09/2026. I punti del piano non ancora fatti (classifica
 - La pagina del livello segue il brief Level-2a ("Il sentiero"): testata compatta, linea centrale che si riempie e schede alternate. I filtri per argomento sono stati tolti di proposito; l'argomento è l'etichetta sopra il titolo di ogni scheda. Non vista dal vivo. Per non rovinare la lista del Ripasso (che usa la classe `.path`) le classi nuove del contenitore si chiamano `.level-path`. Le regole per lo schermo stretto valgono solo sui dispositivi touch.
 - Restano emoji nelle altre parti (icone dei dialoghi di speaking, titoli di sezione, tipi di esercizio): non toccate.
 
+## Phrasal verbs (aggiunti il 30/09)
+- Tre lezioni nuove, una per livello (B1 "i più comuni", B2 "a tre parti e significati multipli", C1 "figurati e registro"), 25 esercizi ciascuna, scritte da me e controllate con `npm run validate` ma non riviste da un insegnante: da leggere per eventuali sfumature (per esempio `turn down` come "rifiutare", `come across as`). Sono l'ultima lezione del loro livello (11 in B1, B2 e C1), non inserite a metà del percorso.
+- Il test di livello non ha domande sui phrasal verbs e non li consiglia: servirebbero 2 o 3 domande per livello con la lezione collegata.
+- Nuovo argomento "Phrasal verbs" (colore azzurro verde) nell'etichetta delle schede. Il test Vitest che conta le lezioni (63) va aggiornato a ogni nuova lezione.
+
 ## Zoom e ridimensionamento della finestra
 - Su mobile lo zoom con le dita è bloccato (meta viewport, `touch-action`, eventi di gesto su iOS): contrasta con WCAG 1.4.4 (chi ha difficoltà visive non può ingrandire la pagina). Scelta di Mario; la regola axe `meta-viewport` è disattivata nei test.
 - Su desktop, sotto 1200 px di larghezza la pagina si rimpicciolisce in proporzione (CSS `zoom` sulla radice, calcolato in `src/lib/fitWindow.ts`) e le regole responsive valgono solo sui dispositivi touch (`(hover: none)`). Con finestre molto strette il testo diventa minuscolo (a 400 px è circa un terzo); nessuna dimensione minima. Non provato dal vivo: possibili scostamenti nelle animazioni di posizione (linguetta del menu, tessere del riordino) e nei pannelli fissi; il `zoom` CSS richiede browser recenti (Chrome, Safari, Firefox 126+).

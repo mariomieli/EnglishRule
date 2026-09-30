@@ -557,6 +557,26 @@ export const LESSON_META: LessonMeta[] = [
     "exerciseCount": 31
   },
   {
+    "id": "b1-phrasal-verbs-basics",
+    "level": "B1",
+    "title": "Phrasal verbs: i più comuni",
+    "subtitle": "get up, turn off, look after: verbo + particella e dove mettere il pronome",
+    "icon": "🔤",
+    "minutes": 15,
+    "tags": [
+      "phrasal verbs",
+      "verbi frasali",
+      "particella",
+      "separabili",
+      "inseparabili",
+      "look for",
+      "give up",
+      "turn off",
+      "get up"
+    ],
+    "exerciseCount": 31
+  },
+  {
     "id": "b2-third-mixed-conditionals",
     "level": "B2",
     "title": "Third e mixed conditionals",
@@ -736,6 +756,26 @@ export const LESSON_META: LessonMeta[] = [
       "none",
       "each",
       "quantificatori"
+    ],
+    "exerciseCount": 31
+  },
+  {
+    "id": "b2-phrasal-verbs-three-word",
+    "level": "B2",
+    "title": "Phrasal verbs a tre parti e significati multipli",
+    "subtitle": "look forward to, put up with, run out of: verbo + particella + preposizione",
+    "icon": "🔤",
+    "minutes": 15,
+    "tags": [
+      "phrasal verbs",
+      "three-word",
+      "look forward to",
+      "put up with",
+      "run out of",
+      "come up with",
+      "take off",
+      "pick up",
+      "verbi frasali"
     ],
     "exerciseCount": 31
   },
@@ -923,6 +963,26 @@ export const LESSON_META: LessonMeta[] = [
       "none of which",
       "reduced relatives",
       "formale"
+    ],
+    "exerciseCount": 31
+  },
+  {
+    "id": "c1-phrasal-verbs-figurative",
+    "level": "C1",
+    "title": "Phrasal verbs figurati e registro",
+    "subtitle": "bring up, carry out, call off, figure out: sensi astratti e alternative formali",
+    "icon": "🔤",
+    "minutes": 15,
+    "tags": [
+      "phrasal verbs",
+      "figurativi",
+      "registro",
+      "formale",
+      "call off",
+      "carry out",
+      "bring up",
+      "figure out",
+      "come across"
     ],
     "exerciseCount": 31
   },

@@ -2,7 +2,7 @@
 
 Webapp per imparare la grammatica inglese dal livello A1 al C2, pensata per italiani.
 
-- 60 lezioni (10 per livello), 1.500 esercizi (25 per lezione, 10 a sessione con rotazione), test di livello da 36 domande
+- 63 lezioni (10 per livello, 11 in B1, B2 e C1 con i phrasal verbs), 1.575 esercizi (25 per lezione, 10 a sessione con rotazione), test di livello adattivo
 - 5 tipi di esercizio: scelta multipla, completamento, riordino, giusto/sbagliato, abbinamento
 - Errori riproposti a fine sessione e raccolti nel Ripasso
 - XP, stelle, combo, serie giornaliera, obiettivo giornaliero, traguardi

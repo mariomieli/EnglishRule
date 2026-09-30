@@ -1,5 +1,5 @@
 /** Grande argomento grammaticale di una lezione: dà icona e colore coerenti, al posto di un'emoji diversa per ogni lezione. */
-export type TopicId = 'tempi' | 'frasi' | 'nomi' | 'modali' | 'condizionali' | 'passivo' | 'complesse' | 'confronti' | 'preposizioni' | 'stile';
+export type TopicId = 'tempi' | 'frasi' | 'nomi' | 'modali' | 'condizionali' | 'passivo' | 'complesse' | 'confronti' | 'preposizioni' | 'phrasal' | 'stile';
 
 export interface Topic {
   id: TopicId;
@@ -18,6 +18,7 @@ export const TOPICS: Topic[] = [
   { id: 'complesse', label: 'Frasi complesse', short: 'Complesse', color: '#14b8a6' },
   { id: 'confronti', label: 'Confronti e collegamenti', short: 'Confronti', color: '#f97316' },
   { id: 'preposizioni', label: 'Preposizioni', short: 'Preposizioni', color: '#3b82f6' },
+  { id: 'phrasal', label: 'Phrasal verbs', short: 'Phrasal verbs', color: '#0891b2' },
   { id: 'stile', label: 'Stile e sfumature', short: 'Stile', color: '#e11d48' },
 ];
 
@@ -52,6 +53,7 @@ const BY_LESSON: Record<string, TopicId> = {
   'b1-defining-relative-clauses': 'complesse',
   'b1-gerund-infinitive': 'complesse',
   'b1-used-to': 'tempi',
+  'b1-phrasal-verbs-basics': 'phrasal',
   'b2-third-mixed-conditionals': 'condizionali',
   'b2-wish-if-only': 'condizionali',
   'b2-advanced-passive': 'passivo',
@@ -62,6 +64,7 @@ const BY_LESSON: Record<string, TopicId> = {
   'b2-modals-deduction': 'modali',
   'b2-contrast-linkers': 'confronti',
   'b2-advanced-quantifiers': 'nomi',
+  'b2-phrasal-verbs-three-word': 'phrasal',
   'c1-inversion': 'complesse',
   'c1-cleft-sentences': 'complesse',
   'c1-participle-clauses': 'complesse',
@@ -72,6 +75,7 @@ const BY_LESSON: Record<string, TopicId> = {
   'c1-articles-nominalisation': 'nomi',
   'c1-advanced-future': 'tempi',
   'c1-advanced-relatives': 'complesse',
+  'c1-phrasal-verbs-figurative': 'phrasal',
   'c2-conditional-inversion': 'condizionali',
   'c2-if-alternatives': 'condizionali',
   'c2-hedging-distancing': 'stile',

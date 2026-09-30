@@ -2460,4 +2460,436 @@ export const b1: Lesson[] = [
       },
     ],
   },
+  // PHRASAL VERBS
+  {
+    "id": "b1-phrasal-verbs-basics",
+    "level": "B1",
+    "title": "Phrasal verbs: i più comuni",
+    "subtitle": "get up, turn off, look after: verbo + particella e dove mettere il pronome",
+    "icon": "🔤",
+    "minutes": 15,
+    "tags": [
+      "phrasal verbs",
+      "verbi frasali",
+      "particella",
+      "separabili",
+      "inseparabili",
+      "look for",
+      "give up",
+      "turn off",
+      "get up"
+    ],
+    "theory": [
+      {
+        "type": "text",
+        "body": "Un **phrasal verb** è un verbo seguito da una **particella** (*up, off, out, in, on, away...*): insieme formano un significato nuovo, che spesso **non si deduce dalle parti**. *Give up* non è \"dare su\": vuol dire **arrendersi** o **smettere**. Sono frequentissimi nell'inglese di tutti i giorni, più dei verbi \"colti\" che in italiano useremmo (si dice *put off* più spesso di *postpone*)."
+      },
+      {
+        "type": "rule",
+        "title": "Separabili e inseparabili",
+        "body": "Molti phrasal verbs con **complemento oggetto** sono **separabili**: il nome può stare in mezzo o dopo la particella (*turn off the light* / *turn the light off*). Ma con un **pronome** (*it, them, him, her, me, us*) il pronome va **sempre in mezzo**: *turn it off*, non ✗ *turn off it*. Altri sono **inseparabili**: verbo e particella restano uniti, anche con un pronome (*look after the kids* / *look after them*). Senza oggetto (**intransitivi**) non c'è nulla da separare: *Wake up! She got up late.*"
+      },
+      {
+        "type": "table",
+        "title": "I più comuni",
+        "headers": [
+          "Phrasal verb",
+          "Significato",
+          "Esempio"
+        ],
+        "rows": [
+          [
+            "get up",
+            "alzarsi",
+            "I get up at seven."
+          ],
+          [
+            "wake up",
+            "svegliarsi",
+            "He woke up late."
+          ],
+          [
+            "sit down",
+            "sedersi",
+            "Please sit down."
+          ],
+          [
+            "turn on / turn off",
+            "accendere / spegnere",
+            "Turn off the TV."
+          ],
+          [
+            "put on / take off",
+            "indossare / togliere",
+            "Put on your coat."
+          ],
+          [
+            "look for",
+            "cercare",
+            "I'm looking for my keys."
+          ],
+          [
+            "look after",
+            "occuparsi di",
+            "She looks after her sister."
+          ],
+          [
+            "give up",
+            "arrendersi, smettere",
+            "Don't give up!"
+          ],
+          [
+            "come back",
+            "tornare",
+            "When will you come back?"
+          ],
+          [
+            "find out",
+            "scoprire",
+            "I found out the truth."
+          ]
+        ]
+      },
+      {
+        "type": "examples",
+        "title": "In contesto",
+        "items": [
+          {
+            "en": "I ==get up== at seven every day.",
+            "it": "Mi alzo alle sette ogni giorno."
+          },
+          {
+            "en": "It's dark. Can you ==turn== the light ==on==?",
+            "it": "È buio. Puoi accendere la luce?"
+          },
+          {
+            "en": "Your shoes are dirty. ==Take them off==.",
+            "it": "Hai le scarpe sporche. Toglile."
+          },
+          {
+            "en": "She ==looks after== her little brother.",
+            "it": "Si occupa del fratellino."
+          },
+          {
+            "en": "I'm ==looking for== a new job.",
+            "it": "Sto cercando un nuovo lavoro."
+          }
+        ]
+      },
+      {
+        "type": "compare",
+        "left": {
+          "label": "Separabili (oggetto in mezzo)",
+          "items": [
+            "turn the light off",
+            "put your coat on",
+            "pick the kids up",
+            "give it up"
+          ]
+        },
+        "right": {
+          "label": "Inseparabili (uniti)",
+          "items": [
+            "look after the kids",
+            "look for my keys",
+            "get on the bus",
+            "run into an old friend"
+          ]
+        }
+      },
+      {
+        "type": "warning",
+        "body": "Errore tipico: il pronome **dopo** la particella. ✗ *Turn off it* → **Turn it off**. ✗ *Pick up them* → **Pick them up**. Con il pronome, nei phrasal verbs separabili, si mette sempre in mezzo."
+      },
+      {
+        "type": "warning",
+        "body": "Non tradurre alla lettera: *look for* (**cercare**) non è *look at* (**guardare**); *give up* (**arrendersi**) non è *give* (**dare**). Cambia la particella, cambia il significato."
+      },
+      {
+        "type": "tip",
+        "body": "Impara i phrasal verbs **dentro una frase**, come blocchi (*turn it off*, *look after the kids*), non in liste di parole sole. Nella pronuncia l'accento cade di solito sulla **particella**: *turn ON*, *give UP*."
+      }
+    ],
+    "exercises": [
+      {
+        "type": "mcq",
+        "prompt": "It's dark in here. Can you ___ the light?",
+        "options": [
+          "turn on",
+          "turn off",
+          "give up",
+          "find out"
+        ],
+        "answer": 0,
+        "explain": "Con il buio si **accende** la luce: *turn on*. *Turn off* la spegnerebbe."
+      },
+      {
+        "type": "mcq",
+        "prompt": "I can't find my glasses. I'm ___ them.",
+        "options": [
+          "looking for",
+          "looking after",
+          "looking at",
+          "looking up"
+        ],
+        "answer": 0,
+        "explain": "**Look for** = cercare. *Look after* = occuparsi di, *look at* = guardare."
+      },
+      {
+        "type": "mcq",
+        "prompt": "She ___ her little brother while her parents are at work.",
+        "options": [
+          "looks after",
+          "looks for",
+          "looks at",
+          "looks up"
+        ],
+        "answer": 0,
+        "explain": "**Look after** = occuparsi di qualcuno. È inseparabile: *looks after him*."
+      },
+      {
+        "type": "mcq",
+        "prompt": "It's cold outside. ___ your coat.",
+        "options": [
+          "Put on",
+          "Take off",
+          "Give up",
+          "Turn off"
+        ],
+        "answer": 0,
+        "explain": "**Put on** = indossare. Il suo contrario è *take off* (togliere)."
+      },
+      {
+        "type": "mcq",
+        "prompt": "I don't know the result yet. I'll ___ tomorrow.",
+        "options": [
+          "find out",
+          "look after",
+          "put on",
+          "sit down"
+        ],
+        "answer": 0,
+        "explain": "**Find out** = scoprire, venire a sapere."
+      },
+      {
+        "type": "mcq",
+        "prompt": "Don't ___! You're almost there.",
+        "options": [
+          "give up",
+          "get up",
+          "take off",
+          "come back"
+        ],
+        "answer": 0,
+        "explain": "**Give up** = arrendersi, rinunciare."
+      },
+      {
+        "type": "mcq",
+        "prompt": "What time do you usually ___ in the morning?",
+        "options": [
+          "get up",
+          "sit down",
+          "put on",
+          "look for"
+        ],
+        "answer": 0,
+        "explain": "**Get up** = alzarsi dal letto. Senza oggetto: niente da separare."
+      },
+      {
+        "type": "mcq",
+        "prompt": "The lights are still on. Please ___.",
+        "options": [
+          "turn them off",
+          "turn off them",
+          "off turn them",
+          "turn them of"
+        ],
+        "answer": 0,
+        "explain": "Con un **pronome** il phrasal verb separabile si spezza: *turn them off*, mai ✗ *turn off them*."
+      },
+      {
+        "type": "mcq",
+        "prompt": "These shoes are dirty. ___ before you come in.",
+        "options": [
+          "Take them off",
+          "Take off them",
+          "Off take them",
+          "Take them of"
+        ],
+        "answer": 0,
+        "explain": "Il pronome *them* va **in mezzo**: *take them off*."
+      },
+      {
+        "type": "fill",
+        "prompt": "Please ___ down and relax.",
+        "answers": [
+          "sit"
+        ],
+        "hint": "sedersi",
+        "explain": "**Sit down** = sedersi."
+      },
+      {
+        "type": "fill",
+        "prompt": "I usually wake ___ at six.",
+        "answers": [
+          "up"
+        ],
+        "explain": "**Wake up** = svegliarsi."
+      },
+      {
+        "type": "fill",
+        "prompt": "She gave ___ smoking last year.",
+        "answers": [
+          "up"
+        ],
+        "explain": "**Give up** + -ing = smettere di fare qualcosa."
+      },
+      {
+        "type": "fill",
+        "prompt": "Can you look ___ my dog while I'm away?",
+        "answers": [
+          "after"
+        ],
+        "hint": "occuparsi di",
+        "explain": "**Look after** = occuparsi di, badare a."
+      },
+      {
+        "type": "fill",
+        "prompt": "I'm looking ___ a new flat in the city centre.",
+        "answers": [
+          "for"
+        ],
+        "hint": "cercare",
+        "explain": "**Look for** = cercare."
+      },
+      {
+        "type": "fill",
+        "prompt": "Take ___ your shoes, please.",
+        "answers": [
+          "off"
+        ],
+        "hint": "togliere",
+        "explain": "**Take off** = togliere (un capo di abbigliamento). Il contrario è *put on*."
+      },
+      {
+        "type": "order",
+        "words": [
+          "Turn",
+          "it",
+          "off",
+          "before",
+          "you",
+          "leave."
+        ],
+        "translation": "Spegnilo prima di uscire.",
+        "explain": "**Turn off** è separabile: con il pronome *it* va in mezzo, *turn it off*."
+      },
+      {
+        "type": "order",
+        "words": [
+          "She",
+          "looks",
+          "after",
+          "her",
+          "grandmother",
+          "every",
+          "day."
+        ],
+        "translation": "Si prende cura di sua nonna ogni giorno.",
+        "explain": "**Look after** resta unito: *looks after her grandmother*."
+      },
+      {
+        "type": "order",
+        "words": [
+          "I",
+          "found",
+          "out",
+          "the",
+          "truth",
+          "yesterday."
+        ],
+        "translation": "Ho scoperto la verità ieri.",
+        "explain": "**Find out** = scoprire. Qui verbo e particella restano uniti."
+      },
+      {
+        "type": "judge",
+        "sentence": "Turn off it, please.",
+        "isCorrect": false,
+        "correction": "Turn it off, please.",
+        "explain": "Con un pronome la particella va **dopo** il pronome: *turn it off*."
+      },
+      {
+        "type": "judge",
+        "sentence": "She looks after her sister.",
+        "isCorrect": true,
+        "explain": "Corretta: *look after* = occuparsi di, e resta unito."
+      },
+      {
+        "type": "judge",
+        "sentence": "I'm looking for my phone.",
+        "isCorrect": true,
+        "explain": "Corretta: *look for* = cercare."
+      },
+      {
+        "type": "judge",
+        "sentence": "Pick up them from school.",
+        "isCorrect": false,
+        "correction": "Pick them up from school.",
+        "explain": "Il pronome *them* va in mezzo: *pick them up*."
+      },
+      {
+        "type": "judge",
+        "sentence": "Put on it, it's cold.",
+        "isCorrect": false,
+        "correction": "Put it on, it's cold.",
+        "explain": "Con un pronome: *put it on*."
+      },
+      {
+        "type": "match",
+        "prompt": "Abbina il phrasal verb al significato.",
+        "pairs": [
+          [
+            "give up",
+            "arrendersi"
+          ],
+          [
+            "look for",
+            "cercare"
+          ],
+          [
+            "look after",
+            "occuparsi di"
+          ],
+          [
+            "find out",
+            "scoprire"
+          ]
+        ],
+        "explain": "Quattro phrasal verbs di base: cambia la particella e cambia il significato."
+      },
+      {
+        "type": "match",
+        "prompt": "Abbina le coppie di contrari.",
+        "pairs": [
+          [
+            "turn on",
+            "turn off"
+          ],
+          [
+            "put on",
+            "take off"
+          ],
+          [
+            "sit down",
+            "stand up"
+          ],
+          [
+            "go out",
+            "stay in"
+          ]
+        ],
+        "explain": "Molti phrasal verbs hanno un contrario: basta cambiare la particella."
+      }
+    ]
+  },
 ];

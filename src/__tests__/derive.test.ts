@@ -19,7 +19,7 @@ describe('confronto libero delle risposte', () => {
 });
 
 describe('esercizi derivati (dettato, traduzione, correzione)', () => {
-  it('ci sono lezioni', () => expect(RAW.length).toBe(60));
+  it('ci sono lezioni', () => expect(RAW.length).toBe(63));
 
   it.each(RAW.map((l) => [l.id, l] as const))('%s: derivati coerenti', (_id, l) => {
     const extra = deriveExercises(l.exercises);

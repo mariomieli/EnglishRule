@@ -2590,4 +2590,431 @@ export const c1: Lesson[] = [
       },
     ],
   },
+  // PHRASAL VERBS
+  {
+    "id": "c1-phrasal-verbs-figurative",
+    "level": "C1",
+    "title": "Phrasal verbs figurati e registro",
+    "subtitle": "bring up, carry out, call off, figure out: sensi astratti e alternative formali",
+    "icon": "🔤",
+    "minutes": 15,
+    "tags": [
+      "phrasal verbs",
+      "figurativi",
+      "registro",
+      "formale",
+      "call off",
+      "carry out",
+      "bring up",
+      "figure out",
+      "come across"
+    ],
+    "theory": [
+      {
+        "type": "text",
+        "body": "Al livello avanzato i phrasal verbs servono a dare **sfumature** e a scegliere il **registro**. Molti hanno un senso **figurato** lontano da quello letterale (*bring up* un tema = sollevarlo; *come across* = imbattersi o dare l'impressione) e quasi tutti hanno un **equivalente formale** di origine latina: in una mail formale *postpone*, a voce *put off*."
+      },
+      {
+        "type": "table",
+        "title": "Informale e formale",
+        "headers": [
+          "Phrasal verb",
+          "Verbo formale",
+          "Significato"
+        ],
+        "rows": [
+          [
+            "put off",
+            "postpone",
+            "rimandare"
+          ],
+          [
+            "carry out",
+            "conduct / perform",
+            "svolgere, eseguire"
+          ],
+          [
+            "call off",
+            "cancel",
+            "annullare"
+          ],
+          [
+            "find out",
+            "discover",
+            "scoprire"
+          ],
+          [
+            "bring up",
+            "raise / mention",
+            "sollevare (un tema)"
+          ],
+          [
+            "set up",
+            "establish",
+            "fondare, creare"
+          ],
+          [
+            "put up with",
+            "tolerate",
+            "tollerare"
+          ],
+          [
+            "look into",
+            "investigate",
+            "indagare"
+          ]
+        ]
+      },
+      {
+        "type": "rule",
+        "title": "Significati figurati",
+        "body": "*Bring up* = allevare (un figlio) o sollevare un argomento. *Turn out* = rivelarsi. *Come across* = imbattersi in qualcosa, oppure *come across as* = dare l'impressione di essere. *Pull off* = riuscire in qualcosa di difficile. *Fall apart* = andare in pezzi. *Back up* = sostenere, oppure fare una copia di sicurezza. *Sum up* = riassumere."
+      },
+      {
+        "type": "rule",
+        "title": "Passivo e nomi",
+        "body": "Molti phrasal verbs passano al **passivo** senza problemi (*The match was called off. The matter will be looked into.*) e diventano **nomi** (*a breakdown, a takeaway, a setback, an outbreak, an outcome*), con la particella prima o dopo il verbo. Il pronome, nei separabili, resta in mezzo: *figure it out*, *bring it up*."
+      },
+      {
+        "type": "examples",
+        "title": "In contesto",
+        "items": [
+          {
+            "en": "The match was ==called off== because of the storm.",
+            "it": "La partita è stata annullata per il temporale."
+          },
+          {
+            "en": "It ==turned out== that the rumour was false.",
+            "it": "Si è scoperto che la voce era falsa."
+          },
+          {
+            "en": "She ==comes across as== very confident.",
+            "it": "Dà l'impressione di essere molto sicura di sé."
+          },
+          {
+            "en": "The team ==pulled off== an impressive victory.",
+            "it": "La squadra ha ottenuto una vittoria notevole."
+          },
+          {
+            "en": "He was ==brought up== by his grandparents.",
+            "it": "È stato cresciuto dai nonni."
+          }
+        ]
+      },
+      {
+        "type": "compare",
+        "left": {
+          "label": "A voce, informale (phrasal verb)",
+          "items": [
+            "put off the meeting",
+            "call off the event",
+            "find out the truth",
+            "look into the matter"
+          ]
+        },
+        "right": {
+          "label": "Scritto, formale",
+          "items": [
+            "postpone the meeting",
+            "cancel the event",
+            "discover the truth",
+            "investigate the matter"
+          ]
+        }
+      },
+      {
+        "type": "warning",
+        "body": "Non esagerare: in un testo accademico, legale o molto formale sono preferibili i verbi formali (*postpone, conduct, investigate*). E attenzione ai **sensi multipli**: *take in* = capire, ingannare o ospitare; leggi sempre il contesto."
+      },
+      {
+        "type": "tip",
+        "body": "Per scrivere con naturalezza, **alterna**: un phrasal verb nelle parti più discorsive, il verbo formale nelle conclusioni e nei documenti. Con i separabili controlla sempre la posizione del pronome: *figure it out*, non ✗ *figure out it*."
+      }
+    ],
+    "exercises": [
+      {
+        "type": "mcq",
+        "prompt": "The match was ___ because of the storm.",
+        "options": [
+          "called off",
+          "called up",
+          "called in",
+          "called out"
+        ],
+        "answer": 0,
+        "explain": "**Call off** = annullare. Qui al passivo: *was called off*."
+      },
+      {
+        "type": "mcq",
+        "prompt": "Our team will ___ a survey next month.",
+        "options": [
+          "carry out",
+          "carry on",
+          "carry off",
+          "carry in"
+        ],
+        "answer": 0,
+        "explain": "**Carry out** = svolgere, eseguire (un'indagine, un piano)."
+      },
+      {
+        "type": "mcq",
+        "prompt": "It ___ that the rumour was false.",
+        "options": [
+          "turned out",
+          "turned up",
+          "turned on",
+          "turned off"
+        ],
+        "answer": 0,
+        "explain": "**Turn out** = rivelarsi, risultare (*It turned out that...*)."
+      },
+      {
+        "type": "mcq",
+        "prompt": "He doesn't ___ as arrogant, but he is very shy.",
+        "options": [
+          "come across",
+          "come down",
+          "come in",
+          "come back"
+        ],
+        "answer": 0,
+        "explain": "**Come across as** = dare l'impressione di essere."
+      },
+      {
+        "type": "mcq",
+        "prompt": "I need to ___ my files before the update.",
+        "options": [
+          "back up",
+          "back down",
+          "back off",
+          "back out"
+        ],
+        "answer": 0,
+        "explain": "**Back up** = fare una copia di sicurezza (o sostenere qualcuno)."
+      },
+      {
+        "type": "mcq",
+        "prompt": "The authorities will ___ the causes of the accident.",
+        "options": [
+          "look into",
+          "look up to",
+          "look out",
+          "look forward"
+        ],
+        "answer": 0,
+        "explain": "**Look into** = indagare su. Equivale al formale *investigate*."
+      },
+      {
+        "type": "mcq",
+        "prompt": "Qual è l'equivalente formale di *put off* (rimandare)?",
+        "options": [
+          "postpone",
+          "put away",
+          "produce",
+          "propose"
+        ],
+        "answer": 0,
+        "explain": "*Put off* (a voce) corrisponde a **postpone** (più formale)."
+      },
+      {
+        "type": "mcq",
+        "prompt": "She managed to ___ an impressive victory.",
+        "options": [
+          "pull off",
+          "pull out",
+          "pull down",
+          "pull over"
+        ],
+        "answer": 0,
+        "explain": "**Pull off** = riuscire in qualcosa di difficile."
+      },
+      {
+        "type": "mcq",
+        "prompt": "The negotiations ___ after the two sides couldn't agree.",
+        "options": [
+          "fell through",
+          "fell over",
+          "fell out",
+          "fell off"
+        ],
+        "answer": 0,
+        "explain": "**Fall through** = fallire, non andare a buon fine."
+      },
+      {
+        "type": "fill",
+        "prompt": "Can we ___ up the budget at the next meeting?",
+        "answers": [
+          "bring"
+        ],
+        "hint": "sollevare",
+        "explain": "**Bring up** = sollevare un argomento."
+      },
+      {
+        "type": "fill",
+        "prompt": "I can't figure ___ how this machine works.",
+        "answers": [
+          "out"
+        ],
+        "explain": "**Figure out** = capire, venire a capo di qualcosa."
+      },
+      {
+        "type": "fill",
+        "prompt": "He was brought ___ by his grandparents.",
+        "answers": [
+          "up"
+        ],
+        "explain": "**Bring up** = allevare, crescere un figlio."
+      },
+      {
+        "type": "fill",
+        "prompt": "The new law will be carried ___ next year.",
+        "answers": [
+          "out"
+        ],
+        "explain": "**Carry out** = attuare; al passivo: *will be carried out*."
+      },
+      {
+        "type": "fill",
+        "prompt": "Let me sum ___ the main points.",
+        "answers": [
+          "up"
+        ],
+        "explain": "**Sum up** = riassumere."
+      },
+      {
+        "type": "fill",
+        "prompt": "They set ___ the company in 1998.",
+        "answers": [
+          "up"
+        ],
+        "explain": "**Set up** = fondare, creare (un'azienda)."
+      },
+      {
+        "type": "order",
+        "words": [
+          "The",
+          "match",
+          "was",
+          "called",
+          "off",
+          "due",
+          "to",
+          "rain."
+        ],
+        "translation": "La partita è stata annullata a causa della pioggia.",
+        "explain": "Passivo con phrasal verb: *was called off*."
+      },
+      {
+        "type": "order",
+        "words": [
+          "We",
+          "need",
+          "to",
+          "look",
+          "into",
+          "the",
+          "matter",
+          "urgently."
+        ],
+        "translation": "Dobbiamo indagare sulla questione con urgenza.",
+        "explain": "**Look into** resta unito: *look into the matter*."
+      },
+      {
+        "type": "order",
+        "words": [
+          "She",
+          "came",
+          "across",
+          "as",
+          "very",
+          "confident."
+        ],
+        "translation": "Dava l'impressione di essere molto sicura di sé.",
+        "explain": "**Come across as** + aggettivo = dare l'impressione di essere."
+      },
+      {
+        "type": "judge",
+        "sentence": "The meeting was put off until next week.",
+        "isCorrect": true,
+        "explain": "Corretta: passivo di *put off* (rimandare)."
+      },
+      {
+        "type": "judge",
+        "sentence": "I'll bring up it at the meeting.",
+        "isCorrect": false,
+        "correction": "I'll bring it up at the meeting.",
+        "explain": "Con un pronome si mette in mezzo: *bring it up*."
+      },
+      {
+        "type": "judge",
+        "sentence": "It turned out to be a mistake.",
+        "isCorrect": true,
+        "explain": "Corretta: *turn out to be* = rivelarsi."
+      },
+      {
+        "type": "judge",
+        "sentence": "We need to figure out it soon.",
+        "isCorrect": false,
+        "correction": "We need to figure it out soon.",
+        "explain": "Con il pronome: *figure it out*."
+      },
+      {
+        "type": "judge",
+        "sentence": "She brought up by her aunt.",
+        "isCorrect": false,
+        "correction": "She was brought up by her aunt.",
+        "explain": "Nel passivo serve l'ausiliare: *was brought up*."
+      },
+      {
+        "type": "match",
+        "prompt": "Abbina il phrasal verb al suo equivalente formale.",
+        "pairs": [
+          [
+            "put off",
+            "postpone"
+          ],
+          [
+            "call off",
+            "cancel"
+          ],
+          [
+            "carry out",
+            "conduct"
+          ],
+          [
+            "find out",
+            "discover"
+          ],
+          [
+            "put up with",
+            "tolerate"
+          ]
+        ],
+        "explain": "Cinque coppie informale/formale."
+      },
+      {
+        "type": "match",
+        "prompt": "Abbina il phrasal verb al significato figurato.",
+        "pairs": [
+          [
+            "turn out",
+            "rivelarsi"
+          ],
+          [
+            "pull off",
+            "riuscire in qualcosa di difficile"
+          ],
+          [
+            "fall apart",
+            "andare in pezzi"
+          ],
+          [
+            "sum up",
+            "riassumere"
+          ]
+        ],
+        "explain": "Quattro sensi figurati."
+      }
+    ]
+  },
 ];

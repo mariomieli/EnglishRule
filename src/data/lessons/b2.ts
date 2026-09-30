@@ -2425,4 +2425,430 @@ export const b2: Lesson[] = [
       },
     ],
   },
+  // PHRASAL VERBS
+  {
+    "id": "b2-phrasal-verbs-three-word",
+    "level": "B2",
+    "title": "Phrasal verbs a tre parti e significati multipli",
+    "subtitle": "look forward to, put up with, run out of: verbo + particella + preposizione",
+    "icon": "🔤",
+    "minutes": 15,
+    "tags": [
+      "phrasal verbs",
+      "three-word",
+      "look forward to",
+      "put up with",
+      "run out of",
+      "come up with",
+      "take off",
+      "pick up",
+      "verbi frasali"
+    ],
+    "theory": [
+      {
+        "type": "text",
+        "body": "I phrasal verbs **a tre parti** hanno verbo + particella + preposizione e sono **sempre inseparabili**: l'oggetto viene dopo tutto il gruppo (*I look forward to the weekend*). Inoltre molti phrasal verbs hanno **più significati**: *take off* vale \"decollare\" ma anche \"togliersi (un capo)\"; *pick up* vale \"raccogliere\", \"andare a prendere\" e \"imparare\"."
+      },
+      {
+        "type": "rule",
+        "title": "Tre parti: inseparabili e con la preposizione",
+        "body": "Con *look forward to, get on with, put up with, run out of, come up with, catch up with, cut down on, look down on, get away with* l'oggetto va **dopo** la preposizione, anche se è un pronome: *I put up with him*, non ✗ *I put him up with*. Attenzione: in *look forward to* il **to è una preposizione**, quindi dopo si usa la **forma in -ing**: *I'm looking forward to seeing you*."
+      },
+      {
+        "type": "table",
+        "title": "Tre parti da conoscere",
+        "headers": [
+          "Phrasal verb",
+          "Significato",
+          "Esempio"
+        ],
+        "rows": [
+          [
+            "look forward to",
+            "non vedere l'ora di",
+            "I look forward to hearing from you."
+          ],
+          [
+            "put up with",
+            "sopportare",
+            "I can't put up with the noise."
+          ],
+          [
+            "run out of",
+            "finire, esaurire",
+            "We've run out of milk."
+          ],
+          [
+            "come up with",
+            "inventare, tirar fuori (un'idea)",
+            "She came up with a plan."
+          ],
+          [
+            "catch up with",
+            "raggiungere, mettersi in pari",
+            "I'll catch up with you later."
+          ],
+          [
+            "get on with",
+            "andare d'accordo con",
+            "He gets on well with his boss."
+          ],
+          [
+            "cut down on",
+            "ridurre",
+            "Try to cut down on sugar."
+          ],
+          [
+            "get away with",
+            "farla franca",
+            "He got away with it."
+          ]
+        ]
+      },
+      {
+        "type": "rule",
+        "title": "Un verbo, più significati",
+        "body": "*Take off*: decollare / togliersi un capo / avere successo. *Pick up*: raccogliere / andare a prendere (qualcuno) / imparare (una lingua) senza sforzo. *Put off*: rimandare / scoraggiare. *Turn down*: rifiutare / abbassare (il volume). *Get over*: superare (una malattia, una delusione). Il significato giusto lo decide il **contesto**."
+      },
+      {
+        "type": "examples",
+        "title": "In contesto",
+        "items": [
+          {
+            "en": "I'm ==looking forward to seeing== you next week.",
+            "it": "Non vedo l'ora di vederti la settimana prossima."
+          },
+          {
+            "en": "We've ==run out of== coffee.",
+            "it": "Abbiamo finito il caffè."
+          },
+          {
+            "en": "The plane ==took off== at six.",
+            "it": "L'aereo è decollato alle sei."
+          },
+          {
+            "en": "She ==picked up== Spanish in a few months.",
+            "it": "Ha imparato lo spagnolo in pochi mesi."
+          },
+          {
+            "en": "They ==turned down== our offer.",
+            "it": "Hanno rifiutato la nostra offerta."
+          }
+        ]
+      },
+      {
+        "type": "compare",
+        "left": {
+          "label": "Separabili (oggetto in mezzo)",
+          "items": [
+            "put the meeting off",
+            "turn the offer down",
+            "pick you up",
+            "take your shoes off"
+          ]
+        },
+        "right": {
+          "label": "A tre parti (inseparabili)",
+          "items": [
+            "look forward to the trip",
+            "put up with the noise",
+            "run out of time",
+            "come up with an idea"
+          ]
+        }
+      },
+      {
+        "type": "warning",
+        "body": "Dopo *look forward to* serve la forma in **-ing**: ✗ *I look forward to see you* → *I look forward to **seeing** you*. E con i tre pezzi non si separa mai: ✗ *I put up him with* → *I put up with him*."
+      },
+      {
+        "type": "tip",
+        "body": "Se il verbo ha più significati, cerca nella frase l'**oggetto**: *pick up a book* (raccogliere), *pick up a friend* (andare a prendere), *pick up a language* (imparare). Annota ogni significato con una frase tua."
+      }
+    ],
+    "exercises": [
+      {
+        "type": "mcq",
+        "prompt": "I'm really looking forward ___ you next week.",
+        "options": [
+          "to seeing",
+          "to see",
+          "for seeing",
+          "at seeing"
+        ],
+        "answer": 0,
+        "explain": "In *look forward to* il **to è una preposizione**: serve la forma in -ing, *to seeing*."
+      },
+      {
+        "type": "mcq",
+        "prompt": "We've ___ milk. Could you buy some?",
+        "options": [
+          "run out of",
+          "run into",
+          "run away",
+          "run up"
+        ],
+        "answer": 0,
+        "explain": "**Run out of** = finire, esaurire qualcosa."
+      },
+      {
+        "type": "mcq",
+        "prompt": "I can't ___ this noise any longer.",
+        "options": [
+          "put up with",
+          "put up for",
+          "put out with",
+          "put off"
+        ],
+        "answer": 0,
+        "explain": "**Put up with** = sopportare. Ha tre parti e non si separa."
+      },
+      {
+        "type": "mcq",
+        "prompt": "She ___ a brilliant idea for the campaign.",
+        "options": [
+          "came up with",
+          "came up to",
+          "came across",
+          "came out"
+        ],
+        "answer": 0,
+        "explain": "**Come up with** = tirar fuori, inventare (un'idea, un piano)."
+      },
+      {
+        "type": "mcq",
+        "prompt": "The plane ___ at 6 a.m.",
+        "options": [
+          "took off",
+          "took out",
+          "took up",
+          "took in"
+        ],
+        "answer": 0,
+        "explain": "**Take off** = decollare (per un aereo)."
+      },
+      {
+        "type": "mcq",
+        "prompt": "I've ___ a lot of Spanish since I moved to Madrid.",
+        "options": [
+          "picked up",
+          "picked on",
+          "picked out",
+          "picked over"
+        ],
+        "answer": 0,
+        "explain": "**Pick up** = imparare senza sforzo, per esposizione."
+      },
+      {
+        "type": "mcq",
+        "prompt": "It took me months to ___ the flu.",
+        "options": [
+          "get over",
+          "get away",
+          "get off",
+          "get out"
+        ],
+        "answer": 0,
+        "explain": "**Get over** = superare (una malattia, una delusione)."
+      },
+      {
+        "type": "mcq",
+        "prompt": "We had to ___ the meeting because the manager was ill.",
+        "options": [
+          "put off",
+          "put up",
+          "put on",
+          "put away"
+        ],
+        "answer": 0,
+        "explain": "**Put off** = rimandare. È separabile: *put the meeting off*."
+      },
+      {
+        "type": "mcq",
+        "prompt": "He ___ my invitation because he was busy.",
+        "options": [
+          "turned down",
+          "turned on",
+          "turned up",
+          "turned into"
+        ],
+        "answer": 0,
+        "explain": "**Turn down** = rifiutare (un'offerta, un invito)."
+      },
+      {
+        "type": "fill",
+        "prompt": "I'm trying to cut ___ on sugar.",
+        "answers": [
+          "down"
+        ],
+        "hint": "ridurre",
+        "explain": "**Cut down on** = ridurre il consumo di qualcosa."
+      },
+      {
+        "type": "fill",
+        "prompt": "You can't get ___ with cheating forever.",
+        "answers": [
+          "away"
+        ],
+        "explain": "**Get away with** = farla franca."
+      },
+      {
+        "type": "fill",
+        "prompt": "I get ___ well with my new colleagues.",
+        "answers": [
+          "on"
+        ],
+        "explain": "**Get on with** = andare d'accordo con (qualcuno)."
+      },
+      {
+        "type": "fill",
+        "prompt": "Slow down! I can't catch ___ with you.",
+        "answers": [
+          "up"
+        ],
+        "explain": "**Catch up with** = raggiungere qualcuno che è avanti."
+      },
+      {
+        "type": "fill",
+        "prompt": "She looks down ___ people who don't read.",
+        "answers": [
+          "on"
+        ],
+        "hint": "disprezzare",
+        "explain": "**Look down on** = guardare dall'alto in basso, disprezzare."
+      },
+      {
+        "type": "fill",
+        "prompt": "We're running out ___ time.",
+        "answers": [
+          "of"
+        ],
+        "explain": "**Run out of** = esaurire, finire."
+      },
+      {
+        "type": "order",
+        "words": [
+          "I'm",
+          "looking",
+          "forward",
+          "to",
+          "meeting",
+          "your",
+          "parents."
+        ],
+        "translation": "Non vedo l'ora di conoscere i tuoi genitori.",
+        "explain": "Dopo *look forward to* si usa l'-ing: *meeting*."
+      },
+      {
+        "type": "order",
+        "words": [
+          "He",
+          "put",
+          "the",
+          "meeting",
+          "off",
+          "until",
+          "Friday."
+        ],
+        "alternatives": [
+          "He put off the meeting until Friday."
+        ],
+        "translation": "Ha rimandato la riunione a venerdì.",
+        "explain": "**Put off** è separabile: l'oggetto può stare in mezzo."
+      },
+      {
+        "type": "order",
+        "words": [
+          "I",
+          "can't",
+          "put",
+          "up",
+          "with",
+          "his",
+          "behaviour."
+        ],
+        "translation": "Non sopporto il suo comportamento.",
+        "explain": "**Put up with** ha tre parti e non si separa."
+      },
+      {
+        "type": "judge",
+        "sentence": "I'm looking forward to see you.",
+        "isCorrect": false,
+        "correction": "I'm looking forward to seeing you.",
+        "explain": "Dopo *look forward to* serve l'-ing: *seeing*."
+      },
+      {
+        "type": "judge",
+        "sentence": "She came up with a great solution.",
+        "isCorrect": true,
+        "explain": "Corretta: *come up with* = tirar fuori un'idea o una soluzione."
+      },
+      {
+        "type": "judge",
+        "sentence": "We ran out coffee.",
+        "isCorrect": false,
+        "correction": "We ran out of coffee.",
+        "explain": "*Run out* vuole la preposizione **of**: *run out of coffee*."
+      },
+      {
+        "type": "judge",
+        "sentence": "They turned down the offer.",
+        "isCorrect": true,
+        "explain": "Corretta: *turn down* = rifiutare."
+      },
+      {
+        "type": "judge",
+        "sentence": "She looks down people who are late.",
+        "isCorrect": false,
+        "correction": "She looks down on people who are late.",
+        "explain": "Manca la preposizione: *look down **on** someone*."
+      },
+      {
+        "type": "match",
+        "prompt": "Abbina il phrasal verb al significato.",
+        "pairs": [
+          [
+            "put up with",
+            "sopportare"
+          ],
+          [
+            "run out of",
+            "esaurire"
+          ],
+          [
+            "come up with",
+            "inventare"
+          ],
+          [
+            "cut down on",
+            "ridurre"
+          ],
+          [
+            "get away with",
+            "farla franca"
+          ]
+        ],
+        "explain": "Cinque phrasal verbs a tre parti."
+      },
+      {
+        "type": "match",
+        "prompt": "Abbina la frase al significato di *pick up*.",
+        "pairs": [
+          [
+            "Pick up your toys.",
+            "raccogliere"
+          ],
+          [
+            "I'll pick you up at eight.",
+            "passare a prendere"
+          ],
+          [
+            "She picked up French quickly.",
+            "imparare senza sforzo"
+          ]
+        ],
+        "explain": "Lo stesso verbo cambia significato secondo l'oggetto e il contesto."
+      }
+    ]
+  },
 ];
