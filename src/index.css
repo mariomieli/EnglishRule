@@ -3646,6 +3646,8 @@ main:focus {
 }
 
 .vocab-tab {
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -3655,6 +3657,12 @@ main:focus {
   border: 1px solid var(--border);
   font-weight: 800;
   transition: background 0.2s, border-color 0.2s;
+}
+
+.vocab-tab span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .vocab-tab.on {

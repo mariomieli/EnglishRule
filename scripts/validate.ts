@@ -90,7 +90,8 @@ placement.forEach((q, i) => {
   const { flatten } = await import('../src/data/vocab/types');
   const { A1_THEMES } = await import('../src/data/vocab/a1');
   const { A2_THEMES } = await import('../src/data/vocab/a2');
-  const all = [...flatten('A1', A1_THEMES), ...flatten('A2', A2_THEMES)];
+  const { B1_THEMES } = await import('../src/data/vocab/b1');
+  const all = [...flatten('A1', A1_THEMES), ...flatten('A2', A2_THEMES), ...flatten('B1', B1_THEMES)];
   const seenIds = new Set<string>();
   const seenEn = new Set<string>();
   for (const w of all) {
@@ -104,7 +105,7 @@ placement.forEach((q, i) => {
     if (/[–—]/.test(w.en + w.it + w.ex + w.exIt)) at('trattino lungo');
     if (/\s{2,}/.test(w.en + w.it + w.ex + w.exIt)) warn.push(`vocabolario ${w.id}: spazi doppi`);
   }
-  console.log('Vocabolario:', { A1: all.filter((w) => w.level === 'A1').length, A2: all.filter((w) => w.level === 'A2').length });
+  console.log('Vocabolario:', { A1: all.filter((w) => w.level === 'A1').length, A2: all.filter((w) => w.level === 'A2').length, B1: all.filter((w) => w.level === 'B1').length });
 }
 
 const perLevel = lessons.reduce<Record<string, number>>((a, l) => ((a[l.level] = (a[l.level] ?? 0) + 1), a), {});

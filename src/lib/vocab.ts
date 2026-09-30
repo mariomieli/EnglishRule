@@ -3,7 +3,7 @@ import { flatten, type VocabWord } from '../data/vocab/types';
 import { isDue, type SrsCard } from './sync/doc';
 import { looseKey, shuffle } from './utils';
 
-export const VOCAB_LEVELS: LevelId[] = ['A1', 'A2'];
+export const VOCAB_LEVELS: LevelId[] = ['A1', 'A2', 'B1'];
 export const NEW_PER_DAY = 5;
 export const MAX_REVIEWS = 15;
 
@@ -11,7 +11,12 @@ const cache: Partial<Record<LevelId, Promise<VocabWord[]>>> = {};
 
 /** Le parole di un livello si scaricano solo quando servono. */
 export function loadVocab(level: LevelId): Promise<VocabWord[]> {
-  cache[level] ??= (level === 'A1' ? import('../data/vocab/a1').then((m) => flatten('A1', m.A1_THEMES)) : import('../data/vocab/a2').then((m) => flatten('A2', m.A2_THEMES)));
+  cache[level] ??=
+    level === 'A1'
+      ? import('../data/vocab/a1').then((m) => flatten('A1', m.A1_THEMES))
+      : level === 'A2'
+        ? import('../data/vocab/a2').then((m) => flatten('A2', m.A2_THEMES))
+        : import('../data/vocab/b1').then((m) => flatten('B1', m.B1_THEMES));
   return cache[level]!;
 }
 
