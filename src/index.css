@@ -3658,3 +3658,28 @@ main:focus {
     transition: none;
   }
 }
+
+/* titolo della lezione evidenziato come con un pennarello, nel colore dell'argomento */
+.path-card h3 {
+  font-size: 1.12rem;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.path-card.next h3 {
+  font-size: 1.3rem;
+}
+
+.path-card h3 span {
+  padding: 0 5px;
+  margin-left: -5px;
+  border-radius: 4px;
+  background: linear-gradient(transparent 55%, color-mix(in srgb, var(--topic) 42%, transparent) 55%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.path-row.left .path-card h3 span {
+  margin-left: 0;
+  margin-right: -5px;
+}

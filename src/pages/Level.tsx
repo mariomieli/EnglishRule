@@ -92,7 +92,9 @@ export function LevelPage() {
                   </span>
                   <Link to={`/lesson/${l.id}`} className={`path-card ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} style={{ '--topic': t.color, '--on-topic': onColor(t.color) } as CSSProperties} aria-label={`Lezione ${i + 1}: ${l.title}${p ? ', completata' : ''}${isNext ? ', consigliata' : ''}`}>
                     <div className="path-topic">{t.short}</div>
-                    <h3>{l.title}</h3>
+                    <h3>
+                      <span>{l.title}</span>
+                    </h3>
                     <div className="sub">{l.subtitle}</div>
                     <div className="path-foot">
                       {p ? <Stars n={p.stars} /> : isNext ? <span className="path-next">Consigliata · {l.minutes} min</span> : <span className="mins">{l.minutes} min</span>}
