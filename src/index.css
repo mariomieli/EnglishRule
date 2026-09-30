@@ -3553,25 +3553,15 @@ main:focus {
 }
 
 .path-topic {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 5px 11px 5px 9px;
-  border-radius: 99px;
-  border: 1px solid color-mix(in srgb, var(--topic) 38%, transparent);
-  background: color-mix(in srgb, var(--topic) 16%, transparent);
-  font: 800 0.74rem/1 Inter, sans-serif;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--topic) 55%, var(--text));
-}
-
-.path-topic::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
+  display: inline-block;
+  padding: 7px 14px;
+  border-radius: 10px;
   background: var(--topic);
+  box-shadow: 0 8px 18px -10px var(--topic);
+  font: 800 0.8rem/1 Inter, sans-serif;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--on-topic, #fff);
 }
 
 /* filo colorato sul lato della scheda rivolto verso il sentiero */

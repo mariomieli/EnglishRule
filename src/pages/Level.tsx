@@ -3,7 +3,7 @@ import { useEffect, type CSSProperties } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { IArrow, IBack, IClock } from '../components/Icons';
 import { Theory } from '../components/Theory';
-import { topicOf } from '../data/topics';
+import { onColor, topicOf } from '../data/topics';
 import { LevelBadge, Page, ProgressRing, Stars } from '../components/ui';
 import { rise, stagger } from '../lib/motion';
 import { lessonById, lessonNumber, lessonsByLevel, nextLesson } from '../data';
@@ -90,7 +90,7 @@ export function LevelPage() {
                   <span className={`path-node ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} aria-hidden>
                     {p ? '✓' : i + 1}
                   </span>
-                  <Link to={`/lesson/${l.id}`} className={`path-card ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} style={{ '--topic': t.color } as CSSProperties} aria-label={`Lezione ${i + 1}: ${l.title}${p ? ', completata' : ''}${isNext ? ', consigliata' : ''}`}>
+                  <Link to={`/lesson/${l.id}`} className={`path-card ${p ? 'done' : ''} ${isNext ? 'next' : ''}`} style={{ '--topic': t.color, '--on-topic': onColor(t.color) } as CSSProperties} aria-label={`Lezione ${i + 1}: ${l.title}${p ? ', completata' : ''}${isNext ? ', consigliata' : ''}`}>
                     <div className="path-topic">{t.short}</div>
                     <h3>{l.title}</h3>
                     <div className="sub">{l.subtitle}</div>

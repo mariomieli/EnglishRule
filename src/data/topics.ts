@@ -92,3 +92,16 @@ export const topicById = (id: TopicId) => TOPICS.find((t) => t.id === id)!;
 
 /** Argomento di una lezione (le lezioni nuove senza voce nella tabella ricadono su "Verbi e tempi"). */
 export const topicOf = (lessonId: string): Topic => topicById(BY_LESSON[lessonId] ?? 'tempi');
+
+const lum = (hex: string) => {
+  const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+};
+
+/** Colore del testo (bianco o quasi nero) con il contrasto migliore sul colore pieno dell'argomento. */
+export const onColor = (hex: string) => {
+  const l = lum(hex);
+  const vsWhite = 1.05 / (l + 0.05);
+  const vsDark = (l + 0.05) / (lum('#16123a') + 0.05);
+  return vsWhite >= vsDark ? '#ffffff' : '#16123a';
+};
