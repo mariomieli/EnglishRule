@@ -3566,6 +3566,10 @@ main:focus {
   color: color-mix(in srgb, var(--lv-from) 72%, var(--text));
 }
 
+:root[data-theme='light'] .path-card h3 {
+  color: color-mix(in srgb, var(--lv-from) 50%, var(--text));
+}
+
 .path-card.next h3 {
   font-size: 1.25rem;
 }
