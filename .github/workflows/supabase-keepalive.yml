@@ -13,7 +13,7 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Richiesta all'API REST
+      - name: Query al database (la radice REST con la chiave pubblica risponde 401 senza toccarlo)
         env:
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
@@ -24,7 +24,7 @@ jobs:
           fi
           code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 \
             -H "apikey: $SUPABASE_ANON_KEY" \
-            "$SUPABASE_URL/rest/v1/")
+            "$SUPABASE_URL/rest/v1/progress?select=user_id&limit=1")
           echo "Risposta: $code"
           # 2xx/4xx = il progetto risponde; 5xx o nessuna risposta = in pausa o fermo
           [ "$code" -ge 200 ] && [ "$code" -lt 500 ]
